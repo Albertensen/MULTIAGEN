@@ -38,7 +38,7 @@ Fokus pada pembuatan "ingatan" yang memisahkan percakapan berdasarkan identitas 
 - [x] Definisikan struktur pesan relasional: `id`, `senderId` (user/a1/a2), `role`, `content`, `timestamp`.
 - [x] Buat fungsi untuk memfilter riwayat obrolan secara global (*main channel*) dan spesifik per agen.
 - [x] Integrasikan dan uji `transcriptStore` berdampingan dengan `agentStore` di `/utest`.
-- [ ] **Persistensi lokal:** simpan agen + transkrip ke `localStorage` agar tidak hilang saat reload (mendatang — kecil).
+- [x] **Persistensi lokal:** simpan agen + transkrip ke `localStorage` (auto-save via subscribe, hydrate saat boot, `clearPersisted*` untuk reset). Teruji: tambah pesan → reload → data bertahan.
 
 ## ⚙️ Fase 3: Orchestration, Message Bus & File Sharing (Mendatang)
 Fokus pada pembangunan mesin komunikasi dan pertukaran aset agar agen bisa saling berkolaborasi.

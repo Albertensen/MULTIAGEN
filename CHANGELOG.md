@@ -1,5 +1,9 @@
 # CHANGELOG.md
 
+## [2026-08-06] feat — Persistensi localStorage untuk agentStore + transcriptStore (auto-save subscribe, hydrate boot, clearPersisted*), harness /utest idempoten + tombol clear
+
+## [2026-08-06] docs — Dev_Log_Session_01.md (journal sesi) + roadmap tick persistensi
+
 ## [2026-08-06] docs — Perluas PROJECT_ROADMAP.md: tambah Fase 0 Fondasi (selesai), tick item selesai, tambah backlog (persistensi, endpoint agents, harness cleanup)
 
 ## [2026-08-06] docs — Tambah PROJECT_ROADMAP.md: roadmap 5 fase Discord-style multi-agent (Fase 1 selesai, Fase 2 aktif, Fase 3-5 mendatang)

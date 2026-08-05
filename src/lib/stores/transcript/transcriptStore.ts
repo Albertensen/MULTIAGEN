@@ -23,7 +23,33 @@ export type TranscriptMessage = {
 // key: chatId -> agentId -> messages[]
 type TranscriptShape = Record<string, Record<string, TranscriptMessage[]>>;
 
-const transcripts = writable<TranscriptShape>({});
+const STORAGE_KEY = 'multiagent.transcripts.v1';
+
+// hydrate dari localStorage saat boot
+function loadInitial(): TranscriptShape {
+	if (typeof localStorage === 'undefined') return {};
+	try {
+		const raw = localStorage.getItem(STORAGE_KEY);
+		if (!raw) return {};
+		const parsed = JSON.parse(raw);
+		return parsed && typeof parsed === 'object' ? parsed : {};
+	} catch (e) {
+		console.warn('[transcriptStore] gagal hydrate localStorage:', e);
+		return {};
+	}
+}
+
+const transcripts = writable<TranscriptShape>(loadInitial());
+
+// auto-save setiap perubahan
+transcripts.subscribe((state) => {
+	if (typeof localStorage === 'undefined') return;
+	try {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+	} catch (e) {
+		console.warn('[transcriptStore] gagal simpan localStorage:', e);
+	}
+});
 
 // readonly — komponen tidak mutasi langsung
 export const transcriptsStore = readonly(transcripts);
@@ -70,6 +96,16 @@ export const clearTranscript = (chatId?: string, agentId?: string) => {
 		delete nextChat[agentId];
 		return { ...m, [chatId]: nextChat };
 	});
+};
+
+// hapus juga data persisted
+export const clearPersistedTranscripts = () => {
+	try {
+		localStorage.removeItem(STORAGE_KEY);
+	} catch (e) {
+		console.warn('[transcriptStore] gagal hapus localStorage:', e);
+	}
+	transcripts.set({});
 };
 
 // ==================== derived (UI) ====================

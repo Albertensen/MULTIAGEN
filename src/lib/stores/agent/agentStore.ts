@@ -7,7 +7,11 @@ import { derived, get, readonly, writable } from 'svelte/store';
 // Otak sistem multi-agen:
 //   agentsStore  → semua agen (key = id)
 //   activeAgentId → siapa yang sedang bicara/ditugaskan
+//
+// Persistensi: auto-save ke localStorage (subscribe) + hydrate saat boot.
 // =====================================================================
+
+const STORAGE_KEY = 'multiagent.agents.v1';
 
 export type Agent = {
 	id: string;
@@ -17,7 +21,31 @@ export type Agent = {
 	active: boolean; // sedang bicara/ditugaskan
 };
 
-const agentsStore = writable<Record<string, Agent>>({});
+// hydrate dari localStorage — jalankan SEBELUM store dipakai
+function loadInitial(): Record<string, Agent> {
+	if (typeof localStorage === 'undefined') return {};
+	try {
+		const raw = localStorage.getItem(STORAGE_KEY);
+		if (!raw) return {};
+		const parsed = JSON.parse(raw);
+		return parsed && typeof parsed === 'object' ? parsed : {};
+	} catch (e) {
+		console.warn('[agentStore] gagal hydrate localStorage:', e);
+		return {};
+	}
+}
+
+const agentsStore = writable<Record<string, Agent>>(loadInitial());
+
+// auto-save setiap perubahan
+agentsStore.subscribe((state) => {
+	if (typeof localStorage === 'undefined') return;
+	try {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+	} catch (e) {
+		console.warn('[agentStore] gagal simpan localStorage:', e);
+	}
+});
 
 // readonly — komponen tidak boleh mutasi langsung, pakai aksi di bawah
 export const agents = readonly(agentsStore);
@@ -73,4 +101,14 @@ export const clearActiveAgent = () => {
 export const resetAgents = () => {
 	agentsStore.set({});
 	activeAgentId.set(null);
+};
+
+// hapus juga data persisted (pakai saat user mau mulai bersih)
+export const clearPersistedAgents = () => {
+	try {
+		localStorage.removeItem(STORAGE_KEY);
+	} catch (e) {
+		console.warn('[agentStore] gagal hapus localStorage:', e);
+	}
+	resetAgents();
 };

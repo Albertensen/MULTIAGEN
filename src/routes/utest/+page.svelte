@@ -19,14 +19,22 @@
 		agentTranscript,
 		addMessage,
 		getHistoryByAgent,
-		clearTranscript
+		clearTranscript,
+		clearPersistedTranscripts
 	} from '$lib/stores/transcript/transcriptStore';
 
 	let log: string[] = [];
 
-	addAgent({ id: 'a1', name: 'Hermes', systemPrompt: 'assistant utama', model: 'gemma4:e4b' });
-	addAgent({ id: 'a2', name: 'Planner', systemPrompt: 'perencana', model: 'hermes3:latest' });
-	addAgent({ id: 'a3', name: 'Critic', systemPrompt: 'penyunting', model: 'gemma4:e4b' });
+	// seed IDEMPOTENT: hanya tambah agen kalau belum ada (amankah persistensi/reload)
+	function seed() {
+		// pakai $agents secara reaktif — jika sudah ada a1,a2,a3 -> skip
+		addAgent({ id: 'a1', name: 'Hermes', systemPrompt: 'assistant utama', model: 'gemma4:e4b' });
+		addAgent({ id: 'a2', name: 'Planner', systemPrompt: 'perencana', model: 'hermes3:latest' });
+		addAgent({ id: 'a3', name: 'Critic', systemPrompt: 'penyunting', model: 'gemma4:e4b' });
+	}
+
+	// reactive: seed 1x saat agent belum lengkap, lalu berhenti
+	$: if ($agentList.length === 0) seed();
 
 	$: summary = {
 		total: $agentList.length,
@@ -35,17 +43,13 @@
 		activeId: $activeAgentId
 	};
 
-	// transcript: demo state awal
+	// transcript: demo state awal — HANYA bila chat ini belum punya pesan (idempoten utk reload)
 	const CHAT = 'chat-demo-1';
-	$: if ($agentList.length === 3) {
-		// tambah hanya sekali (guard pakai panjang log)
-		if (log.length === 0) {
-			addMessage(CHAT, 'a2', { role: 'user', content: 'Rencanakan fitur X' });
-			addMessage(CHAT, 'a2', { role: 'assistant', content: 'Rencana: 1) API 2) UI' });
-			addMessage(CHAT, 'a3', { role: 'assistant', content: 'Kritik: API perlu auth' });
-			addMessage(CHAT, 'a1', { role: 'assistant', content: 'Final: API + auth + UI' });
-			log.push('seeded');
-		}
+	$: if ($agentList.length === 3 && getHistoryByAgent(CHAT, 'a2').length === 0) {
+		addMessage(CHAT, 'a2', { role: 'user', content: 'Rencanakan fitur X' });
+		addMessage(CHAT, 'a2', { role: 'assistant', content: 'Rencana: 1) API 2) UI' });
+		addMessage(CHAT, 'a3', { role: 'assistant', content: 'Kritik: API perlu auth' });
+		addMessage(CHAT, 'a1', { role: 'assistant', content: 'Final: API + auth + UI' });
 	}
 
 	// derived store func -> subscribe SEKALI di top-level (bukan dalam $: block,
@@ -112,5 +116,7 @@
 	add planner msg
 </button>
 <button on:click={() => clearTranscript(CHAT)}>clear chat transcript</button>
+<button on:click={() => clearPersistedTranscripts()}>clear ALL persisted transcripts</button>
+<button on:click={() => { localStorage.clear(); location.reload(); }}>nuke localStorage + reload</button>
 
 <pre>{JSON.stringify(summary)}</pre>
