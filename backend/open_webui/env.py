@@ -195,7 +195,15 @@ changelog_json = {}
 # Iterate over each version
 for version in soup.find_all('h2'):
     version_number = version.get_text().strip().split(' - ')[0][1:-1]  # Remove brackets
-    date = version.get_text().strip().split(' - ')[1]
+    try:
+        text_content = version.get_text().strip()
+        if ' - ' in text_content:
+            date = text_content.split(' - ')[1]
+        else:
+            # Fallback jika menggunakan format kustom atau em-dash
+            date = text_content.split(' ')[0].replace('[', '').replace(']', '')
+    except IndexError:
+        date = "Unknown"
 
     version_data = {'date': date}
 
