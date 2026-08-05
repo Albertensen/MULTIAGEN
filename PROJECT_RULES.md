@@ -29,6 +29,13 @@ Setiap rilis harus diperbarui di RELEASE_NOTES.md.
 - Pastikan semua test lolos (status: works).
 - Gate kualitas commit: kode harus lolos build success DAN uji runtime fungsional (berjalan normal di localhost:8080).
 
+## SOP WIP Commit (Penting — Berlaku Saat Sesi Dihentikan)
+
+- Jika sesi berakhir (istirahat, matikan komputer, pergi) dan ada progres setengah jalan / belum teruji / pending, **WAJIB commit + push ke GitHub** sebelum menutup.
+- Gunakan penanda **`WIP:`** atau **`PENDING:`** pada pesan commit supaya jelas kode belum diverifikasi penuh.
+- Tujuan: tidak pernah kehilangan progres; sesi berikutnya lanjut dari titik yang jelas.
+- Saat sesi dilanjutkan: cari commit berpenanda `WIP:`/`PENDING:` terakhir, selesaikan verifikasi, lalu commit ulang tanpa penanda (status works).
+
 ## Pengecualian Verifikasi Frontend (Deployed Foundation)
 
 - Tahap verifikasi frontend TIDAK menggunakan svelte-check / strict TypeScript linting dari codebase upstream Open WebUI.

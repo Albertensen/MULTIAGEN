@@ -102,3 +102,14 @@ Initial commit (master) → 419ebca (docs foundation) → d33d2a8 (fix env.py)
 ---
 
 *Ditulis oleh Hermes (agent) — sesi kolaborasi dengan Albert. Runtime-verified, tidak ada pernyataan tanpa bukti.*
+
+---
+
+## ⏸️ PAUSE — Sesi Dijeda untuk Istirahat
+
+**Waktu:** 2026-08-06 dini hari.
+
+**Titik lanjut besok (persis):**
+- `orchestration.ts` (event bus + parser `[CALL: agent]`) sudah ditulis + TSC clean + sebagian teruji di `/utest` (parseCalls, resolveAgentId, CALL dari Hermes → a1→a3, a1→a2 berhasil). **Belum final:** verifikasi `CALL dari user` dan case-insensitive penuh (masih status WIP).
+- **Lanjutkan:** buka `/utest`, klik "send CALL from user", pastikan call count naik (target planner → a2), lalu `npm run build` (dengan `NODE_OPTIONS=--max-old-space-size=8192`), commit tanpa penanda WIP.
+- SOP baru: **WIP commit** ditambahkan ke `PROJECT_RULES.md` — semua progres setengah jalan wajib di-commit + push dgn penanda `WIP:`/`PENDING:` saat sesi ditutup.

@@ -23,6 +23,17 @@
 		clearPersistedTranscripts
 	} from '$lib/stores/transcript/transcriptStore';
 
+	import {
+		busHistory,
+		calls,
+		parseCalls,
+		resolveAgentId,
+		processMessage,
+		watchTranscript,
+		on,
+		clearBus
+	} from '$lib/stores/orchestration/orchestration';
+
 	let log: string[] = [];
 
 	// seed IDEMPOTENT: hanya tambah agen kalau belum ada (amankah persistensi/reload)
@@ -60,6 +71,16 @@
 	chatTranscript(CHAT).subscribe((v) => (chronoMsgs = v));
 	agentTranscript(CHAT, 'a2').subscribe((v) => (plannerMsgsList = v));
 	agentTranscript(CHAT, 'a3').subscribe((v) => (criticMsgsList = v));
+
+	// ===== Orchestration test =====
+	// start monitor pada chat demo — deteksi [CALL: nama] di pesan baru
+	watchTranscript(CHAT);
+
+	// reactive: render jumlah calls & bus
+	let callCount = 0;
+	calls.subscribe((c) => (callCount = c.length));
+	let busCount = 0;
+	busHistory.subscribe((b) => (busCount = b.length));
 </script>
 
 <h1>Agent Store Harness</h1>
@@ -118,5 +139,30 @@
 <button on:click={() => clearTranscript(CHAT)}>clear chat transcript</button>
 <button on:click={() => clearPersistedTranscripts()}>clear ALL persisted transcripts</button>
 <button on:click={() => { localStorage.clear(); location.reload(); }}>nuke localStorage + reload</button>
+
+<hr />
+<h2>Orchestration</h2>
+<p><strong>parseCalls('[CALL: Planner]') =</strong> {JSON.stringify(parseCalls('[CALL: Planner]'))}</p>
+<p><strong>parseCalls('hai [CALL: critic] dan [CALL: Hermes]') =</strong>
+	{JSON.stringify(parseCalls('hai [CALL: critic] dan [CALL: Hermes]'))}</p>
+<p><strong>resolveAgentId('planner') =</strong> {resolveAgentId('planner') ?? 'null'}</p>
+<p><strong>calls (log panggilan) — {callCount} event:</strong></p>
+<ul>
+	{#each $calls as c (c.ts + c.targetAgentId + c.chatId)}
+		<li>
+			{new Date(c.ts).toLocaleTimeString()} — {c.fromAgentId ?? 'user'} → {c.targetAgentId}
+			(chat: {c.chatId})
+		</li>
+	{/each}
+</ul>
+<p><strong>bus events — {busCount}:</strong> {$busHistory.map((e) => e.type).join(', ') || 'none'}</p>
+
+<button on:click={() => addMessage(CHAT, 'a1', { role: 'assistant', content: 'Analisis: butuh [CALL: critic] dan [CALL: Planner]' })}>
+	send CALL from Hermes
+</button>
+<button on:click={() => addMessage(CHAT, 'user', { role: 'user', content: 'tolong [CALL: planner] review ini' })}>
+	send CALL from user
+</button>
+<button on:click={() => clearBus()}>clear bus/calls</button>
 
 <pre>{JSON.stringify(summary)}</pre>

@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-06] wip — orchestration.ts (event bus + parser [CALL: agent], watchTranscript) + harness /utest; PROJECT_RULES SOP WIP commit; log sesi pause
+
 ## [2026-08-06] feat — Persistensi localStorage untuk agentStore + transcriptStore (auto-save subscribe, hydrate boot, clearPersisted*), harness /utest idempoten + tombol clear
 
 ## [2026-08-06] docs — Dev_Log_Session_01.md (journal sesi) + roadmap tick persistensi
