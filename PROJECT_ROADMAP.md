@@ -7,8 +7,22 @@ Membangun platform Multi-Agent AI lokal berkinerja tinggi menggunakan arsitektur
 - **Runtime-First:** Prioritaskan fungsionalitas dan reaktivitas di browser.
 - **Fleksibilitas Type:** Hindari *strict* TypeScript/static type-checking yang menghambat kecepatan iterasi.
 - **Modularitas:** Gunakan *store* Svelte murni tanpa dependensi internal yang rumit.
+- **Uji Dulu, Commit Belakangan:** Kode masuk Git hanya setelah verified working (build + runtime).
+- **Keamanan .env:** Secret key tidak pernah di-commit.
 
 ---
+
+## 🏗 Fase 0: Fondasi & Deployment (Selesai)
+Fokus pada infrastruktur yang membuat proyek bisa jalan & aman di Git.
+- [x] Setup `PROJECT_RULES.md` + `CHANGELOG.md` + `RELEASE_NOTES.md` (kebijakan commit/push, changelog wajib).
+- [x] `.gitignore` standar (venv, cache, `.env`, `.svelte-kit/`).
+- [x] Inisialisasi repo Git + push awal ke GitHub (`Albertensen/MULTIAGEN`).
+- [x] Pengecualian verifikasi frontend: build + runtime fungsional, bukan svelte-check strict upstream (8,323 error TS = technical debt upstream, disetujui).
+- [x] `WEBUI_SECRET_KEY` di-set (env aman, tidak di-commit).
+- [x] Fix parser CHANGELOG di `backend/open_webui/env.py` (IndexError saat startup — format custom em-dash).
+- [x] Fix `PYTHONPATH` global Hermes yang menimpa venv project (PIL/uvicorn dari venv salah).
+- [x] Startup backend (uvicorn, port 8080) & frontend (vite, port 8088) terverifikasi `LISTENING` + health 200.
+- [x] Model lokal Ollama terverifikasi: `gemma4:e4b` (9.6GB), `gemma4:12b` (7.6GB), `hermes3:latest` (4.7GB), `nomic-embed-text:latest` (embedding).
 
 ## 🚀 Fase 1: Agent State Management (Selesai)
 Fokus pada pembuatan "otak" dan manajemen identitas agen.
@@ -18,12 +32,13 @@ Fokus pada pembuatan "otak" dan manajemen identitas agen.
 - [x] Pembuatan `/utest` harness untuk pengujian *runtime* di browser.
 - [x] Verifikasi reaktivitas *store* (pergantian agen aktif berjalan sempurna).
 
-## 🧠 Fase 2: Relational Memory System (Aktif)
+## 🧠 Fase 2: Relational Memory System (Selesai)
 Fokus pada pembuatan "ingatan" yang memisahkan percakapan berdasarkan identitas pengirim (User vs Agen).
 - [x] Buat `transcriptStore.ts` menggunakan Svelte store.
 - [x] Definisikan struktur pesan relasional: `id`, `senderId` (user/a1/a2), `role`, `content`, `timestamp`.
 - [x] Buat fungsi untuk memfilter riwayat obrolan secara global (*main channel*) dan spesifik per agen.
 - [x] Integrasikan dan uji `transcriptStore` berdampingan dengan `agentStore` di `/utest`.
+- [ ] **Persistensi lokal:** simpan agen + transkrip ke `localStorage` agar tidak hilang saat reload (mendatang — kecil).
 
 ## ⚙️ Fase 3: Orchestration, Message Bus & File Sharing (Mendatang)
 Fokus pada pembangunan mesin komunikasi dan pertukaran aset agar agen bisa saling berkolaborasi.
@@ -31,6 +46,7 @@ Fokus pada pembangunan mesin komunikasi dan pertukaran aset agar agen bisa salin
 - [ ] Implementasi sistem *Mention/Call* melalui *System Prompt* (misal: pengenalan token `[CALL: a2]`).
 - [ ] Buat *trigger* otomatis: Jika Agen A menyebut Agen B, sistem akan secara otomatis memicu generasi teks dari Agen B.
 - [ ] **Inter-Agent File Sharing:**  Tambahkan dukungan payload *attachment* pada pesan sehingga agen dapat mengirim file (contoh: *script* Python, JSON, gambar) ke agen lain untuk dianalisis atau dieksekusi.
+- [ ] Koneksi ke backend: endpoint FastAPI `/api/v1/agents/*` (CRUD agen + broadcast ke semua klien via websocket).
 
 ## 🎨 Fase 4: Discord-like UI Implementation (Mendatang)
 Fokus pada perombakan antarmuka pengguna menjadi tata letak aplikasi obrolan modern.
@@ -47,4 +63,4 @@ Fokus pada perluasan akses agen ke alat eksternal dan memori jangka panjang perm
 - [ ] **Code Execution Environment:** Sandbox khusus di backend agar skrip Python yang dibagikan antar-agen dapat dieksekusi dengan aman dan hasilnya dikembalikan ke obrolan.
 
 ---
-*Roadmap agar bisa terus diperbarui. Centang kotak seiring berjalannya progres.*
+*Roadmap adalah dokumen hidup. Centang kotak seiring berjalannya progres, tambahkan item baru yang muncul.*
