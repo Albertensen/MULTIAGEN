@@ -1,0 +1,52 @@
+# Multi-agent UI
+
+# Python / virtualenv
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory
+.DS_Store
+*.egg-info
+dist/
+build/
+*.log
+*.sqlite3
+
+# Environment variables
+.env
+.env/*
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*~
+*.md~
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Node
+node_modules/
+
+# Build outputs
+build/
+dist/
+*.local
+
+# Test
+.coverage
+coverage/
+.tox
+pytest_cache/
+.mypy_cache/
+
+# Docker
+*.tar.gz
