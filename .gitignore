@@ -50,3 +50,5 @@ pytest_cache/
 
 # Docker
 *.tar.gz
+# SvelteKit build cache
+.svelte-kit/
