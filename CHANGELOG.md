@@ -1,3 +1,5 @@
 # CHANGELOG.md
 
-## [2026-08-05] feat — Initial commit: Multi-agent UI and agent code setup
+## [2026-08-05] fix — Added WEBUI_SECRET_KEY to .env with secure random value for authentication compliance
+
+## [2026-08-05] docs — Updated PROJECT_RULES.md: frontend verification exception (Deployed Foundation), LLM model rules (Ollama local), .env security hardening

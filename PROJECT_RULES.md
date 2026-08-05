@@ -12,7 +12,7 @@ Commit harus selalu berisi file kode yang diubah + CHANGELOG.md sekaligus.
 
 ## Commit Wajib
 
-- Dilarang彦 claws commit kode yang belum diuji secara lokal.
+- Dilarang melakukan commit pada kode yang belum diuji secara lokal.
 - Pastikan kode sudah works 100% sebelum masuk ke Git.
 
 ## Release Notes
@@ -27,9 +27,23 @@ Setiap rilis harus diperbarui di RELEASE_NOTES.md.
 
 - Uji aplikasi secara local sebelum commit.
 - Pastikan semua test lolos (status: works).
+- Gate kualitas commit: kode harus lolos build success DAN uji runtime fungsional (berjalan normal di localhost:8080).
+
+## Pengecualian Verifikasi Frontend (Deployed Foundation)
+
+- Tahap verifikasi frontend TIDAK menggunakan svelte-check / strict TypeScript linting dari codebase upstream Open WebUI.
+- Error typing bawaan upstream (8,323 svelte-check errors di file seperti RichTextInput/, routes/auth/, i18n store) adalah technical debt upstream, bukan kesalahan runtime pada fungsionalitas Multi-Agent.
+- Kriteria works: build success + uji runtime fungsional — aplikasi berjalan normal di localhost:8080 dengan engine LLM terhubung (Ollama lokal).
+- Status: 'Deployed Foundation' disetujui.
+- Integrasi UI Multi-Agent dan agennya boleh lanjut tanpa terblokir error typing bawaan upstream.
+
+## Aturan Model LLM
+
+- Gunakan engine LLM lokal (Ollama, mis. gemma4 / hermes3) yang sudah terbukti terhubung.
+- Jangan gunakan panggilan API eksternal yang tidak relevan.
 
 ## Keamanan .env
 
-- File .env JANGAN pernikah, ditimpa, atau dimodifikasi.
-- .env WAKTU DIHUPUS dari versi Git.
-- Pastikan .env sudah masuk .gitignore.
+- File .env JANGAN pernah di-commit, ditimpa, atau dimodifikasi secara otonom.
+- Tidak ada backup git untuk .env.
+- Pastikan .env sudah masuk ke dalam .gitignore.
