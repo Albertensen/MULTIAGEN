@@ -3,6 +3,9 @@
 ## 🎯 Visi Proyek
 Membangun platform Multi-Agent AI lokal berkinerja tinggi menggunakan arsitektur Open WebUI (Python/FastAPI Backend + SvelteKit Frontend). Platform ini akan berevolusi menjadi antarmuka komunikasi bergaya Discord, memungkinkan interaksi kompleks, *real-time*, eksekusi file, dan manajemen pengetahuan antar-agen AI.
 
+- **Hierarchical Task Delegation (Sistem Leader-Worker):** Agen Leader otonom yang menyusun plan dan mendelegasikan tugas ke spesialis.
+- **Multi-Tenant & Custom Team Workspaces:** Pengguna dapat membuat akun mandiri dan merakit 'Tim Virtual' mereka sendiri.
+
 ## 🛠 Aturan Dasar (Sesuai `PROJECT_RULES.md`)
 - **Runtime-First:** Prioritaskan fungsionalitas dan reaktivitas di browser.
 - **Fleksibilitas Type:** Hindari *strict* TypeScript/static type-checking yang menghambat kecepatan iterasi.
