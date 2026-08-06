@@ -51,7 +51,7 @@ Fokus pada pembangunan mesin komunikasi dan pertukaran aset agar agen bisa salin
 - [x] Implementasi sistem Mention/Call melalui System Prompt (misal: pengenalan token [CALL: a2]).
 - [x] Buat trigger otomatis: Jika Agen A menyebut Agen B, sistem akan secara otomatis memicu generasi teks dari Agen B.
 - [x] Inter-Agent File Sharing: Tambahkan dukungan payload attachment pada pesan sehingga agen dapat mengirim file (contoh: script Python, JSON, gambar) ke agen lain untuk dianalisis atau dieksekusi.
-- [ ] Koneksi ke backend: endpoint FastAPI /api/v1/agents/* (CRUD agen + broadcast ke semua klien via websocket).
+- [x] Koneksi ke backend: endpoint FastAPI /api/v1/agents/* (CRUD agen + broadcast ke semua klien via websocket).
 - [ ] Hierarchical Task Delegation (Leader-Worker): Pengguna hanya perlu berinteraksi dengan satu agen Leader di dalam obrolan. Agen Leader ini bertugas secara otonom menganalisis permintaan, menyusun execution plan, dan mendelegasikan sub-tugas ke agen spesialis lainnya tanpa campur tangan manual.
 - [ ] Multi-Tenant & Custom Team Workspaces: Platform ini didesain agar multi-user. Setiap pengguna dapat membuat ruang kerja mereka sendiri dan merakit 'Tim Virtual' yang terdiri dari berbagai agen spesialis sesuai dengan kebutuhan proyek mereka.
 - [ ] Anti-Hallucination Guardrails & Critic Agent: Implementasi sistem validasi otonom. Output dari agen Leader akan dievaluasi secara otomatis oleh agen khusus (Critic/Reviewer) secara internal sebelum ditampilkan ke UI. Sistem juga akan memanfaatkan parameter deterministik (temperature rendah) dan validasi backend (seperti Pydantic untuk JSON) untuk mencegah dan mengoreksi halusinasi LLM secara real-time.
