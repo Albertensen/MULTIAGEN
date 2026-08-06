@@ -1,6 +1,7 @@
 # CHANGELOG.md
 
 ## [2026-08-06] wip — orchestration.ts (event bus + parser [CALL: agent], watchTranscript) + harness /utest; PROJECT_RULES SOP WIP commit; log sesi pause
+## [2026-08-06] feat — Verifikasi Event Bus/Parser di Svelte store: emit/on, parseCalls, resolveAgentId, processMessage, watchTranscript sudah berjalan di /utest; arsitektur frontend-only dikonfirmasi Runtime-First
 
 ## [2026-08-06] feat — Persistensi localStorage untuk agentStore + transcriptStore (auto-save subscribe, hydrate boot, clearPersisted*), harness /utest idempoten + tombol clear
 
