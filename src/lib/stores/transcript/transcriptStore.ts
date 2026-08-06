@@ -13,11 +13,21 @@ import { derived, get, readonly, writable } from 'svelte/store';
 
 export type MessageRole = 'user' | 'assistant' | 'system';
 
+// ===== Attachment (Fase 3, item 4: Inter-Agent File Sharing) =====
+export type Attachment = {
+	id: string;
+	name: string;
+	type: 'script' | 'json' | 'image' | 'text';
+	content: string; // inline payload (script source / JSON / base64 image / teks)
+	mime?: string;
+};
+
 export type TranscriptMessage = {
 	id: string;
 	role: MessageRole;
 	content: string;
 	ts: number; // Date.now()
+	attachments?: Attachment[]; // opsional — payload file antar agen
 };
 
 // key: chatId -> agentId -> messages[]

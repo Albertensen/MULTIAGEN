@@ -1,6 +1,7 @@
 import { derived, get, readonly, writable } from 'svelte/store';
 import { agentList, assignAgent } from '../agent/agentStore';
 import { addMessage, chatTranscript } from '../transcript/transcriptStore';
+import type { Attachment } from '../transcript/transcriptStore';
 
 // =====================================================================
 // orchestration.ts — Event Bus + parser [CALL: agent] (Fase 3, item 1)
@@ -103,6 +104,49 @@ export const processMessage = (chatId: string, fromAgentId: string, content: str
 		});
 		emit('orchestration:call', { chatId, fromAgentId, targetAgentId: targetId });
 	}
+};
+
+// ==================== File Sharing (Fase 3, item 4) ====================
+
+export type SendPayload = {
+	chatId: string;
+	fromAgentId: string; // pengirim (null = user)
+	toAgentId: string; // penerima
+	content: string; // teks pesan
+	attachments?: Attachment[]; // payload file
+};
+
+// Kirim pesan + attachment dari satu agen ke agen lain via bus.
+// - Pesan masuk ke transkrip penerima (role user, menandakan "diterima utk diproses")
+// - Emit event 'agent:file-shared' utk traceability
+// - Auto-process [CALL: ...] bila ada dalam content
+export const sendMessageToAgent = (p: SendPayload) => {
+	const { chatId, fromAgentId, toAgentId, content, attachments } = p;
+
+	addMessage(chatId, toAgentId, {
+		role: 'user',
+		content,
+		...(attachments && attachments.length > 0 ? { attachments } : {})
+	});
+
+	emit('agent:file-shared', {
+		chatId,
+		fromAgentId,
+		toAgentId,
+		content,
+		attachmentCount: attachments?.length ?? 0
+	});
+
+	// Auto-trigger: pesan bisa mengandung [CALL: agen lain] — biarkan parser jalan
+	processMessage(chatId, fromAgentId, content);
+};
+
+// Ambil semua attachment dalam riwayat satu agen (utk UI/analisis)
+export const getAttachmentsByAgent = (chatId: string, agentId: string): Attachment[] => {
+	const history = get(chatTranscript(chatId));
+	return history
+		.filter((m) => m.agentId === agentId && m.attachments && m.attachments.length > 0)
+		.flatMap((m) => m.attachments!);
 };
 
 // ==================== Generator (Fase 3, item 3) ====================

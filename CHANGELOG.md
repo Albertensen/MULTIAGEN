@@ -1,5 +1,6 @@
 # CHANGELOG.md
 
+## [2026-08-06] feat(phase3) — Inter-Agent File Sharing & Attachment Payload: tipe Attachment (script/json/image/text) + field attachments di TranscriptMessage; sendMessageToAgent() + getAttachmentsByAgent() di orchestration.ts (kirim file antar agen via bus, event agent:file-shared, auto-process [CALL:]); harness /utest 3 skenario (a1→a2 script, a2→a3 json, a1→a3 image) terverifikasi runtime + persist localStorage
 ## [2026-08-06] docs — Strict GitHub & Vault Sync Protocol (Zero-Drift Policy): triple-sync wajib (roadmap + vault mainbrain/system-core + git push), zero unpushed commits, verifikasi remote; Fase 3 item 1-3 ditandai [x] lunas
 ## [2026-08-06] feat — Fase 3 item 3: auto-trigger generasi via Ollama. Backend routers/agents.py (/api/v1/agents/generate + /models, guard ENABLE_DEV_AGENTS_API), generateAgentResponse() di orchestration.ts, proxy /api di vite.config.ts, launcher relaunch_backend.sh/frontend.sh (PYTHONPATH=backend;site-packages fix), end-to-end terverifikasi di /utest
 ## [2026-08-06] wip — orchestration.ts (event bus + parser [CALL: agent], watchTranscript) + harness /utest; PROJECT_RULES SOP WIP commit; log sesi pause

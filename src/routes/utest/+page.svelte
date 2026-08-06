@@ -22,6 +22,7 @@
 		clearTranscript,
 		clearPersistedTranscripts
 	} from '$lib/stores/transcript/transcriptStore';
+	import type { Attachment } from '$lib/stores/transcript/transcriptStore';
 
 	import {
 		busHistory,
@@ -31,6 +32,8 @@
 		processMessage,
 		watchTranscript,
 		generateAgentResponse,
+		sendMessageToAgent,
+		getAttachmentsByAgent,
 		on,
 		clearBus
 	} from '$lib/stores/orchestration/orchestration';
@@ -151,6 +154,67 @@
 		}
 	};
 	on('agent:generated', handleGenerated);
+
+	// ===== File Sharing test (Fase 3, item 4) =====
+	let fileLog: string[] = [];
+	let fileAttachments = 0;
+
+	// a1 (Hermes) kirim script Python ke a2 (Planner)
+	const shareScript = () => {
+		const att: Attachment = {
+			id: `att-${Date.now()}`,
+			name: 'analyze.py',
+			type: 'script',
+			content: 'def analyze(data):\n    return { "count": len(data), "sum": sum(data) }\n'
+		};
+		sendMessageToAgent({
+			chatId: CHAT,
+			fromAgentId: 'a1',
+			toAgentId: 'a2',
+			content: 'Planner, ini script analisis — [CALL: planner] review',
+			attachments: [att]
+		});
+		fileLog = [...fileLog, `[share] a1 -> a2 script: ${att.name} (${att.content.length} chars)`];
+		fileAttachments = getAttachmentsByAgent(CHAT, 'a2').length;
+	};
+
+	// a2 (Planner) kirim JSON ke a3 (Critic)
+	const shareJson = () => {
+		const att: Attachment = {
+			id: `att-${Date.now()}`,
+			name: 'plan.json',
+			type: 'json',
+			content: '{"steps": ["API", "UI", "Auth"], "owner": "planner"}'
+		};
+		sendMessageToAgent({
+			chatId: CHAT,
+			fromAgentId: 'a2',
+			toAgentId: 'a3',
+			content: 'Critic, ini rencana JSON — [CALL: critic] cek',
+			attachments: [att]
+		});
+		fileLog = [...fileLog, `[share] a2 -> a3 json: ${att.name}`];
+		fileAttachments = getAttachmentsByAgent(CHAT, 'a3').length;
+	};
+
+	// a1 kirim image payload (base64 kecil) ke a3
+	const shareImage = () => {
+		const att: Attachment = {
+			id: `att-${Date.now()}`,
+			name: 'diagram.png',
+			type: 'image',
+			content: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+		};
+		sendMessageToAgent({
+			chatId: CHAT,
+			fromAgentId: 'a1',
+			toAgentId: 'a3',
+			content: 'Critic, ini diagram arsitektur — [CALL: critic] evaluasi',
+			attachments: [att]
+		});
+		fileLog = [...fileLog, `[share] a1 -> a3 image: ${att.name} (base64)`];
+		fileAttachments = getAttachmentsByAgent(CHAT, 'a3').length;
+	};
 </script>
 
 <h1>Agent Store Harness</h1>
@@ -256,5 +320,17 @@
 <button on:click={() => generateFor('a3', 'Review kualitas [CALL: planner]')}>
 	Critic -> generate & CALL planner
 </button>
+
+<hr />
+<h2>Inter-Agent File Sharing (Fase 3 item 4)</h2>
+<p><strong>total attachment diterima:</strong> {fileAttachments}</p>
+<ul>
+	{#each fileLog as l, i (i)}
+		<li>{l}</li>
+	{/each}
+</ul>
+<button on:click={shareScript}>a1 -> a2: kirim script Python (analyze.py)</button>
+<button on:click={shareJson}>a2 -> a3: kirim JSON (plan.json)</button>
+<button on:click={shareImage}>a1 -> a3: kirim image (diagram.png)</button>
 
 <pre>{JSON.stringify(summary)}</pre>

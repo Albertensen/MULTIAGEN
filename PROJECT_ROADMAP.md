@@ -50,7 +50,7 @@ Fokus pada pembangunan mesin komunikasi dan pertukaran aset agar agen bisa salin
 - [x] Rancang arsitektur Event Bus/Router (di Svelte atau FastAPI).
 - [x] Implementasi sistem Mention/Call melalui System Prompt (misal: pengenalan token [CALL: a2]).
 - [x] Buat trigger otomatis: Jika Agen A menyebut Agen B, sistem akan secara otomatis memicu generasi teks dari Agen B.
-- [ ] Inter-Agent File Sharing: Tambahkan dukungan payload attachment pada pesan sehingga agen dapat mengirim file (contoh: script Python, JSON, gambar) ke agen lain untuk dianalisis atau dieksekusi.
+- [x] Inter-Agent File Sharing: Tambahkan dukungan payload attachment pada pesan sehingga agen dapat mengirim file (contoh: script Python, JSON, gambar) ke agen lain untuk dianalisis atau dieksekusi.
 - [ ] Koneksi ke backend: endpoint FastAPI /api/v1/agents/* (CRUD agen + broadcast ke semua klien via websocket).
 - [ ] Hierarchical Task Delegation (Leader-Worker): Pengguna hanya perlu berinteraksi dengan satu agen Leader di dalam obrolan. Agen Leader ini bertugas secara otonom menganalisis permintaan, menyusun execution plan, dan mendelegasikan sub-tugas ke agen spesialis lainnya tanpa campur tangan manual.
 - [ ] Multi-Tenant & Custom Team Workspaces: Platform ini didesain agar multi-user. Setiap pengguna dapat membuat ruang kerja mereka sendiri dan merakit 'Tim Virtual' yang terdiri dari berbagai agen spesialis sesuai dengan kebutuhan proyek mereka.
