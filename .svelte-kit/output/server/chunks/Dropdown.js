@@ -1,4 +1,4 @@
-import { f as fallback, a as attr, j as slot, d as attr_class, g as clsx, h as attr_style, b as bind_props } from "./root.js";
+import { f as fallback, a as attr, j as slot, d as attr_class, g as clsx, h as attr_style, b as bind_props } from "./index2.js";
 import { o as onDestroy, t as tick } from "./index-server.js";
 function Dropdown($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {

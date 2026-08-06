@@ -1,4 +1,4 @@
-import { f as fallback, a as attr, d as attr_class, g as clsx, j as slot, b as bind_props } from "./root.js";
+import { f as fallback, a as attr, d as attr_class, g as clsx, j as slot, b as bind_props } from "./index2.js";
 function XMark($$renderer, $$props) {
   let className = fallback($$props["className"], "size-3.5");
   let strokeWidth = fallback($$props["strokeWidth"], "2");

@@ -1,5 +1,5 @@
-import { V as RETRIEVAL_API_BASE_URL } from "./index3.js";
-import { f as fallback, o as getContext, k as escape_html, c as store_get, j as slot, u as unsubscribe_stores, b as bind_props } from "./root.js";
+import { V as RETRIEVAL_API_BASE_URL } from "./index4.js";
+import { f as fallback, m as getContext, k as escape_html, c as store_get, j as slot, u as unsubscribe_stores, b as bind_props } from "./index2.js";
 const processYoutubeVideo = async (token, url) => {
   let error = null;
   const res = await fetch(`${RETRIEVAL_API_BASE_URL}/process/youtube`, {

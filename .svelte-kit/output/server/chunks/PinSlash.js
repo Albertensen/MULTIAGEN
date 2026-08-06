@@ -1,9 +1,9 @@
-import { a as WEBUI_API_BASE_URL, W as WEBUI_BASE_URL } from "./index3.js";
-import { f as fallback, h as attr_style, t as stringify, e as ensure_array_like, j as slot, b as bind_props, o as getContext, c as store_get, u as unsubscribe_stores, a as attr, k as escape_html, w as invalid_default_snippet, d as attr_class, g as clsx } from "./root.js";
+import { a as WEBUI_API_BASE_URL, W as WEBUI_BASE_URL } from "./index4.js";
+import { f as fallback, h as attr_style, q as stringify, e as ensure_array_like, j as slot, b as bind_props, m as getContext, c as store_get, u as unsubscribe_stores, a as attr, k as escape_html, v as invalid_default_snippet, d as attr_class, g as clsx } from "./index2.js";
 /* empty css                                          */
 import { D as Dropdown } from "./Dropdown.js";
 import { T as Tooltip } from "./Tooltip.js";
-import { s as settings, ai as emojiShortCodes } from "./index2.js";
+import { s as settings, ai as emojiShortCodes } from "./index3.js";
 const getSessionUser = async (token) => {
   let error = null;
   const res = await fetch(`${WEBUI_API_BASE_URL}/auths/`, {

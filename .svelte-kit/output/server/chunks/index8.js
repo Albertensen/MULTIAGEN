@@ -1,44 +1,81 @@
-import { a as WEBUI_API_BASE_URL } from "./index3.js";
-const getFunctions = async (token = "") => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err.detail;
-    return null;
-  });
-  if (error) {
-    throw error;
+import { a as WEBUI_API_BASE_URL, U as splitStream } from "./index4.js";
+const uploadFile = async (token, file, metadata, process, stream = true) => {
+  const data = new FormData();
+  data.append("file", file);
+  if (metadata) {
+    data.append("metadata", JSON.stringify(metadata));
   }
-  return res;
-};
-const loadFunctionByUrl = async (token = "", url) => {
+  const searchParams = new URLSearchParams();
+  if (process !== void 0 && process !== null) {
+    searchParams.append("process", String(process));
+  }
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/load/url`, {
+  const res = await fetch(`${WEBUI_API_BASE_URL}/files/?${searchParams.toString()}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({
-      url
-    })
+    body: data
   }).then(async (res2) => {
     if (!res2.ok) throw await res2.json();
     return res2.json();
-  }).then((json) => {
-    return json;
+  }).catch((err) => {
+    error = err.detail || err.message;
+    return null;
+  });
+  if (error) {
+    throw error;
+  }
+  if (res && stream) {
+    const status = await getFileProcessStatus(token, res.id);
+    if (status && status.ok) {
+      const reader = status.body.pipeThrough(new TextDecoderStream()).pipeThrough(splitStream("\n")).getReader();
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          break;
+        }
+        try {
+          let lines = value.split("\n");
+          for (const line of lines) {
+            if (line !== "") {
+              /* @__PURE__ */ console.log(line);
+              if (line === "data: [DONE]") {
+                /* @__PURE__ */ console.log(line);
+              } else {
+                let data2 = JSON.parse(line.replace(/^data: /, ""));
+                /* @__PURE__ */ console.log(data2);
+                if (data2?.error) {
+                  /* @__PURE__ */ console.error(data2.error);
+                  res.error = data2.error;
+                }
+                if (res?.data) {
+                  res.data = data2;
+                }
+              }
+            }
+          }
+        } catch (error2) {
+        }
+      }
+    }
+  }
+  if (error) {
+    throw error;
+  }
+  return res;
+};
+const getFileProcessStatus = async (token, id) => {
+  const queryParams = new URLSearchParams();
+  queryParams.append("stream", "true");
+  let error = null;
+  const res = await fetch(`${WEBUI_API_BASE_URL}/files/${id}/process/status?${queryParams}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      authorization: `Bearer ${token}`
+    }
   }).catch((err) => {
     error = err.detail;
     return null;
@@ -48,9 +85,56 @@ const loadFunctionByUrl = async (token = "", url) => {
   }
   return res;
 };
-const getFunctionValvesById = async (token, id) => {
+const searchFiles = async (token, filename = "*", skip = 0, limit = 50, content = false) => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/id/${id}/valves`, {
+  const searchParams = new URLSearchParams();
+  searchParams.append("filename", filename);
+  searchParams.append("skip", String(skip));
+  searchParams.append("limit", String(limit));
+  searchParams.append("content", String(content));
+  const res = await fetch(`${WEBUI_API_BASE_URL}/files/search?${searchParams.toString()}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`
+    }
+  }).then(async (res2) => {
+    if (!res2.ok) throw await res2.json();
+    return res2.json();
+  }).catch((err) => {
+    error = err.detail;
+    return [];
+  });
+  if (error) {
+    throw error;
+  }
+  return res;
+};
+const getFileCount = async (token = "") => {
+  let error = null;
+  const res = await fetch(`${WEBUI_API_BASE_URL}/files/count`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`
+    }
+  }).then(async (res2) => {
+    if (!res2.ok) throw await res2.json();
+    return res2.json();
+  }).catch((err) => {
+    error = err;
+    return null;
+  });
+  if (error) {
+    throw error;
+  }
+  return res;
+};
+const getFileById = async (token, id) => {
+  let error = null;
+  const res = await fetch(`${WEBUI_API_BASE_URL}/files/${id}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -71,66 +155,17 @@ const getFunctionValvesById = async (token, id) => {
   }
   return res;
 };
-const getFunctionValvesSpecById = async (token, id) => {
+const getFileContentById = async (id) => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/id/${id}/valves/spec`, {
+  const res = await fetch(`${WEBUI_API_BASE_URL}/files/${id}/content`, {
     method: "GET",
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
+      Accept: "application/json"
+    },
+    credentials: "include"
   }).then(async (res2) => {
     if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err.detail;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getUserValvesById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/id/${id}/valves/user`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err.detail;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getUserValvesSpecById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/id/${id}/valves/user/spec`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
+    return await res2.arrayBuffer();
   }).catch((err) => {
     error = err.detail;
     return null;
@@ -141,11 +176,10 @@ const getUserValvesSpecById = async (token, id) => {
   return res;
 };
 export {
-  getUserValvesSpecById as a,
-  getFunctionValvesById as b,
-  getFunctionValvesSpecById as c,
-  getFunctions as d,
-  getUserValvesById as g,
-  loadFunctionByUrl as l
+  getFileById as a,
+  getFileContentById as b,
+  getFileCount as g,
+  searchFiles as s,
+  uploadFile as u
 };
 //# sourceMappingURL=index8.js.map

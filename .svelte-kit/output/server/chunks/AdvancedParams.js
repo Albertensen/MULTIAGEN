@@ -1,4 +1,4 @@
-import { o as getContext, f as fallback, b as bind_props, d as attr_class, g as clsx, c as store_get, a as attr, k as escape_html, e as ensure_array_like, u as unsubscribe_stores } from "./root.js";
+import { m as getContext, f as fallback, b as bind_props, d as attr_class, g as clsx, c as store_get, a as attr, k as escape_html, e as ensure_array_like, u as unsubscribe_stores } from "./index2.js";
 import { S as Switch_1 } from "./Switch.js";
 import { T as Textarea } from "./EllipsisHorizontal.js";
 import { T as Tooltip } from "./Tooltip.js";

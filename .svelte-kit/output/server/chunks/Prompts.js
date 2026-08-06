@@ -1,4 +1,4 @@
-import { f as fallback, o as getContext, b as bind_props, q as head, k as escape_html, c as store_get, u as unsubscribe_stores } from "./root.js";
+import { f as fallback, m as getContext, b as bind_props, p as head, k as escape_html, c as store_get, u as unsubscribe_stores } from "./index2.js";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime.js";
 import { o as onDestroy } from "./index-server.js";
@@ -8,9 +8,10 @@ import "@sveltejs/kit/internal";
 import "./exports.js";
 import "./utils.js";
 import "@sveltejs/kit/internal/server";
+import "./root.js";
 import "./state.svelte.js";
-import { W as WEBUI_NAME } from "./index2.js";
-import "./index3.js";
+import { W as WEBUI_NAME } from "./index3.js";
+import "./index4.js";
 import "dompurify";
 import "marked";
 /* empty css                                            */

@@ -1,4 +1,4 @@
-import { f as fallback, a as attr, d as attr_class, g as clsx, b as bind_props, o as getContext, c as store_get, k as escape_html, j as slot, u as unsubscribe_stores, t as stringify } from "./root.js";
+import { f as fallback, a as attr, d as attr_class, g as clsx, b as bind_props, m as getContext, c as store_get, k as escape_html, j as slot, u as unsubscribe_stores, q as stringify } from "./index2.js";
 import { v4 } from "uuid";
 import dayjs from "dayjs";
 import "dayjs/locale/af.js";

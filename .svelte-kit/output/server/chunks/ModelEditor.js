@@ -1,7 +1,7 @@
-import { a as WEBUI_API_BASE_URL, p as extractInputVariables } from "./index3.js";
-import { o as getContext, f as fallback, b as bind_props } from "./root.js";
+import { a as WEBUI_API_BASE_URL, p as extractInputVariables } from "./index4.js";
+import { m as getContext, f as fallback, b as bind_props } from "./index2.js";
 import "./Toaster.svelte_svelte_type_style_lang.js";
-import "./index2.js";
+import "./index3.js";
 import "dompurify";
 import "marked";
 import "dayjs";
@@ -112,6 +112,7 @@ import "@sveltejs/kit/internal";
 import "./exports.js";
 import "./utils.js";
 import "@sveltejs/kit/internal/server";
+import "./root.js";
 import "./state.svelte.js";
 /* empty css                                    */
 import "file-saver";

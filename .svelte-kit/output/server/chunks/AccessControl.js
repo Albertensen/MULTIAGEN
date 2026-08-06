@@ -1,5 +1,5 @@
-import { o as getContext, f as fallback, b as bind_props, k as escape_html, c as store_get, u as unsubscribe_stores, e as ensure_array_like, a as attr } from "./root.js";
-import { a as WEBUI_API_BASE_URL } from "./index3.js";
+import { m as getContext, f as fallback, b as bind_props, k as escape_html, c as store_get, u as unsubscribe_stores, e as ensure_array_like, a as attr } from "./index2.js";
+import { a as WEBUI_API_BASE_URL } from "./index4.js";
 import { d as getUserInfoById } from "./UserStatusLinkPreview.js";
 import { X as XMark } from "./XMark.js";
 import { B as Badge } from "./Badge.js";

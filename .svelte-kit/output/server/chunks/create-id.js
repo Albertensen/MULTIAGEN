@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 import parse from "style-to-object";
-import { J as ATTACHMENT_KEY, z as derived, y as hasContext, o as getContext, p as setContext, K as run } from "./root.js";
+import { ax as ATTACHMENT_KEY, y as derived, x as hasContext, m as getContext, o as setContext, ay as run } from "./index2.js";
 const SvelteMap = globalThis.Map;
 function createSubscriber(_) {
   return () => {

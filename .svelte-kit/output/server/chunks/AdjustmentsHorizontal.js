@@ -1,4 +1,4 @@
-import { f as fallback, d as attr_class, g as clsx, a as attr, b as bind_props } from "./root.js";
+import { f as fallback, d as attr_class, g as clsx, a as attr, b as bind_props } from "./index2.js";
 function AdjustmentsHorizontal($$renderer, $$props) {
   let className = fallback($$props["className"], "w-4 h-4");
   let strokeWidth = fallback($$props["strokeWidth"], "1.5");

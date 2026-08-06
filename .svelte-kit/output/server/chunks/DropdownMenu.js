@@ -1,4 +1,4 @@
-import { f as fallback, d as attr_class, h as attr_style, j as slot, b as bind_props } from "./root.js";
+import { f as fallback, d as attr_class, h as attr_style, j as slot, b as bind_props } from "./index2.js";
 function DropdownMenu($$renderer, $$props) {
   let className = fallback($$props["className"], "");
   let style = fallback($$props["style"], "");

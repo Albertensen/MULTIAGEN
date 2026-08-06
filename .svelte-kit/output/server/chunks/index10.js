@@ -1,7 +1,7 @@
-import { a as WEBUI_API_BASE_URL } from "./index3.js";
-const createNewSkill = async (token, skill) => {
+import { a as WEBUI_API_BASE_URL } from "./index4.js";
+const loadToolByUrl = async (token = "", url) => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/skills/create`, {
+  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/load/url`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -9,11 +9,13 @@ const createNewSkill = async (token, skill) => {
       authorization: `Bearer ${token}`
     },
     body: JSON.stringify({
-      ...skill
+      url
     })
   }).then(async (res2) => {
     if (!res2.ok) throw await res2.json();
     return res2.json();
+  }).then((json) => {
+    return json;
   }).catch((err) => {
     error = err.detail;
     return null;
@@ -23,9 +25,9 @@ const createNewSkill = async (token, skill) => {
   }
   return res;
 };
-const getSkills = async (token = "") => {
+const getTools = async (token = "") => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/skills/`, {
+  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -46,21 +48,89 @@ const getSkills = async (token = "") => {
   }
   return res;
 };
-const updateSkillAccessGrants = async (token, id, accessGrants) => {
+const getToolValvesById = async (token, id) => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/skills/id/${id}/access/update`, {
-    method: "POST",
+  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/id/${id}/valves`, {
+    method: "GET",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
       authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      access_grants: accessGrants
-    })
+    }
   }).then(async (res2) => {
     if (!res2.ok) throw await res2.json();
     return res2.json();
+  }).then((json) => {
+    return json;
+  }).catch((err) => {
+    error = err.detail;
+    return null;
+  });
+  if (error) {
+    throw error;
+  }
+  return res;
+};
+const getToolValvesSpecById = async (token, id) => {
+  let error = null;
+  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/id/${id}/valves/spec`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`
+    }
+  }).then(async (res2) => {
+    if (!res2.ok) throw await res2.json();
+    return res2.json();
+  }).then((json) => {
+    return json;
+  }).catch((err) => {
+    error = err.detail;
+    return null;
+  });
+  if (error) {
+    throw error;
+  }
+  return res;
+};
+const getUserValvesById = async (token, id) => {
+  let error = null;
+  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/id/${id}/valves/user`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`
+    }
+  }).then(async (res2) => {
+    if (!res2.ok) throw await res2.json();
+    return res2.json();
+  }).then((json) => {
+    return json;
+  }).catch((err) => {
+    error = err.detail;
+    return null;
+  });
+  if (error) {
+    throw error;
+  }
+  return res;
+};
+const getUserValvesSpecById = async (token, id) => {
+  let error = null;
+  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/id/${id}/valves/user/spec`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`
+    }
+  }).then(async (res2) => {
+    if (!res2.ok) throw await res2.json();
+    return res2.json();
+  }).then((json) => {
+    return json;
   }).catch((err) => {
     error = err.detail;
     return null;
@@ -71,8 +141,11 @@ const updateSkillAccessGrants = async (token, id, accessGrants) => {
   return res;
 };
 export {
-  createNewSkill as c,
-  getSkills as g,
-  updateSkillAccessGrants as u
+  getUserValvesSpecById as a,
+  getToolValvesById as b,
+  getToolValvesSpecById as c,
+  getTools as d,
+  getUserValvesById as g,
+  loadToolByUrl as l
 };
 //# sourceMappingURL=index10.js.map

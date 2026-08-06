@@ -1,5 +1,5 @@
-import { o as getContext, q as head, d as attr_class, c as store_get, k as escape_html, j as slot, u as unsubscribe_stores, a as attr } from "../../../../chunks/root.js";
-import { W as WEBUI_NAME, h as showSidebar, m as mobile } from "../../../../chunks/index2.js";
+import { m as getContext, p as head, d as attr_class, c as store_get, k as escape_html, j as slot, u as unsubscribe_stores, a as attr } from "../../../../chunks/index2.js";
+import { W as WEBUI_NAME, h as showSidebar, m as mobile } from "../../../../chunks/index3.js";
 import { p as page } from "../../../../chunks/stores.js";
 import { T as Tooltip } from "../../../../chunks/Tooltip.js";
 import { S as Sidebar } from "../../../../chunks/Sidebar.js";

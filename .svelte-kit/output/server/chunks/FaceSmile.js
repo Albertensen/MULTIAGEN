@@ -1,4 +1,4 @@
-import { f as fallback, d as attr_class, j as slot, b as bind_props, t as stringify, p as setContext, y as hasContext, o as getContext, s as sanitize_props, l as rest_props, c as store_get, m as attributes, u as unsubscribe_stores, a as attr, g as clsx } from "./root.js";
+import { f as fallback, d as attr_class, j as slot, b as bind_props, q as stringify, o as setContext, x as hasContext, m as getContext, s as sanitize_props, r as rest_props, c as store_get, l as attributes, u as unsubscribe_stores, a as attr, g as clsx } from "./index2.js";
 import { o as onDestroy } from "./index-server.js";
 /* empty css                                     */
 import { nanoid } from "nanoid/non-secure";

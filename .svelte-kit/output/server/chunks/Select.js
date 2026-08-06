@@ -1,4 +1,4 @@
-import { f as fallback, d as attr_class, g as clsx, a as attr, j as slot, b as bind_props, k as escape_html, e as ensure_array_like } from "./root.js";
+import { f as fallback, d as attr_class, g as clsx, a as attr, j as slot, b as bind_props, k as escape_html, e as ensure_array_like } from "./index2.js";
 import { D as DropdownMenu } from "./DropdownMenu.js";
 function Select($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {

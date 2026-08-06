@@ -1,4 +1,4 @@
-import { f as fallback, d as attr_class, g as clsx, b as bind_props } from "./root.js";
+import { f as fallback, d as attr_class, g as clsx, b as bind_props } from "./index2.js";
 function Spinner($$renderer, $$props) {
   let className = fallback($$props["className"], "size-4");
   $$renderer.push(`<div class="flex justify-center text-center"><svg aria-hidden="true"${attr_class(clsx(className))} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">`);

@@ -1,5 +1,5 @@
-import { a as WEBUI_API_BASE_URL } from "./index3.js";
-import { f as fallback, d as attr_class, g as clsx, a as attr, b as bind_props } from "./root.js";
+import { a as WEBUI_API_BASE_URL } from "./index4.js";
+import { f as fallback, d as attr_class, g as clsx, a as attr, b as bind_props } from "./index2.js";
 const createNewChannel = async (token = "", channel) => {
   let error = null;
   const res = await fetch(`${WEBUI_API_BASE_URL}/channels/create`, {

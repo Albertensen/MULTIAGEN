@@ -1,9 +1,10 @@
-import { o as getContext, q as head, k as escape_html, c as store_get, u as unsubscribe_stores } from "../../../../chunks/root.js";
-import { W as WEBUI_NAME } from "../../../../chunks/index2.js";
+import { m as getContext, p as head, k as escape_html, c as store_get, u as unsubscribe_stores } from "../../../../chunks/index2.js";
+import { W as WEBUI_NAME } from "../../../../chunks/index3.js";
 import "@sveltejs/kit/internal";
 import "../../../../chunks/exports.js";
 import "../../../../chunks/utils.js";
 import "@sveltejs/kit/internal/server";
+import "../../../../chunks/root.js";
 import "../../../../chunks/state.svelte.js";
 function _layout($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {

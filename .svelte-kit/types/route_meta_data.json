@@ -95,6 +95,9 @@
 	"/s/[id]": [
 		"src/routes/+layout.js"
 	],
+	"/utest": [
+		"src/routes/+layout.js"
+	],
 	"/watch": [
 		"src/routes/+layout.js"
 	],

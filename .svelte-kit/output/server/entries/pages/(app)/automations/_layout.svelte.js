@@ -1,12 +1,13 @@
-import { o as getContext, p as setContext, d as attr_class, c as store_get, k as escape_html, j as slot, u as unsubscribe_stores, a as attr, i as spread_props } from "../../../../chunks/root.js";
+import { m as getContext, o as setContext, d as attr_class, c as store_get, k as escape_html, j as slot, u as unsubscribe_stores, a as attr, i as spread_props } from "../../../../chunks/index2.js";
 import { w as writable } from "../../../../chunks/index.js";
 import "@sveltejs/kit/internal";
 import "../../../../chunks/exports.js";
 import "../../../../chunks/utils.js";
 import "@sveltejs/kit/internal/server";
+import "../../../../chunks/root.js";
 import "../../../../chunks/state.svelte.js";
-import { h as showSidebar, m as mobile } from "../../../../chunks/index2.js";
-import { a as WEBUI_API_BASE_URL, f as formatNumber } from "../../../../chunks/index3.js";
+import { h as showSidebar, m as mobile } from "../../../../chunks/index3.js";
+import { a as WEBUI_API_BASE_URL, f as formatNumber } from "../../../../chunks/index4.js";
 import { S as Sidebar } from "../../../../chunks/Sidebar.js";
 import { T as Tooltip } from "../../../../chunks/Tooltip.js";
 const getAutomationItems = async (token, query, status, page, folder_id) => {

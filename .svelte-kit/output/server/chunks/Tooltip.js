@@ -1,4 +1,4 @@
-import { f as fallback, G as element, j as slot, b as bind_props, d as attr_class, g as clsx } from "./root.js";
+import { f as fallback, av as element, j as slot, b as bind_props, d as attr_class, g as clsx } from "./index2.js";
 import "dompurify";
 import { o as onDestroy } from "./index-server.js";
 function Tooltip($$renderer, $$props) {

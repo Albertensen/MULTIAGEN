@@ -1,4 +1,4 @@
-import { f as fallback, d as attr_class, j as slot, b as bind_props, t as stringify } from "./root.js";
+import { f as fallback, d as attr_class, j as slot, b as bind_props, q as stringify } from "./index2.js";
 import { o as onDestroy } from "./index-server.js";
 /* empty css                                    */
 function Modal($$renderer, $$props) {

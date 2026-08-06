@@ -1,7 +1,30 @@
-import { a as WEBUI_API_BASE_URL } from "./index3.js";
-const loadToolByUrl = async (token = "", url) => {
+import { a as WEBUI_API_BASE_URL } from "./index4.js";
+const getFunctions = async (token = "") => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/load/url`, {
+  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`
+    }
+  }).then(async (res2) => {
+    if (!res2.ok) throw await res2.json();
+    return res2.json();
+  }).then((json) => {
+    return json;
+  }).catch((err) => {
+    error = err.detail;
+    return null;
+  });
+  if (error) {
+    throw error;
+  }
+  return res;
+};
+const loadFunctionByUrl = async (token = "", url) => {
+  let error = null;
+  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/load/url`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -25,9 +48,9 @@ const loadToolByUrl = async (token = "", url) => {
   }
   return res;
 };
-const getTools = async (token = "") => {
+const getFunctionValvesById = async (token, id) => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/`, {
+  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/id/${id}/valves`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -48,32 +71,9 @@ const getTools = async (token = "") => {
   }
   return res;
 };
-const getToolValvesById = async (token, id) => {
+const getFunctionValvesSpecById = async (token, id) => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/id/${id}/valves`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err.detail;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getToolValvesSpecById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/id/${id}/valves/spec`, {
+  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/id/${id}/valves/spec`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -96,7 +96,7 @@ const getToolValvesSpecById = async (token, id) => {
 };
 const getUserValvesById = async (token, id) => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/id/${id}/valves/user`, {
+  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/id/${id}/valves/user`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -119,7 +119,7 @@ const getUserValvesById = async (token, id) => {
 };
 const getUserValvesSpecById = async (token, id) => {
   let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/tools/id/${id}/valves/user/spec`, {
+  const res = await fetch(`${WEBUI_API_BASE_URL}/functions/id/${id}/valves/user/spec`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -142,10 +142,10 @@ const getUserValvesSpecById = async (token, id) => {
 };
 export {
   getUserValvesSpecById as a,
-  getToolValvesById as b,
-  getToolValvesSpecById as c,
-  getTools as d,
+  getFunctionValvesById as b,
+  getFunctionValvesSpecById as c,
+  getFunctions as d,
   getUserValvesById as g,
-  loadToolByUrl as l
+  loadFunctionByUrl as l
 };
 //# sourceMappingURL=index9.js.map

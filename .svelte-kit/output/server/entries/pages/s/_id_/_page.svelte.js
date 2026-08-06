@@ -1,13 +1,13 @@
-import { o as getContext, c as store_get, u as unsubscribe_stores, q as head, k as escape_html, d as attr_class, a as attr } from "../../../../chunks/root.js";
+import { m as getContext, c as store_get, u as unsubscribe_stores, p as head, k as escape_html, d as attr_class, a as attr } from "../../../../chunks/index2.js";
 import { t as tick } from "../../../../chunks/index-server.js";
 import { g as goto } from "../../../../chunks/client.js";
 import { p as page } from "../../../../chunks/stores.js";
 import dayjs from "dayjs";
-import { s as settings, w as models, c as config, b as chatId, al as getChatByShareId, u as user, W as WEBUI_NAME } from "../../../../chunks/index2.js";
-import { h as createMessagesList, z as convertMessagesToHistory } from "../../../../chunks/index3.js";
+import { s as settings, w as models, c as config, b as chatId, al as getChatByShareId, u as user, W as WEBUI_NAME } from "../../../../chunks/index3.js";
+import { h as createMessagesList, z as convertMessagesToHistory } from "../../../../chunks/index4.js";
 import { M as Messages } from "../../../../chunks/Messages.js";
 import { e as getUserSettings, d as getUserInfoById } from "../../../../chunks/UserStatusLinkPreview.js";
-import { c as getModels } from "../../../../chunks/index6.js";
+import { c as getModels } from "../../../../chunks/index7.js";
 import "../../../../chunks/Toaster.svelte_svelte_type_style_lang.js";
 import localizedFormat from "dayjs/plugin/localizedFormat.js";
 function _page($$renderer, $$props) {

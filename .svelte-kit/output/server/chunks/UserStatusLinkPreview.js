@@ -1,12 +1,13 @@
-import { f as fallback, c as store_get, a as attr, t as stringify, d as attr_class, g as clsx, k as escape_html, u as unsubscribe_stores, b as bind_props, z as derived, H as getAllContexts, I as on, i as spread_props, A as props_id, m as attributes, o as getContext, e as ensure_array_like } from "./root.js";
+import { f as fallback, c as store_get, a as attr, q as stringify, d as attr_class, g as clsx, k as escape_html, u as unsubscribe_stores, b as bind_props, y as derived, aw as getAllContexts, i as spread_props, z as props_id, l as attributes, m as getContext, e as ensure_array_like } from "./index2.js";
 import { i as createSubscriber, j as defaultWindow, k as isObject, h as boxWith, w as watch, C as Context, e as createBitsAttrs, n as noop, l as executeCallbacks, o as ESCAPE, s as simpleBox, p as composeHandlers, q as SvelteMap, r as boxFrom, d as attachRef, t as cssToStyleObj, u as styleToString, m as mergeProps, v as getDataOpenClosed, x as boolToStr, g as createId } from "./create-id.js";
 import "clsx";
-import { i as getUserPosition, a as WEBUI_API_BASE_URL, W as WEBUI_BASE_URL } from "./index3.js";
-import { U as shortCodesToEmojis, u as user } from "./index2.js";
+import { i as getUserPosition, a as WEBUI_API_BASE_URL, W as WEBUI_BASE_URL } from "./index4.js";
+import { U as shortCodesToEmojis, u as user } from "./index3.js";
 import "@sveltejs/kit/internal";
 import "./exports.js";
 import "./utils.js";
 import "@sveltejs/kit/internal/server";
+import { o as on } from "./root.js";
 import "./state.svelte.js";
 import { T as Tooltip } from "./Tooltip.js";
 import { t as tick, m as mount, u as unmount } from "./index-server.js";

@@ -1,4 +1,4 @@
-import { f as fallback, j as slot, b as bind_props } from "./root.js";
+import { f as fallback, j as slot, b as bind_props } from "./index2.js";
 function DropdownSub($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {
     let contentClass = fallback($$props["contentClass"], "select-none rounded-2xl p-1 z-50 bg-white dark:bg-gray-850 dark:text-white shadow-lg border border-gray-100 dark:border-gray-800");

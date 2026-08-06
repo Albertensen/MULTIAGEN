@@ -1,4 +1,4 @@
-import { o as getContext, f as fallback, d as attr_class, g as clsx, a as attr, k as escape_html, c as store_get, u as unsubscribe_stores, b as bind_props, e as ensure_array_like, j as slot } from "./root.js";
+import { m as getContext, f as fallback, d as attr_class, g as clsx, a as attr, k as escape_html, c as store_get, u as unsubscribe_stores, b as bind_props, e as ensure_array_like, j as slot } from "./index2.js";
 import DOMPurify from "dompurify";
 import { o as onDestroy, t as tick } from "./index-server.js";
 import { marked } from "marked";

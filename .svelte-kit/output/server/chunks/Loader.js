@@ -1,11 +1,11 @@
-import { j as slot, f as fallback, a as attr, d as attr_class, b as bind_props, t as stringify, g as clsx, e as ensure_array_like, k as escape_html, c as store_get, u as unsubscribe_stores, o as getContext } from "./root.js";
-import { W as WEBUI_BASE_URL, a as WEBUI_API_BASE_URL, u as formatFileSize, H as getLineCount } from "./index3.js";
+import { j as slot, f as fallback, a as attr, d as attr_class, b as bind_props, q as stringify, g as clsx, e as ensure_array_like, k as escape_html, c as store_get, u as unsubscribe_stores, m as getContext } from "./index2.js";
+import { W as WEBUI_BASE_URL, a as WEBUI_API_BASE_URL, u as formatFileSize, H as getLineCount } from "./index4.js";
 import { s as safeImageUrl, M as Markdown, c as ConsecutiveDetailsGroup, T as ToolCallDisplay, P as PanzoomContainer, d as CodeBlock, R as Reset } from "./FileItemModal.svelte_svelte_type_style_lang.js";
 import { C as Collapsible } from "./Download.js";
-import { s as settings } from "./index2.js";
+import { s as settings } from "./index3.js";
 import DOMPurify from "dompurify";
 import { o as onDestroy, t as tick } from "./index-server.js";
-import { a as getFileById, b as getFileContentById } from "./index7.js";
+import { a as getFileById, b as getFileContentById } from "./index8.js";
 import { M as Modal } from "./Modal.js";
 import { X as XMark } from "./XMark.js";
 import { S as Switch_1 } from "./Switch.js";

@@ -1,203 +1,37 @@
-import { a as WEBUI_API_BASE_URL } from "./index3.js";
-const createNewFolder = async (token, folderForm) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/folders/`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(folderForm)
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).catch((err) => {
-    error = err.detail;
-    return null;
+import i18next from "i18next";
+import "i18next-resources-to-backend";
+import "i18next-browser-languagedetector";
+import { w as writable } from "./index.js";
+const createI18nStore = (i18n2) => {
+  const i18nWritable = writable(i18n2);
+  i18n2.on("initialized", () => {
+    i18nWritable.set(i18n2);
   });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getFolders = async (token = "") => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/folders/`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
+  i18n2.on("loaded", () => {
+    i18nWritable.set(i18n2);
+  });
+  i18n2.on("added", () => i18nWritable.set(i18n2));
+  i18n2.on("languageChanged", (lang) => {
+    i18nWritable.set(i18n2);
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("lang", lang);
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err.detail;
-    return null;
   });
-  if (error) {
-    throw error;
-  }
-  return res;
+  return i18nWritable;
 };
-const getFolderById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/folders/${id}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err.detail;
-    return null;
+const createIsLoadingStore = (i18n2) => {
+  const isLoading2 = writable(false);
+  i18n2.on("loaded", (resources) => {
+    isLoading2.set(Object.keys(resources).length === 0);
   });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const updateFolderById = async (token, id, folderForm) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/folders/${id}/update`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(folderForm)
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err.detail;
-    return null;
+  i18n2.on("failedLoading", () => {
+    isLoading2.set(true);
   });
-  if (error) {
-    throw error;
-  }
-  return res;
+  return isLoading2;
 };
-const markFolderChatsReadById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/folders/${id}/read`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).catch((err) => {
-    error = err.detail;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const updateFolderAccessById = async (token, id, accessGrants) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/folders/${id}/access/update`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({ access_grants: accessGrants })
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).catch((err) => {
-    error = err.detail;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getSharedFolders = async (token) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/folders/shared`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).catch((err) => {
-    error = err.detail;
-    return [];
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getSharedFolderChats = async (token, folderId, params = {}) => {
-  let error = null;
-  const searchParams = new URLSearchParams();
-  if (params.page !== void 0 && params.page !== null) {
-    searchParams.append("page", `${params.page}`);
-  }
-  if (params.sortBy) {
-    searchParams.append("sort_by", params.sortBy);
-  }
-  if (params.sortDir) {
-    searchParams.append("sort_dir", params.sortDir);
-  }
-  const query = searchParams.toString();
-  const res = await fetch(
-    `${WEBUI_API_BASE_URL}/folders/${folderId}/shared/chats${query ? `?${query}` : ""}`,
-    {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`
-      }
-    }
-  ).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).catch((err) => {
-    error = err.detail;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
+const i18n = createI18nStore(i18next);
+createIsLoadingStore(i18next);
 export {
-  getFolderById as a,
-  getFolders as b,
-  createNewFolder as c,
-  getSharedFolders as d,
-  updateFolderAccessById as e,
-  getSharedFolderChats as g,
-  markFolderChatsReadById as m,
-  updateFolderById as u
+  i18n as i
 };
 //# sourceMappingURL=index5.js.map

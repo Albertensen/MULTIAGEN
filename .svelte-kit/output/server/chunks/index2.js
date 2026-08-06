@@ -1,2889 +1,3522 @@
-import { a as WEBUI_API_BASE_URL, v as getTimeRange, G as APP_NAME } from "./index3.js";
-import { a as readonly, w as writable } from "./index.js";
-const emojiShortCodes = {
-  "2049": "interrobang",
-  "2122": "tm",
-  "2139": "information_source",
-  "2194": "left_right_arrow",
-  "2195": "arrow_up_down",
-  "2196": "arrow_upper_left",
-  "2197": "arrow_upper_right",
-  "2198": "arrow_lower_right",
-  "2199": "arrow_lower_left",
-  "2328": "keyboard",
-  "2600": "sunny",
-  "2601": "cloud",
-  "2602": "umbrella",
-  "2603": "snowman",
-  "2604": "comet",
-  "2611": "ballot_box_with_check",
-  "2614": "umbrella_with_rain_drops",
-  "2615": "coffee",
-  "2618": "shamrock",
-  "2620": "skull_and_crossbones",
-  "2622": "radioactive_sign",
-  "2623": "biohazard_sign",
-  "2626": "orthodox_cross",
-  "2638": "wheel_of_dharma",
-  "2639": "white_frowning_face",
-  "2640": "female_sign",
-  "2642": "male_sign",
-  "2648": "aries",
-  "2649": "taurus",
-  "2650": "sagittarius",
-  "2651": "capricorn",
-  "2652": "aquarius",
-  "2653": "pisces",
-  "2660": "spades",
-  "2663": "clubs",
-  "2665": "hearts",
-  "2666": "diamonds",
-  "2668": "hotsprings",
-  "2692": "hammer_and_pick",
-  "2693": "anchor",
-  "2694": "crossed_swords",
-  "2695": [
-    "medical_symbol",
-    "staff_of_aesculapius"
-  ],
-  "2696": "scales",
-  "2697": "alembic",
-  "2699": "gear",
-  "2702": "scissors",
-  "2705": "white_check_mark",
-  "2708": "airplane",
-  "2709": [
-    "email",
-    "envelope"
-  ],
-  "2712": "black_nib",
-  "2714": "heavy_check_mark",
-  "2716": "heavy_multiplication_x",
-  "2721": "star_of_david",
-  "2728": "sparkles",
-  "2733": "eight_spoked_asterisk",
-  "2734": "eight_pointed_black_star",
-  "2744": "snowflake",
-  "2747": "sparkle",
-  "2753": "question",
-  "2754": "grey_question",
-  "2755": "grey_exclamation",
-  "2757": [
-    "exclamation",
-    "heavy_exclamation_mark"
-  ],
-  "2763": "heavy_heart_exclamation_mark_ornament",
-  "2764": "heart",
-  "2795": "heavy_plus_sign",
-  "2796": "heavy_minus_sign",
-  "2797": "heavy_division_sign",
-  "2934": "arrow_heading_up",
-  "2935": "arrow_heading_down",
-  "3030": "wavy_dash",
-  "3297": "congratulations",
-  "3299": "secret",
-  "0023-FE0F-20E3": "hash",
-  "002A-FE0F-20E3": "keycap_star",
-  "0030-FE0F-20E3": "zero",
-  "0031-FE0F-20E3": "one",
-  "0032-FE0F-20E3": "two",
-  "0033-FE0F-20E3": "three",
-  "0034-FE0F-20E3": "four",
-  "0035-FE0F-20E3": "five",
-  "0036-FE0F-20E3": "six",
-  "0037-FE0F-20E3": "seven",
-  "0038-FE0F-20E3": "eight",
-  "0039-FE0F-20E3": "nine",
-  "00A9": "copyright",
-  "00AE": "registered",
-  "1F004": "mahjong",
-  "1F0CF": "black_joker",
-  "1F170": "a",
-  "1F171": "b",
-  "1F17E": "o2",
-  "1F17F": "parking",
-  "1F18E": "ab",
-  "1F191": "cl",
-  "1F192": "cool",
-  "1F193": "free",
-  "1F194": "id",
-  "1F195": "new",
-  "1F196": "ng",
-  "1F197": "ok",
-  "1F198": "sos",
-  "1F199": "up",
-  "1F19A": "vs",
-  "1F1E6-1F1E8": "flag-ac",
-  "1F1E6-1F1E9": "flag-ad",
-  "1F1E6-1F1EA": "flag-ae",
-  "1F1E6-1F1EB": "flag-af",
-  "1F1E6-1F1EC": "flag-ag",
-  "1F1E6-1F1EE": "flag-ai",
-  "1F1E6-1F1F1": "flag-al",
-  "1F1E6-1F1F2": "flag-am",
-  "1F1E6-1F1F4": "flag-ao",
-  "1F1E6-1F1F6": "flag-aq",
-  "1F1E6-1F1F7": "flag-ar",
-  "1F1E6-1F1F8": "flag-as",
-  "1F1E6-1F1F9": "flag-at",
-  "1F1E6-1F1FA": "flag-au",
-  "1F1E6-1F1FC": "flag-aw",
-  "1F1E6-1F1FD": "flag-ax",
-  "1F1E6-1F1FF": "flag-az",
-  "1F1E7-1F1E6": "flag-ba",
-  "1F1E7-1F1E7": "flag-bb",
-  "1F1E7-1F1E9": "flag-bd",
-  "1F1E7-1F1EA": "flag-be",
-  "1F1E7-1F1EB": "flag-bf",
-  "1F1E7-1F1EC": "flag-bg",
-  "1F1E7-1F1ED": "flag-bh",
-  "1F1E7-1F1EE": "flag-bi",
-  "1F1E7-1F1EF": "flag-bj",
-  "1F1E7-1F1F1": "flag-bl",
-  "1F1E7-1F1F2": "flag-bm",
-  "1F1E7-1F1F3": "flag-bn",
-  "1F1E7-1F1F4": "flag-bo",
-  "1F1E7-1F1F6": "flag-bq",
-  "1F1E7-1F1F7": "flag-br",
-  "1F1E7-1F1F8": "flag-bs",
-  "1F1E7-1F1F9": "flag-bt",
-  "1F1E7-1F1FB": "flag-bv",
-  "1F1E7-1F1FC": "flag-bw",
-  "1F1E7-1F1FE": "flag-by",
-  "1F1E7-1F1FF": "flag-bz",
-  "1F1E8-1F1E6": "flag-ca",
-  "1F1E8-1F1E8": "flag-cc",
-  "1F1E8-1F1E9": "flag-cd",
-  "1F1E8-1F1EB": "flag-cf",
-  "1F1E8-1F1EC": "flag-cg",
-  "1F1E8-1F1ED": "flag-ch",
-  "1F1E8-1F1EE": "flag-ci",
-  "1F1E8-1F1F0": "flag-ck",
-  "1F1E8-1F1F1": "flag-cl",
-  "1F1E8-1F1F2": "flag-cm",
-  "1F1E8-1F1F3": [
-    "cn",
-    "flag-cn"
-  ],
-  "1F1E8-1F1F4": "flag-co",
-  "1F1E8-1F1F5": "flag-cp",
-  "1F1E8-1F1F7": "flag-cr",
-  "1F1E8-1F1FA": "flag-cu",
-  "1F1E8-1F1FB": "flag-cv",
-  "1F1E8-1F1FC": "flag-cw",
-  "1F1E8-1F1FD": "flag-cx",
-  "1F1E8-1F1FE": "flag-cy",
-  "1F1E8-1F1FF": "flag-cz",
-  "1F1E9-1F1EA": [
-    "de",
-    "flag-de"
-  ],
-  "1F1E9-1F1EC": "flag-dg",
-  "1F1E9-1F1EF": "flag-dj",
-  "1F1E9-1F1F0": "flag-dk",
-  "1F1E9-1F1F2": "flag-dm",
-  "1F1E9-1F1F4": "flag-do",
-  "1F1E9-1F1FF": "flag-dz",
-  "1F1EA-1F1E6": "flag-ea",
-  "1F1EA-1F1E8": "flag-ec",
-  "1F1EA-1F1EA": "flag-ee",
-  "1F1EA-1F1EC": "flag-eg",
-  "1F1EA-1F1ED": "flag-eh",
-  "1F1EA-1F1F7": "flag-er",
-  "1F1EA-1F1F8": [
-    "es",
-    "flag-es"
-  ],
-  "1F1EA-1F1F9": "flag-et",
-  "1F1EA-1F1FA": "flag-eu",
-  "1F1EB-1F1EE": "flag-fi",
-  "1F1EB-1F1EF": "flag-fj",
-  "1F1EB-1F1F0": "flag-fk",
-  "1F1EB-1F1F2": "flag-fm",
-  "1F1EB-1F1F4": "flag-fo",
-  "1F1EB-1F1F7": [
-    "fr",
-    "flag-fr"
-  ],
-  "1F1EC-1F1E6": "flag-ga",
-  "1F1EC-1F1E7": [
-    "gb",
-    "uk",
-    "flag-gb"
-  ],
-  "1F1EC-1F1E9": "flag-gd",
-  "1F1EC-1F1EA": "flag-ge",
-  "1F1EC-1F1EB": "flag-gf",
-  "1F1EC-1F1EC": "flag-gg",
-  "1F1EC-1F1ED": "flag-gh",
-  "1F1EC-1F1EE": "flag-gi",
-  "1F1EC-1F1F1": "flag-gl",
-  "1F1EC-1F1F2": "flag-gm",
-  "1F1EC-1F1F3": "flag-gn",
-  "1F1EC-1F1F5": "flag-gp",
-  "1F1EC-1F1F6": "flag-gq",
-  "1F1EC-1F1F7": "flag-gr",
-  "1F1EC-1F1F8": "flag-gs",
-  "1F1EC-1F1F9": "flag-gt",
-  "1F1EC-1F1FA": "flag-gu",
-  "1F1EC-1F1FC": "flag-gw",
-  "1F1EC-1F1FE": "flag-gy",
-  "1F1ED-1F1F0": "flag-hk",
-  "1F1ED-1F1F2": "flag-hm",
-  "1F1ED-1F1F3": "flag-hn",
-  "1F1ED-1F1F7": "flag-hr",
-  "1F1ED-1F1F9": "flag-ht",
-  "1F1ED-1F1FA": "flag-hu",
-  "1F1EE-1F1E8": "flag-ic",
-  "1F1EE-1F1E9": "flag-id",
-  "1F1EE-1F1EA": "flag-ie",
-  "1F1EE-1F1F1": "flag-il",
-  "1F1EE-1F1F2": "flag-im",
-  "1F1EE-1F1F3": "flag-in",
-  "1F1EE-1F1F4": "flag-io",
-  "1F1EE-1F1F6": "flag-iq",
-  "1F1EE-1F1F7": "flag-ir",
-  "1F1EE-1F1F8": "flag-is",
-  "1F1EE-1F1F9": [
-    "it",
-    "flag-it"
-  ],
-  "1F1EF-1F1EA": "flag-je",
-  "1F1EF-1F1F2": "flag-jm",
-  "1F1EF-1F1F4": "flag-jo",
-  "1F1EF-1F1F5": [
-    "jp",
-    "flag-jp"
-  ],
-  "1F1F0-1F1EA": "flag-ke",
-  "1F1F0-1F1EC": "flag-kg",
-  "1F1F0-1F1ED": "flag-kh",
-  "1F1F0-1F1EE": "flag-ki",
-  "1F1F0-1F1F2": "flag-km",
-  "1F1F0-1F1F3": "flag-kn",
-  "1F1F0-1F1F5": "flag-kp",
-  "1F1F0-1F1F7": [
-    "kr",
-    "flag-kr"
-  ],
-  "1F1F0-1F1FC": "flag-kw",
-  "1F1F0-1F1FE": "flag-ky",
-  "1F1F0-1F1FF": "flag-kz",
-  "1F1F1-1F1E6": "flag-la",
-  "1F1F1-1F1E7": "flag-lb",
-  "1F1F1-1F1E8": "flag-lc",
-  "1F1F1-1F1EE": "flag-li",
-  "1F1F1-1F1F0": "flag-lk",
-  "1F1F1-1F1F7": "flag-lr",
-  "1F1F1-1F1F8": "flag-ls",
-  "1F1F1-1F1F9": "flag-lt",
-  "1F1F1-1F1FA": "flag-lu",
-  "1F1F1-1F1FB": "flag-lv",
-  "1F1F1-1F1FE": "flag-ly",
-  "1F1F2-1F1E6": "flag-ma",
-  "1F1F2-1F1E8": "flag-mc",
-  "1F1F2-1F1E9": "flag-md",
-  "1F1F2-1F1EA": "flag-me",
-  "1F1F2-1F1EB": "flag-mf",
-  "1F1F2-1F1EC": "flag-mg",
-  "1F1F2-1F1ED": "flag-mh",
-  "1F1F2-1F1F0": "flag-mk",
-  "1F1F2-1F1F1": "flag-ml",
-  "1F1F2-1F1F2": "flag-mm",
-  "1F1F2-1F1F3": "flag-mn",
-  "1F1F2-1F1F4": "flag-mo",
-  "1F1F2-1F1F5": "flag-mp",
-  "1F1F2-1F1F6": "flag-mq",
-  "1F1F2-1F1F7": "flag-mr",
-  "1F1F2-1F1F8": "flag-ms",
-  "1F1F2-1F1F9": "flag-mt",
-  "1F1F2-1F1FA": "flag-mu",
-  "1F1F2-1F1FB": "flag-mv",
-  "1F1F2-1F1FC": "flag-mw",
-  "1F1F2-1F1FD": "flag-mx",
-  "1F1F2-1F1FE": "flag-my",
-  "1F1F2-1F1FF": "flag-mz",
-  "1F1F3-1F1E6": "flag-na",
-  "1F1F3-1F1E8": "flag-nc",
-  "1F1F3-1F1EA": "flag-ne",
-  "1F1F3-1F1EB": "flag-nf",
-  "1F1F3-1F1EC": "flag-ng",
-  "1F1F3-1F1EE": "flag-ni",
-  "1F1F3-1F1F1": "flag-nl",
-  "1F1F3-1F1F4": "flag-no",
-  "1F1F3-1F1F5": "flag-np",
-  "1F1F3-1F1F7": "flag-nr",
-  "1F1F3-1F1FA": "flag-nu",
-  "1F1F3-1F1FF": "flag-nz",
-  "1F1F4-1F1F2": "flag-om",
-  "1F1F5-1F1E6": "flag-pa",
-  "1F1F5-1F1EA": "flag-pe",
-  "1F1F5-1F1EB": "flag-pf",
-  "1F1F5-1F1EC": "flag-pg",
-  "1F1F5-1F1ED": "flag-ph",
-  "1F1F5-1F1F0": "flag-pk",
-  "1F1F5-1F1F1": "flag-pl",
-  "1F1F5-1F1F2": "flag-pm",
-  "1F1F5-1F1F3": "flag-pn",
-  "1F1F5-1F1F7": "flag-pr",
-  "1F1F5-1F1F8": "flag-ps",
-  "1F1F5-1F1F9": "flag-pt",
-  "1F1F5-1F1FC": "flag-pw",
-  "1F1F5-1F1FE": "flag-py",
-  "1F1F6-1F1E6": "flag-qa",
-  "1F1F7-1F1EA": "flag-re",
-  "1F1F7-1F1F4": "flag-ro",
-  "1F1F7-1F1F8": "flag-rs",
-  "1F1F7-1F1FA": [
-    "ru",
-    "flag-ru"
-  ],
-  "1F1F7-1F1FC": "flag-rw",
-  "1F1F8-1F1E6": "flag-sa",
-  "1F1F8-1F1E7": "flag-sb",
-  "1F1F8-1F1E8": "flag-sc",
-  "1F1F8-1F1E9": "flag-sd",
-  "1F1F8-1F1EA": "flag-se",
-  "1F1F8-1F1EC": "flag-sg",
-  "1F1F8-1F1ED": "flag-sh",
-  "1F1F8-1F1EE": "flag-si",
-  "1F1F8-1F1EF": "flag-sj",
-  "1F1F8-1F1F0": "flag-sk",
-  "1F1F8-1F1F1": "flag-sl",
-  "1F1F8-1F1F2": "flag-sm",
-  "1F1F8-1F1F3": "flag-sn",
-  "1F1F8-1F1F4": "flag-so",
-  "1F1F8-1F1F7": "flag-sr",
-  "1F1F8-1F1F8": "flag-ss",
-  "1F1F8-1F1F9": "flag-st",
-  "1F1F8-1F1FB": "flag-sv",
-  "1F1F8-1F1FD": "flag-sx",
-  "1F1F8-1F1FE": "flag-sy",
-  "1F1F8-1F1FF": "flag-sz",
-  "1F1F9-1F1E6": "flag-ta",
-  "1F1F9-1F1E8": "flag-tc",
-  "1F1F9-1F1E9": "flag-td",
-  "1F1F9-1F1EB": "flag-tf",
-  "1F1F9-1F1EC": "flag-tg",
-  "1F1F9-1F1ED": "flag-th",
-  "1F1F9-1F1EF": "flag-tj",
-  "1F1F9-1F1F0": "flag-tk",
-  "1F1F9-1F1F1": "flag-tl",
-  "1F1F9-1F1F2": "flag-tm",
-  "1F1F9-1F1F3": "flag-tn",
-  "1F1F9-1F1F4": "flag-to",
-  "1F1F9-1F1F7": "flag-tr",
-  "1F1F9-1F1F9": "flag-tt",
-  "1F1F9-1F1FB": "flag-tv",
-  "1F1F9-1F1FC": "flag-tw",
-  "1F1F9-1F1FF": "flag-tz",
-  "1F1FA-1F1E6": "flag-ua",
-  "1F1FA-1F1EC": "flag-ug",
-  "1F1FA-1F1F2": "flag-um",
-  "1F1FA-1F1F3": "flag-un",
-  "1F1FA-1F1F8": [
-    "us",
-    "flag-us"
-  ],
-  "1F1FA-1F1FE": "flag-uy",
-  "1F1FA-1F1FF": "flag-uz",
-  "1F1FB-1F1E6": "flag-va",
-  "1F1FB-1F1E8": "flag-vc",
-  "1F1FB-1F1EA": "flag-ve",
-  "1F1FB-1F1EC": "flag-vg",
-  "1F1FB-1F1EE": "flag-vi",
-  "1F1FB-1F1F3": "flag-vn",
-  "1F1FB-1F1FA": "flag-vu",
-  "1F1FC-1F1EB": "flag-wf",
-  "1F1FC-1F1F8": "flag-ws",
-  "1F1FD-1F1F0": "flag-xk",
-  "1F1FE-1F1EA": "flag-ye",
-  "1F1FE-1F1F9": "flag-yt",
-  "1F1FF-1F1E6": "flag-za",
-  "1F1FF-1F1F2": "flag-zm",
-  "1F1FF-1F1FC": "flag-zw",
-  "1F201": "koko",
-  "1F202": "sa",
-  "1F21A": "u7121",
-  "1F22F": "u6307",
-  "1F232": "u7981",
-  "1F233": "u7a7a",
-  "1F234": "u5408",
-  "1F235": "u6e80",
-  "1F236": "u6709",
-  "1F237": "u6708",
-  "1F238": "u7533",
-  "1F239": "u5272",
-  "1F23A": "u55b6",
-  "1F250": "ideograph_advantage",
-  "1F251": "accept",
-  "1F300": "cyclone",
-  "1F301": "foggy",
-  "1F302": "closed_umbrella",
-  "1F303": "night_with_stars",
-  "1F304": "sunrise_over_mountains",
-  "1F305": "sunrise",
-  "1F306": "city_sunset",
-  "1F307": "city_sunrise",
-  "1F308": "rainbow",
-  "1F309": "bridge_at_night",
-  "1F30A": "ocean",
-  "1F30B": "volcano",
-  "1F30C": "milky_way",
-  "1F30D": "earth_africa",
-  "1F30E": "earth_americas",
-  "1F30F": "earth_asia",
-  "1F310": "globe_with_meridians",
-  "1F311": "new_moon",
-  "1F312": "waxing_crescent_moon",
-  "1F313": "first_quarter_moon",
-  "1F314": [
-    "moon",
-    "waxing_gibbous_moon"
-  ],
-  "1F315": "full_moon",
-  "1F316": "waning_gibbous_moon",
-  "1F317": "last_quarter_moon",
-  "1F318": "waning_crescent_moon",
-  "1F319": "crescent_moon",
-  "1F31A": "new_moon_with_face",
-  "1F31B": "first_quarter_moon_with_face",
-  "1F31C": "last_quarter_moon_with_face",
-  "1F31D": "full_moon_with_face",
-  "1F31E": "sun_with_face",
-  "1F31F": "star2",
-  "1F320": "stars",
-  "1F321": "thermometer",
-  "1F324": [
-    "mostly_sunny",
-    "sun_small_cloud"
-  ],
-  "1F325": [
-    "barely_sunny",
-    "sun_behind_cloud"
-  ],
-  "1F326": [
-    "partly_sunny_rain",
-    "sun_behind_rain_cloud"
-  ],
-  "1F327": "rain_cloud",
-  "1F328": "snow_cloud",
-  "1F329": [
-    "lightning",
-    "lightning_cloud"
-  ],
-  "1F32A": [
-    "tornado",
-    "tornado_cloud"
-  ],
-  "1F32B": "fog",
-  "1F32C": "wind_blowing_face",
-  "1F32D": "hotdog",
-  "1F32E": "taco",
-  "1F32F": "burrito",
-  "1F330": "chestnut",
-  "1F331": "seedling",
-  "1F332": "evergreen_tree",
-  "1F333": "deciduous_tree",
-  "1F334": "palm_tree",
-  "1F335": "cactus",
-  "1F336": "hot_pepper",
-  "1F337": "tulip",
-  "1F338": "cherry_blossom",
-  "1F339": "rose",
-  "1F33A": "hibiscus",
-  "1F33B": "sunflower",
-  "1F33C": "blossom",
-  "1F33D": "corn",
-  "1F33E": "ear_of_rice",
-  "1F33F": "herb",
-  "1F340": "four_leaf_clover",
-  "1F341": "maple_leaf",
-  "1F342": "fallen_leaf",
-  "1F343": "leaves",
-  "1F344-200D-1F7EB": "brown_mushroom",
-  "1F344": "mushroom",
-  "1F345": "tomato",
-  "1F346": "eggplant",
-  "1F347": "grapes",
-  "1F348": "melon",
-  "1F349": "watermelon",
-  "1F34A": "tangerine",
-  "1F34B-200D-1F7E9": "lime",
-  "1F34B": "lemon",
-  "1F34C": "banana",
-  "1F34D": "pineapple",
-  "1F34E": "apple",
-  "1F34F": "green_apple",
-  "1F350": "pear",
-  "1F351": "peach",
-  "1F352": "cherries",
-  "1F353": "strawberry",
-  "1F354": "hamburger",
-  "1F355": "pizza",
-  "1F356": "meat_on_bone",
-  "1F357": "poultry_leg",
-  "1F358": "rice_cracker",
-  "1F359": "rice_ball",
-  "1F35A": "rice",
-  "1F35B": "curry",
-  "1F35C": "ramen",
-  "1F35D": "spaghetti",
-  "1F35E": "bread",
-  "1F35F": "fries",
-  "1F360": "sweet_potato",
-  "1F361": "dango",
-  "1F362": "oden",
-  "1F363": "sushi",
-  "1F364": "fried_shrimp",
-  "1F365": "fish_cake",
-  "1F366": "icecream",
-  "1F367": "shaved_ice",
-  "1F368": "ice_cream",
-  "1F369": "doughnut",
-  "1F36A": "cookie",
-  "1F36B": "chocolate_bar",
-  "1F36C": "candy",
-  "1F36D": "lollipop",
-  "1F36E": "custard",
-  "1F36F": "honey_pot",
-  "1F370": "cake",
-  "1F371": "bento",
-  "1F372": "stew",
-  "1F373": [
-    "fried_egg",
-    "cooking"
-  ],
-  "1F374": "fork_and_knife",
-  "1F375": "tea",
-  "1F376": "sake",
-  "1F377": "wine_glass",
-  "1F378": "cocktail",
-  "1F379": "tropical_drink",
-  "1F37A": "beer",
-  "1F37B": "beers",
-  "1F37C": "baby_bottle",
-  "1F37D": "knife_fork_plate",
-  "1F37E": "champagne",
-  "1F37F": "popcorn",
-  "1F380": "ribbon",
-  "1F381": "gift",
-  "1F382": "birthday",
-  "1F383": "jack_o_lantern",
-  "1F384": "christmas_tree",
-  "1F385": "santa",
-  "1F386": "fireworks",
-  "1F387": "sparkler",
-  "1F388": "balloon",
-  "1F389": "tada",
-  "1F38A": "confetti_ball",
-  "1F38B": "tanabata_tree",
-  "1F38C": "crossed_flags",
-  "1F38D": "bamboo",
-  "1F38E": "dolls",
-  "1F38F": "flags",
-  "1F390": "wind_chime",
-  "1F391": "rice_scene",
-  "1F392": "school_satchel",
-  "1F393": "mortar_board",
-  "1F396": "medal",
-  "1F397": "reminder_ribbon",
-  "1F399": "studio_microphone",
-  "1F39A": "level_slider",
-  "1F39B": "control_knobs",
-  "1F39E": "film_frames",
-  "1F39F": "admission_tickets",
-  "1F3A0": "carousel_horse",
-  "1F3A1": "ferris_wheel",
-  "1F3A2": "roller_coaster",
-  "1F3A3": "fishing_pole_and_fish",
-  "1F3A4": "microphone",
-  "1F3A5": "movie_camera",
-  "1F3A6": "cinema",
-  "1F3A7": "headphones",
-  "1F3A8": "art",
-  "1F3A9": "tophat",
-  "1F3AA": "circus_tent",
-  "1F3AB": "ticket",
-  "1F3AC": "clapper",
-  "1F3AD": "performing_arts",
-  "1F3AE": "video_game",
-  "1F3AF": "dart",
-  "1F3B0": "slot_machine",
-  "1F3B1": "8ball",
-  "1F3B2": "game_die",
-  "1F3B3": "bowling",
-  "1F3B4": "flower_playing_cards",
-  "1F3B5": "musical_note",
-  "1F3B6": "notes",
-  "1F3B7": "saxophone",
-  "1F3B8": "guitar",
-  "1F3B9": "musical_keyboard",
-  "1F3BA": "trumpet",
-  "1F3BB": "violin",
-  "1F3BC": "musical_score",
-  "1F3BD": "running_shirt_with_sash",
-  "1F3BE": "tennis",
-  "1F3BF": "ski",
-  "1F3C0": "basketball",
-  "1F3C1": "checkered_flag",
-  "1F3C2": "snowboarder",
-  "1F3C3-200D-2640-FE0F": "woman-running",
-  "1F3C3-200D-2640-FE0F-200D-27A1-FE0F": "woman_running_facing_right",
-  "1F3C3-200D-2642-FE0F": "man-running",
-  "1F3C3-200D-2642-FE0F-200D-27A1-FE0F": "man_running_facing_right",
-  "1F3C3-200D-27A1-FE0F": "person_running_facing_right",
-  "1F3C3": [
-    "runner",
-    "running"
-  ],
-  "1F3C4-200D-2640-FE0F": "woman-surfing",
-  "1F3C4-200D-2642-FE0F": "man-surfing",
-  "1F3C4": "surfer",
-  "1F3C5": "sports_medal",
-  "1F3C6": "trophy",
-  "1F3C7": "horse_racing",
-  "1F3C8": "football",
-  "1F3C9": "rugby_football",
-  "1F3CA-200D-2640-FE0F": "woman-swimming",
-  "1F3CA-200D-2642-FE0F": "man-swimming",
-  "1F3CA": "swimmer",
-  "1F3CB-FE0F-200D-2640-FE0F": "woman-lifting-weights",
-  "1F3CB-FE0F-200D-2642-FE0F": "man-lifting-weights",
-  "1F3CB": "weight_lifter",
-  "1F3CC-FE0F-200D-2640-FE0F": "woman-golfing",
-  "1F3CC-FE0F-200D-2642-FE0F": "man-golfing",
-  "1F3CC": "golfer",
-  "1F3CD": "racing_motorcycle",
-  "1F3CE": "racing_car",
-  "1F3CF": "cricket_bat_and_ball",
-  "1F3D0": "volleyball",
-  "1F3D1": "field_hockey_stick_and_ball",
-  "1F3D2": "ice_hockey_stick_and_puck",
-  "1F3D3": "table_tennis_paddle_and_ball",
-  "1F3D4": "snow_capped_mountain",
-  "1F3D5": "camping",
-  "1F3D6": "beach_with_umbrella",
-  "1F3D7": "building_construction",
-  "1F3D8": "house_buildings",
-  "1F3D9": "cityscape",
-  "1F3DA": "derelict_house_building",
-  "1F3DB": "classical_building",
-  "1F3DC": "desert",
-  "1F3DD": "desert_island",
-  "1F3DE": "national_park",
-  "1F3DF": "stadium",
-  "1F3E0": "house",
-  "1F3E1": "house_with_garden",
-  "1F3E2": "office",
-  "1F3E3": "post_office",
-  "1F3E4": "european_post_office",
-  "1F3E5": "hospital",
-  "1F3E6": "bank",
-  "1F3E7": "atm",
-  "1F3E8": "hotel",
-  "1F3E9": "love_hotel",
-  "1F3EA": "convenience_store",
-  "1F3EB": "school",
-  "1F3EC": "department_store",
-  "1F3ED": "factory",
-  "1F3EE": [
-    "izakaya_lantern",
-    "lantern"
-  ],
-  "1F3EF": "japanese_castle",
-  "1F3F0": "european_castle",
-  "1F3F3-FE0F-200D-1F308": "rainbow-flag",
-  "1F3F3-FE0F-200D-26A7-FE0F": "transgender_flag",
-  "1F3F3": "waving_white_flag",
-  "1F3F4-200D-2620-FE0F": "pirate_flag",
-  "1F3F4-E0067-E0062-E0065-E006E-E0067-E007F": "flag-england",
-  "1F3F4-E0067-E0062-E0073-E0063-E0074-E007F": "flag-scotland",
-  "1F3F4-E0067-E0062-E0077-E006C-E0073-E007F": "flag-wales",
-  "1F3F4": "waving_black_flag",
-  "1F3F5": "rosette",
-  "1F3F7": "label",
-  "1F3F8": "badminton_racquet_and_shuttlecock",
-  "1F3F9": "bow_and_arrow",
-  "1F3FA": "amphora",
-  "1F3FB": "skin-tone-2",
-  "1F3FC": "skin-tone-3",
-  "1F3FD": "skin-tone-4",
-  "1F3FE": "skin-tone-5",
-  "1F3FF": "skin-tone-6",
-  "1F400": "rat",
-  "1F401": "mouse2",
-  "1F402": "ox",
-  "1F403": "water_buffalo",
-  "1F404": "cow2",
-  "1F405": "tiger2",
-  "1F406": "leopard",
-  "1F407": "rabbit2",
-  "1F408-200D-2B1B": "black_cat",
-  "1F408": "cat2",
-  "1F409": "dragon",
-  "1F40A": "crocodile",
-  "1F40B": "whale2",
-  "1F40C": "snail",
-  "1F40D": "snake",
-  "1F40E": "racehorse",
-  "1F40F": "ram",
-  "1F410": "goat",
-  "1F411": "sheep",
-  "1F412": "monkey",
-  "1F413": "rooster",
-  "1F414": "chicken",
-  "1F415-200D-1F9BA": "service_dog",
-  "1F415": "dog2",
-  "1F416": "pig2",
-  "1F417": "boar",
-  "1F418": "elephant",
-  "1F419": "octopus",
-  "1F41A": "shell",
-  "1F41B": "bug",
-  "1F41C": "ant",
-  "1F41D": [
-    "bee",
-    "honeybee"
-  ],
-  "1F41E": [
-    "ladybug",
-    "lady_beetle"
-  ],
-  "1F41F": "fish",
-  "1F420": "tropical_fish",
-  "1F421": "blowfish",
-  "1F422": "turtle",
-  "1F423": "hatching_chick",
-  "1F424": "baby_chick",
-  "1F425": "hatched_chick",
-  "1F426-200D-1F525": "phoenix",
-  "1F426-200D-2B1B": "black_bird",
-  "1F426": "bird",
-  "1F427": "penguin",
-  "1F428": "koala",
-  "1F429": "poodle",
-  "1F42A": "dromedary_camel",
-  "1F42B": "camel",
-  "1F42C": [
-    "dolphin",
-    "flipper"
-  ],
-  "1F42D": "mouse",
-  "1F42E": "cow",
-  "1F42F": "tiger",
-  "1F430": "rabbit",
-  "1F431": "cat",
-  "1F432": "dragon_face",
-  "1F433": "whale",
-  "1F434": "horse",
-  "1F435": "monkey_face",
-  "1F436": "dog",
-  "1F437": "pig",
-  "1F438": "frog",
-  "1F439": "hamster",
-  "1F43A": "wolf",
-  "1F43B-200D-2744-FE0F": "polar_bear",
-  "1F43B": "bear",
-  "1F43C": "panda_face",
-  "1F43D": "pig_nose",
-  "1F43E": [
-    "feet",
-    "paw_prints"
-  ],
-  "1F43F": "chipmunk",
-  "1F440": "eyes",
-  "1F441-FE0F-200D-1F5E8-FE0F": "eye-in-speech-bubble",
-  "1F441": "eye",
-  "1F442": "ear",
-  "1F443": "nose",
-  "1F444": "lips",
-  "1F445": "tongue",
-  "1F446": "point_up_2",
-  "1F447": "point_down",
-  "1F448": "point_left",
-  "1F449": "point_right",
-  "1F44A": [
-    "facepunch",
-    "punch"
-  ],
-  "1F44B": "wave",
-  "1F44C": "ok_hand",
-  "1F44D": [
-    "+1",
-    "thumbsup"
-  ],
-  "1F44E": [
-    "-1",
-    "thumbsdown"
-  ],
-  "1F44F": "clap",
-  "1F450": "open_hands",
-  "1F451": "crown",
-  "1F452": "womans_hat",
-  "1F453": "eyeglasses",
-  "1F454": "necktie",
-  "1F455": [
-    "shirt",
-    "tshirt"
-  ],
-  "1F456": "jeans",
-  "1F457": "dress",
-  "1F458": "kimono",
-  "1F459": "bikini",
-  "1F45A": "womans_clothes",
-  "1F45B": "purse",
-  "1F45C": "handbag",
-  "1F45D": "pouch",
-  "1F45E": [
-    "mans_shoe",
-    "shoe"
-  ],
-  "1F45F": "athletic_shoe",
-  "1F460": "high_heel",
-  "1F461": "sandal",
-  "1F462": "boot",
-  "1F463": "footprints",
-  "1F464": "bust_in_silhouette",
-  "1F465": "busts_in_silhouette",
-  "1F466": "boy",
-  "1F467": "girl",
-  "1F468-200D-1F33E": "male-farmer",
-  "1F468-200D-1F373": "male-cook",
-  "1F468-200D-1F37C": "man_feeding_baby",
-  "1F468-200D-1F393": "male-student",
-  "1F468-200D-1F3A4": "male-singer",
-  "1F468-200D-1F3A8": "male-artist",
-  "1F468-200D-1F3EB": "male-teacher",
-  "1F468-200D-1F3ED": "male-factory-worker",
-  "1F468-200D-1F466-200D-1F466": "man-boy-boy",
-  "1F468-200D-1F466": "man-boy",
-  "1F468-200D-1F467-200D-1F466": "man-girl-boy",
-  "1F468-200D-1F467-200D-1F467": "man-girl-girl",
-  "1F468-200D-1F467": "man-girl",
-  "1F468-200D-1F468-200D-1F466": "man-man-boy",
-  "1F468-200D-1F468-200D-1F466-200D-1F466": "man-man-boy-boy",
-  "1F468-200D-1F468-200D-1F467": "man-man-girl",
-  "1F468-200D-1F468-200D-1F467-200D-1F466": "man-man-girl-boy",
-  "1F468-200D-1F468-200D-1F467-200D-1F467": "man-man-girl-girl",
-  "1F468-200D-1F469-200D-1F466": "man-woman-boy",
-  "1F468-200D-1F469-200D-1F466-200D-1F466": "man-woman-boy-boy",
-  "1F468-200D-1F469-200D-1F467": "man-woman-girl",
-  "1F468-200D-1F469-200D-1F467-200D-1F466": "man-woman-girl-boy",
-  "1F468-200D-1F469-200D-1F467-200D-1F467": "man-woman-girl-girl",
-  "1F468-200D-1F4BB": "male-technologist",
-  "1F468-200D-1F4BC": "male-office-worker",
-  "1F468-200D-1F527": "male-mechanic",
-  "1F468-200D-1F52C": "male-scientist",
-  "1F468-200D-1F680": "male-astronaut",
-  "1F468-200D-1F692": "male-firefighter",
-  "1F468-200D-1F9AF-200D-27A1-FE0F": "man_with_white_cane_facing_right",
-  "1F468-200D-1F9AF": "man_with_probing_cane",
-  "1F468-200D-1F9B0": "red_haired_man",
-  "1F468-200D-1F9B1": "curly_haired_man",
-  "1F468-200D-1F9B2": "bald_man",
-  "1F468-200D-1F9B3": "white_haired_man",
-  "1F468-200D-1F9BC-200D-27A1-FE0F": "man_in_motorized_wheelchair_facing_right",
-  "1F468-200D-1F9BC": "man_in_motorized_wheelchair",
-  "1F468-200D-1F9BD-200D-27A1-FE0F": "man_in_manual_wheelchair_facing_right",
-  "1F468-200D-1F9BD": "man_in_manual_wheelchair",
-  "1F468-200D-2695-FE0F": "male-doctor",
-  "1F468-200D-2696-FE0F": "male-judge",
-  "1F468-200D-2708-FE0F": "male-pilot",
-  "1F468-200D-2764-FE0F-200D-1F468": "man-heart-man",
-  "1F468-200D-2764-FE0F-200D-1F48B-200D-1F468": "man-kiss-man",
-  "1F468": "man",
-  "1F469-200D-1F33E": "female-farmer",
-  "1F469-200D-1F373": "female-cook",
-  "1F469-200D-1F37C": "woman_feeding_baby",
-  "1F469-200D-1F393": "female-student",
-  "1F469-200D-1F3A4": "female-singer",
-  "1F469-200D-1F3A8": "female-artist",
-  "1F469-200D-1F3EB": "female-teacher",
-  "1F469-200D-1F3ED": "female-factory-worker",
-  "1F469-200D-1F466-200D-1F466": "woman-boy-boy",
-  "1F469-200D-1F466": "woman-boy",
-  "1F469-200D-1F467-200D-1F466": "woman-girl-boy",
-  "1F469-200D-1F467-200D-1F467": "woman-girl-girl",
-  "1F469-200D-1F467": "woman-girl",
-  "1F469-200D-1F469-200D-1F466": "woman-woman-boy",
-  "1F469-200D-1F469-200D-1F466-200D-1F466": "woman-woman-boy-boy",
-  "1F469-200D-1F469-200D-1F467": "woman-woman-girl",
-  "1F469-200D-1F469-200D-1F467-200D-1F466": "woman-woman-girl-boy",
-  "1F469-200D-1F469-200D-1F467-200D-1F467": "woman-woman-girl-girl",
-  "1F469-200D-1F4BB": "female-technologist",
-  "1F469-200D-1F4BC": "female-office-worker",
-  "1F469-200D-1F527": "female-mechanic",
-  "1F469-200D-1F52C": "female-scientist",
-  "1F469-200D-1F680": "female-astronaut",
-  "1F469-200D-1F692": "female-firefighter",
-  "1F469-200D-1F9AF-200D-27A1-FE0F": "woman_with_white_cane_facing_right",
-  "1F469-200D-1F9AF": "woman_with_probing_cane",
-  "1F469-200D-1F9B0": "red_haired_woman",
-  "1F469-200D-1F9B1": "curly_haired_woman",
-  "1F469-200D-1F9B2": "bald_woman",
-  "1F469-200D-1F9B3": "white_haired_woman",
-  "1F469-200D-1F9BC-200D-27A1-FE0F": "woman_in_motorized_wheelchair_facing_right",
-  "1F469-200D-1F9BC": "woman_in_motorized_wheelchair",
-  "1F469-200D-1F9BD-200D-27A1-FE0F": "woman_in_manual_wheelchair_facing_right",
-  "1F469-200D-1F9BD": "woman_in_manual_wheelchair",
-  "1F469-200D-2695-FE0F": "female-doctor",
-  "1F469-200D-2696-FE0F": "female-judge",
-  "1F469-200D-2708-FE0F": "female-pilot",
-  "1F469-200D-2764-FE0F-200D-1F468": "woman-heart-man",
-  "1F469-200D-2764-FE0F-200D-1F469": "woman-heart-woman",
-  "1F469-200D-2764-FE0F-200D-1F48B-200D-1F468": "woman-kiss-man",
-  "1F469-200D-2764-FE0F-200D-1F48B-200D-1F469": "woman-kiss-woman",
-  "1F469": "woman",
-  "1F46A": "family",
-  "1F46B": [
-    "man_and_woman_holding_hands",
-    "woman_and_man_holding_hands",
-    "couple"
-  ],
-  "1F46C": [
-    "two_men_holding_hands",
-    "men_holding_hands"
-  ],
-  "1F46D": [
-    "two_women_holding_hands",
-    "women_holding_hands"
-  ],
-  "1F46E-200D-2640-FE0F": "female-police-officer",
-  "1F46E-200D-2642-FE0F": "male-police-officer",
-  "1F46E": "cop",
-  "1F46F-200D-2640-FE0F": [
-    "women-with-bunny-ears-partying",
-    "woman-with-bunny-ears-partying"
-  ],
-  "1F46F-200D-2642-FE0F": [
-    "men-with-bunny-ears-partying",
-    "man-with-bunny-ears-partying"
-  ],
-  "1F46F": "dancers",
-  "1F470-200D-2640-FE0F": "woman_with_veil",
-  "1F470-200D-2642-FE0F": "man_with_veil",
-  "1F470": "bride_with_veil",
-  "1F471-200D-2640-FE0F": "blond-haired-woman",
-  "1F471-200D-2642-FE0F": "blond-haired-man",
-  "1F471": "person_with_blond_hair",
-  "1F472": "man_with_gua_pi_mao",
-  "1F473-200D-2640-FE0F": "woman-wearing-turban",
-  "1F473-200D-2642-FE0F": "man-wearing-turban",
-  "1F473": "man_with_turban",
-  "1F474": "older_man",
-  "1F475": "older_woman",
-  "1F476": "baby",
-  "1F477-200D-2640-FE0F": "female-construction-worker",
-  "1F477-200D-2642-FE0F": "male-construction-worker",
-  "1F477": "construction_worker",
-  "1F478": "princess",
-  "1F479": "japanese_ogre",
-  "1F47A": "japanese_goblin",
-  "1F47B": "ghost",
-  "1F47C": "angel",
-  "1F47D": "alien",
-  "1F47E": "space_invader",
-  "1F47F": "imp",
-  "1F480": "skull",
-  "1F481-200D-2640-FE0F": "woman-tipping-hand",
-  "1F481-200D-2642-FE0F": "man-tipping-hand",
-  "1F481": "information_desk_person",
-  "1F482-200D-2640-FE0F": "female-guard",
-  "1F482-200D-2642-FE0F": "male-guard",
-  "1F482": "guardsman",
-  "1F483": "dancer",
-  "1F484": "lipstick",
-  "1F485": "nail_care",
-  "1F486-200D-2640-FE0F": "woman-getting-massage",
-  "1F486-200D-2642-FE0F": "man-getting-massage",
-  "1F486": "massage",
-  "1F487-200D-2640-FE0F": "woman-getting-haircut",
-  "1F487-200D-2642-FE0F": "man-getting-haircut",
-  "1F487": "haircut",
-  "1F488": "barber",
-  "1F489": "syringe",
-  "1F48A": "pill",
-  "1F48B": "kiss",
-  "1F48C": "love_letter",
-  "1F48D": "ring",
-  "1F48E": "gem",
-  "1F48F": "couplekiss",
-  "1F490": "bouquet",
-  "1F491": "couple_with_heart",
-  "1F492": "wedding",
-  "1F493": "heartbeat",
-  "1F494": "broken_heart",
-  "1F495": "two_hearts",
-  "1F496": "sparkling_heart",
-  "1F497": "heartpulse",
-  "1F498": "cupid",
-  "1F499": "blue_heart",
-  "1F49A": "green_heart",
-  "1F49B": "yellow_heart",
-  "1F49C": "purple_heart",
-  "1F49D": "gift_heart",
-  "1F49E": "revolving_hearts",
-  "1F49F": "heart_decoration",
-  "1F4A0": "diamond_shape_with_a_dot_inside",
-  "1F4A1": "bulb",
-  "1F4A2": "anger",
-  "1F4A3": "bomb",
-  "1F4A4": "zzz",
-  "1F4A5": [
-    "boom",
-    "collision"
-  ],
-  "1F4A6": "sweat_drops",
-  "1F4A7": "droplet",
-  "1F4A8": "dash",
-  "1F4A9": [
-    "hankey",
-    "poop",
-    "shit"
-  ],
-  "1F4AA": "muscle",
-  "1F4AB": "dizzy",
-  "1F4AC": "speech_balloon",
-  "1F4AD": "thought_balloon",
-  "1F4AE": "white_flower",
-  "1F4AF": "100",
-  "1F4B0": "moneybag",
-  "1F4B1": "currency_exchange",
-  "1F4B2": "heavy_dollar_sign",
-  "1F4B3": "credit_card",
-  "1F4B4": "yen",
-  "1F4B5": "dollar",
-  "1F4B6": "euro",
-  "1F4B7": "pound",
-  "1F4B8": "money_with_wings",
-  "1F4B9": "chart",
-  "1F4BA": "seat",
-  "1F4BB": "computer",
-  "1F4BC": "briefcase",
-  "1F4BD": "minidisc",
-  "1F4BE": "floppy_disk",
-  "1F4BF": "cd",
-  "1F4C0": "dvd",
-  "1F4C1": "file_folder",
-  "1F4C2": "open_file_folder",
-  "1F4C3": "page_with_curl",
-  "1F4C4": "page_facing_up",
-  "1F4C5": "date",
-  "1F4C6": "calendar",
-  "1F4C7": "card_index",
-  "1F4C8": "chart_with_upwards_trend",
-  "1F4C9": "chart_with_downwards_trend",
-  "1F4CA": "bar_chart",
-  "1F4CB": "clipboard",
-  "1F4CC": "pushpin",
-  "1F4CD": "round_pushpin",
-  "1F4CE": "paperclip",
-  "1F4CF": "straight_ruler",
-  "1F4D0": "triangular_ruler",
-  "1F4D1": "bookmark_tabs",
-  "1F4D2": "ledger",
-  "1F4D3": "notebook",
-  "1F4D4": "notebook_with_decorative_cover",
-  "1F4D5": "closed_book",
-  "1F4D6": [
-    "book",
-    "open_book"
-  ],
-  "1F4D7": "green_book",
-  "1F4D8": "blue_book",
-  "1F4D9": "orange_book",
-  "1F4DA": "books",
-  "1F4DB": "name_badge",
-  "1F4DC": "scroll",
-  "1F4DD": [
-    "memo",
-    "pencil"
-  ],
-  "1F4DE": "telephone_receiver",
-  "1F4DF": "pager",
-  "1F4E0": "fax",
-  "1F4E1": "satellite_antenna",
-  "1F4E2": "loudspeaker",
-  "1F4E3": "mega",
-  "1F4E4": "outbox_tray",
-  "1F4E5": "inbox_tray",
-  "1F4E6": "package",
-  "1F4E7": "e-mail",
-  "1F4E8": "incoming_envelope",
-  "1F4E9": "envelope_with_arrow",
-  "1F4EA": "mailbox_closed",
-  "1F4EB": "mailbox",
-  "1F4EC": "mailbox_with_mail",
-  "1F4ED": "mailbox_with_no_mail",
-  "1F4EE": "postbox",
-  "1F4EF": "postal_horn",
-  "1F4F0": "newspaper",
-  "1F4F1": "iphone",
-  "1F4F2": "calling",
-  "1F4F3": "vibration_mode",
-  "1F4F4": "mobile_phone_off",
-  "1F4F5": "no_mobile_phones",
-  "1F4F6": "signal_strength",
-  "1F4F7": "camera",
-  "1F4F8": "camera_with_flash",
-  "1F4F9": "video_camera",
-  "1F4FA": "tv",
-  "1F4FB": "radio",
-  "1F4FC": "vhs",
-  "1F4FD": "film_projector",
-  "1F4FF": "prayer_beads",
-  "1F500": "twisted_rightwards_arrows",
-  "1F501": "repeat",
-  "1F502": "repeat_one",
-  "1F503": "arrows_clockwise",
-  "1F504": "arrows_counterclockwise",
-  "1F505": "low_brightness",
-  "1F506": "high_brightness",
-  "1F507": "mute",
-  "1F508": "speaker",
-  "1F509": "sound",
-  "1F50A": "loud_sound",
-  "1F50B": "battery",
-  "1F50C": "electric_plug",
-  "1F50D": "mag",
-  "1F50E": "mag_right",
-  "1F50F": "lock_with_ink_pen",
-  "1F510": "closed_lock_with_key",
-  "1F511": "key",
-  "1F512": "lock",
-  "1F513": "unlock",
-  "1F514": "bell",
-  "1F515": "no_bell",
-  "1F516": "bookmark",
-  "1F517": "link",
-  "1F518": "radio_button",
-  "1F519": "back",
-  "1F51A": "end",
-  "1F51B": "on",
-  "1F51C": "soon",
-  "1F51D": "top",
-  "1F51E": "underage",
-  "1F51F": "keycap_ten",
-  "1F520": "capital_abcd",
-  "1F521": "abcd",
-  "1F522": "1234",
-  "1F523": "symbols",
-  "1F524": "abc",
-  "1F525": "fire",
-  "1F526": "flashlight",
-  "1F527": "wrench",
-  "1F528": "hammer",
-  "1F529": "nut_and_bolt",
-  "1F52A": [
-    "hocho",
-    "knife"
-  ],
-  "1F52B": "gun",
-  "1F52C": "microscope",
-  "1F52D": "telescope",
-  "1F52E": "crystal_ball",
-  "1F52F": "six_pointed_star",
-  "1F530": "beginner",
-  "1F531": "trident",
-  "1F532": "black_square_button",
-  "1F533": "white_square_button",
-  "1F534": "red_circle",
-  "1F535": "large_blue_circle",
-  "1F536": "large_orange_diamond",
-  "1F537": "large_blue_diamond",
-  "1F538": "small_orange_diamond",
-  "1F539": "small_blue_diamond",
-  "1F53A": "small_red_triangle",
-  "1F53B": "small_red_triangle_down",
-  "1F53C": "arrow_up_small",
-  "1F53D": "arrow_down_small",
-  "1F549": "om_symbol",
-  "1F54A": "dove_of_peace",
-  "1F54B": "kaaba",
-  "1F54C": "mosque",
-  "1F54D": "synagogue",
-  "1F54E": "menorah_with_nine_branches",
-  "1F550": "clock1",
-  "1F551": "clock2",
-  "1F552": "clock3",
-  "1F553": "clock4",
-  "1F554": "clock5",
-  "1F555": "clock6",
-  "1F556": "clock7",
-  "1F557": "clock8",
-  "1F558": "clock9",
-  "1F559": "clock10",
-  "1F55A": "clock11",
-  "1F55B": "clock12",
-  "1F55C": "clock130",
-  "1F55D": "clock230",
-  "1F55E": "clock330",
-  "1F55F": "clock430",
-  "1F560": "clock530",
-  "1F561": "clock630",
-  "1F562": "clock730",
-  "1F563": "clock830",
-  "1F564": "clock930",
-  "1F565": "clock1030",
-  "1F566": "clock1130",
-  "1F567": "clock1230",
-  "1F56F": "candle",
-  "1F570": "mantelpiece_clock",
-  "1F573": "hole",
-  "1F574": "man_in_business_suit_levitating",
-  "1F575-FE0F-200D-2640-FE0F": "female-detective",
-  "1F575-FE0F-200D-2642-FE0F": "male-detective",
-  "1F575": "sleuth_or_spy",
-  "1F576": "dark_sunglasses",
-  "1F577": "spider",
-  "1F578": "spider_web",
-  "1F579": "joystick",
-  "1F57A": "man_dancing",
-  "1F587": "linked_paperclips",
-  "1F58A": "lower_left_ballpoint_pen",
-  "1F58B": "lower_left_fountain_pen",
-  "1F58C": "lower_left_paintbrush",
-  "1F58D": "lower_left_crayon",
-  "1F590": "raised_hand_with_fingers_splayed",
-  "1F595": [
-    "middle_finger",
-    "reversed_hand_with_middle_finger_extended"
-  ],
-  "1F596": "spock-hand",
-  "1F5A4": "black_heart",
-  "1F5A5": "desktop_computer",
-  "1F5A8": "printer",
-  "1F5B1": "three_button_mouse",
-  "1F5B2": "trackball",
-  "1F5BC": "frame_with_picture",
-  "1F5C2": "card_index_dividers",
-  "1F5C3": "card_file_box",
-  "1F5C4": "file_cabinet",
-  "1F5D1": "wastebasket",
-  "1F5D2": "spiral_note_pad",
-  "1F5D3": "spiral_calendar_pad",
-  "1F5DC": "compression",
-  "1F5DD": "old_key",
-  "1F5DE": "rolled_up_newspaper",
-  "1F5E1": "dagger_knife",
-  "1F5E3": "speaking_head_in_silhouette",
-  "1F5E8": "left_speech_bubble",
-  "1F5EF": "right_anger_bubble",
-  "1F5F3": "ballot_box_with_ballot",
-  "1F5FA": "world_map",
-  "1F5FB": "mount_fuji",
-  "1F5FC": "tokyo_tower",
-  "1F5FD": "statue_of_liberty",
-  "1F5FE": "japan",
-  "1F5FF": "moyai",
-  "1F600": "grinning",
-  "1F601": "grin",
-  "1F602": "joy",
-  "1F603": "smiley",
-  "1F604": "smile",
-  "1F605": "sweat_smile",
-  "1F606": [
-    "laughing",
-    "satisfied"
-  ],
-  "1F607": "innocent",
-  "1F608": "smiling_imp",
-  "1F609": "wink",
-  "1F60A": "blush",
-  "1F60B": "yum",
-  "1F60C": "relieved",
-  "1F60D": "heart_eyes",
-  "1F60E": "sunglasses",
-  "1F60F": "smirk",
-  "1F610": "neutral_face",
-  "1F611": "expressionless",
-  "1F612": "unamused",
-  "1F613": "sweat",
-  "1F614": "pensive",
-  "1F615": "confused",
-  "1F616": "confounded",
-  "1F617": "kissing",
-  "1F618": "kissing_heart",
-  "1F619": "kissing_smiling_eyes",
-  "1F61A": "kissing_closed_eyes",
-  "1F61B": "stuck_out_tongue",
-  "1F61C": "stuck_out_tongue_winking_eye",
-  "1F61D": "stuck_out_tongue_closed_eyes",
-  "1F61E": "disappointed",
-  "1F61F": "worried",
-  "1F620": "angry",
-  "1F621": "rage",
-  "1F622": "cry",
-  "1F623": "persevere",
-  "1F624": "triumph",
-  "1F625": "disappointed_relieved",
-  "1F626": "frowning",
-  "1F627": "anguished",
-  "1F628": "fearful",
-  "1F629": "weary",
-  "1F62A": "sleepy",
-  "1F62B": "tired_face",
-  "1F62C": "grimacing",
-  "1F62D": "sob",
-  "1F62E-200D-1F4A8": "face_exhaling",
-  "1F62E": "open_mouth",
-  "1F62F": "hushed",
-  "1F630": "cold_sweat",
-  "1F631": "scream",
-  "1F632": "astonished",
-  "1F633": "flushed",
-  "1F634": "sleeping",
-  "1F635-200D-1F4AB": "face_with_spiral_eyes",
-  "1F635": "dizzy_face",
-  "1F636-200D-1F32B-FE0F": "face_in_clouds",
-  "1F636": "no_mouth",
-  "1F637": "mask",
-  "1F638": "smile_cat",
-  "1F639": "joy_cat",
-  "1F63A": "smiley_cat",
-  "1F63B": "heart_eyes_cat",
-  "1F63C": "smirk_cat",
-  "1F63D": "kissing_cat",
-  "1F63E": "pouting_cat",
-  "1F63F": "crying_cat_face",
-  "1F640": "scream_cat",
-  "1F641": "slightly_frowning_face",
-  "1F642-200D-2194-FE0F": "head_shaking_horizontally",
-  "1F642-200D-2195-FE0F": "head_shaking_vertically",
-  "1F642": "slightly_smiling_face",
-  "1F643": "upside_down_face",
-  "1F644": "face_with_rolling_eyes",
-  "1F645-200D-2640-FE0F": "woman-gesturing-no",
-  "1F645-200D-2642-FE0F": "man-gesturing-no",
-  "1F645": "no_good",
-  "1F646-200D-2640-FE0F": "woman-gesturing-ok",
-  "1F646-200D-2642-FE0F": "man-gesturing-ok",
-  "1F646": "ok_woman",
-  "1F647-200D-2640-FE0F": "woman-bowing",
-  "1F647-200D-2642-FE0F": "man-bowing",
-  "1F647": "bow",
-  "1F648": "see_no_evil",
-  "1F649": "hear_no_evil",
-  "1F64A": "speak_no_evil",
-  "1F64B-200D-2640-FE0F": "woman-raising-hand",
-  "1F64B-200D-2642-FE0F": "man-raising-hand",
-  "1F64B": "raising_hand",
-  "1F64C": "raised_hands",
-  "1F64D-200D-2640-FE0F": "woman-frowning",
-  "1F64D-200D-2642-FE0F": "man-frowning",
-  "1F64D": "person_frowning",
-  "1F64E-200D-2640-FE0F": "woman-pouting",
-  "1F64E-200D-2642-FE0F": "man-pouting",
-  "1F64E": "person_with_pouting_face",
-  "1F64F": "pray",
-  "1F680": "rocket",
-  "1F681": "helicopter",
-  "1F682": "steam_locomotive",
-  "1F683": "railway_car",
-  "1F684": "bullettrain_side",
-  "1F685": "bullettrain_front",
-  "1F686": "train2",
-  "1F687": "metro",
-  "1F688": "light_rail",
-  "1F689": "station",
-  "1F68A": "tram",
-  "1F68B": "train",
-  "1F68C": "bus",
-  "1F68D": "oncoming_bus",
-  "1F68E": "trolleybus",
-  "1F68F": "busstop",
-  "1F690": "minibus",
-  "1F691": "ambulance",
-  "1F692": "fire_engine",
-  "1F693": "police_car",
-  "1F694": "oncoming_police_car",
-  "1F695": "taxi",
-  "1F696": "oncoming_taxi",
-  "1F697": [
-    "car",
-    "red_car"
-  ],
-  "1F698": "oncoming_automobile",
-  "1F699": "blue_car",
-  "1F69A": "truck",
-  "1F69B": "articulated_lorry",
-  "1F69C": "tractor",
-  "1F69D": "monorail",
-  "1F69E": "mountain_railway",
-  "1F69F": "suspension_railway",
-  "1F6A0": "mountain_cableway",
-  "1F6A1": "aerial_tramway",
-  "1F6A2": "ship",
-  "1F6A3-200D-2640-FE0F": "woman-rowing-boat",
-  "1F6A3-200D-2642-FE0F": "man-rowing-boat",
-  "1F6A3": "rowboat",
-  "1F6A4": "speedboat",
-  "1F6A5": "traffic_light",
-  "1F6A6": "vertical_traffic_light",
-  "1F6A7": "construction",
-  "1F6A8": "rotating_light",
-  "1F6A9": "triangular_flag_on_post",
-  "1F6AA": "door",
-  "1F6AB": "no_entry_sign",
-  "1F6AC": "smoking",
-  "1F6AD": "no_smoking",
-  "1F6AE": "put_litter_in_its_place",
-  "1F6AF": "do_not_litter",
-  "1F6B0": "potable_water",
-  "1F6B1": "non-potable_water",
-  "1F6B2": "bike",
-  "1F6B3": "no_bicycles",
-  "1F6B4-200D-2640-FE0F": "woman-biking",
-  "1F6B4-200D-2642-FE0F": "man-biking",
-  "1F6B4": "bicyclist",
-  "1F6B5-200D-2640-FE0F": "woman-mountain-biking",
-  "1F6B5-200D-2642-FE0F": "man-mountain-biking",
-  "1F6B5": "mountain_bicyclist",
-  "1F6B6-200D-2640-FE0F": "woman-walking",
-  "1F6B6-200D-2640-FE0F-200D-27A1-FE0F": "woman_walking_facing_right",
-  "1F6B6-200D-2642-FE0F": "man-walking",
-  "1F6B6-200D-2642-FE0F-200D-27A1-FE0F": "man_walking_facing_right",
-  "1F6B6-200D-27A1-FE0F": "person_walking_facing_right",
-  "1F6B6": "walking",
-  "1F6B7": "no_pedestrians",
-  "1F6B8": "children_crossing",
-  "1F6B9": "mens",
-  "1F6BA": "womens",
-  "1F6BB": "restroom",
-  "1F6BC": "baby_symbol",
-  "1F6BD": "toilet",
-  "1F6BE": "wc",
-  "1F6BF": "shower",
-  "1F6C0": "bath",
-  "1F6C1": "bathtub",
-  "1F6C2": "passport_control",
-  "1F6C3": "customs",
-  "1F6C4": "baggage_claim",
-  "1F6C5": "left_luggage",
-  "1F6CB": "couch_and_lamp",
-  "1F6CC": "sleeping_accommodation",
-  "1F6CD": "shopping_bags",
-  "1F6CE": "bellhop_bell",
-  "1F6CF": "bed",
-  "1F6D0": "place_of_worship",
-  "1F6D1": "octagonal_sign",
-  "1F6D2": "shopping_trolley",
-  "1F6D5": "hindu_temple",
-  "1F6D6": "hut",
-  "1F6D7": "elevator",
-  "1F6DC": "wireless",
-  "1F6DD": "playground_slide",
-  "1F6DE": "wheel",
-  "1F6DF": "ring_buoy",
-  "1F6E0": "hammer_and_wrench",
-  "1F6E1": "shield",
-  "1F6E2": "oil_drum",
-  "1F6E3": "motorway",
-  "1F6E4": "railway_track",
-  "1F6E5": "motor_boat",
-  "1F6E9": "small_airplane",
-  "1F6EB": "airplane_departure",
-  "1F6EC": "airplane_arriving",
-  "1F6F0": "satellite",
-  "1F6F3": "passenger_ship",
-  "1F6F4": "scooter",
-  "1F6F5": "motor_scooter",
-  "1F6F6": "canoe",
-  "1F6F7": "sled",
-  "1F6F8": "flying_saucer",
-  "1F6F9": "skateboard",
-  "1F6FA": "auto_rickshaw",
-  "1F6FB": "pickup_truck",
-  "1F6FC": "roller_skate",
-  "1F7E0": "large_orange_circle",
-  "1F7E1": "large_yellow_circle",
-  "1F7E2": "large_green_circle",
-  "1F7E3": "large_purple_circle",
-  "1F7E4": "large_brown_circle",
-  "1F7E5": "large_red_square",
-  "1F7E6": "large_blue_square",
-  "1F7E7": "large_orange_square",
-  "1F7E8": "large_yellow_square",
-  "1F7E9": "large_green_square",
-  "1F7EA": "large_purple_square",
-  "1F7EB": "large_brown_square",
-  "1F7F0": "heavy_equals_sign",
-  "1F90C": "pinched_fingers",
-  "1F90D": "white_heart",
-  "1F90E": "brown_heart",
-  "1F90F": "pinching_hand",
-  "1F910": "zipper_mouth_face",
-  "1F911": "money_mouth_face",
-  "1F912": "face_with_thermometer",
-  "1F913": "nerd_face",
-  "1F914": "thinking_face",
-  "1F915": "face_with_head_bandage",
-  "1F916": "robot_face",
-  "1F917": "hugging_face",
-  "1F918": [
-    "the_horns",
-    "sign_of_the_horns"
-  ],
-  "1F919": "call_me_hand",
-  "1F91A": "raised_back_of_hand",
-  "1F91B": "left-facing_fist",
-  "1F91C": "right-facing_fist",
-  "1F91D": "handshake",
-  "1F91E": [
-    "crossed_fingers",
-    "hand_with_index_and_middle_fingers_crossed"
-  ],
-  "1F91F": "i_love_you_hand_sign",
-  "1F920": "face_with_cowboy_hat",
-  "1F921": "clown_face",
-  "1F922": "nauseated_face",
-  "1F923": "rolling_on_the_floor_laughing",
-  "1F924": "drooling_face",
-  "1F925": "lying_face",
-  "1F926-200D-2640-FE0F": "woman-facepalming",
-  "1F926-200D-2642-FE0F": "man-facepalming",
-  "1F926": "face_palm",
-  "1F927": "sneezing_face",
-  "1F928": [
-    "face_with_raised_eyebrow",
-    "face_with_one_eyebrow_raised"
-  ],
-  "1F929": [
-    "star-struck",
-    "grinning_face_with_star_eyes"
-  ],
-  "1F92A": [
-    "zany_face",
-    "grinning_face_with_one_large_and_one_small_eye"
-  ],
-  "1F92B": [
-    "shushing_face",
-    "face_with_finger_covering_closed_lips"
-  ],
-  "1F92C": [
-    "face_with_symbols_on_mouth",
-    "serious_face_with_symbols_covering_mouth"
-  ],
-  "1F92D": [
-    "face_with_hand_over_mouth",
-    "smiling_face_with_smiling_eyes_and_hand_covering_mouth"
-  ],
-  "1F92E": [
-    "face_vomiting",
-    "face_with_open_mouth_vomiting"
-  ],
-  "1F92F": [
-    "exploding_head",
-    "shocked_face_with_exploding_head"
-  ],
-  "1F930": "pregnant_woman",
-  "1F931": "breast-feeding",
-  "1F932": "palms_up_together",
-  "1F933": "selfie",
-  "1F934": "prince",
-  "1F935-200D-2640-FE0F": "woman_in_tuxedo",
-  "1F935-200D-2642-FE0F": "man_in_tuxedo",
-  "1F935": "person_in_tuxedo",
-  "1F936": [
-    "mrs_claus",
-    "mother_christmas"
-  ],
-  "1F937-200D-2640-FE0F": "woman-shrugging",
-  "1F937-200D-2642-FE0F": "man-shrugging",
-  "1F937": "shrug",
-  "1F938-200D-2640-FE0F": "woman-cartwheeling",
-  "1F938-200D-2642-FE0F": "man-cartwheeling",
-  "1F938": "person_doing_cartwheel",
-  "1F939-200D-2640-FE0F": "woman-juggling",
-  "1F939-200D-2642-FE0F": "man-juggling",
-  "1F939": "juggling",
-  "1F93A": "fencer",
-  "1F93C-200D-2640-FE0F": "woman-wrestling",
-  "1F93C-200D-2642-FE0F": "man-wrestling",
-  "1F93C": "wrestlers",
-  "1F93D-200D-2640-FE0F": "woman-playing-water-polo",
-  "1F93D-200D-2642-FE0F": "man-playing-water-polo",
-  "1F93D": "water_polo",
-  "1F93E-200D-2640-FE0F": "woman-playing-handball",
-  "1F93E-200D-2642-FE0F": "man-playing-handball",
-  "1F93E": "handball",
-  "1F93F": "diving_mask",
-  "1F940": "wilted_flower",
-  "1F941": "drum_with_drumsticks",
-  "1F942": "clinking_glasses",
-  "1F943": "tumbler_glass",
-  "1F944": "spoon",
-  "1F945": "goal_net",
-  "1F947": "first_place_medal",
-  "1F948": "second_place_medal",
-  "1F949": "third_place_medal",
-  "1F94A": "boxing_glove",
-  "1F94B": "martial_arts_uniform",
-  "1F94C": "curling_stone",
-  "1F94D": "lacrosse",
-  "1F94E": "softball",
-  "1F94F": "flying_disc",
-  "1F950": "croissant",
-  "1F951": "avocado",
-  "1F952": "cucumber",
-  "1F953": "bacon",
-  "1F954": "potato",
-  "1F955": "carrot",
-  "1F956": "baguette_bread",
-  "1F957": "green_salad",
-  "1F958": "shallow_pan_of_food",
-  "1F959": "stuffed_flatbread",
-  "1F95A": "egg",
-  "1F95B": "glass_of_milk",
-  "1F95C": "peanuts",
-  "1F95D": "kiwifruit",
-  "1F95E": "pancakes",
-  "1F95F": "dumpling",
-  "1F960": "fortune_cookie",
-  "1F961": "takeout_box",
-  "1F962": "chopsticks",
-  "1F963": "bowl_with_spoon",
-  "1F964": "cup_with_straw",
-  "1F965": "coconut",
-  "1F966": "broccoli",
-  "1F967": "pie",
-  "1F968": "pretzel",
-  "1F969": "cut_of_meat",
-  "1F96A": "sandwich",
-  "1F96B": "canned_food",
-  "1F96C": "leafy_green",
-  "1F96D": "mango",
-  "1F96E": "moon_cake",
-  "1F96F": "bagel",
-  "1F970": "smiling_face_with_3_hearts",
-  "1F971": "yawning_face",
-  "1F972": "smiling_face_with_tear",
-  "1F973": "partying_face",
-  "1F974": "woozy_face",
-  "1F975": "hot_face",
-  "1F976": "cold_face",
-  "1F977": "ninja",
-  "1F978": "disguised_face",
-  "1F979": "face_holding_back_tears",
-  "1F97A": "pleading_face",
-  "1F97B": "sari",
-  "1F97C": "lab_coat",
-  "1F97D": "goggles",
-  "1F97E": "hiking_boot",
-  "1F97F": "womans_flat_shoe",
-  "1F980": "crab",
-  "1F981": "lion_face",
-  "1F982": "scorpion",
-  "1F983": "turkey",
-  "1F984": "unicorn_face",
-  "1F985": "eagle",
-  "1F986": "duck",
-  "1F987": "bat",
-  "1F988": "shark",
-  "1F989": "owl",
-  "1F98A": "fox_face",
-  "1F98B": "butterfly",
-  "1F98C": "deer",
-  "1F98D": "gorilla",
-  "1F98E": "lizard",
-  "1F98F": "rhinoceros",
-  "1F990": "shrimp",
-  "1F991": "squid",
-  "1F992": "giraffe_face",
-  "1F993": "zebra_face",
-  "1F994": "hedgehog",
-  "1F995": "sauropod",
-  "1F996": "t-rex",
-  "1F997": "cricket",
-  "1F998": "kangaroo",
-  "1F999": "llama",
-  "1F99A": "peacock",
-  "1F99B": "hippopotamus",
-  "1F99C": "parrot",
-  "1F99D": "raccoon",
-  "1F99E": "lobster",
-  "1F99F": "mosquito",
-  "1F9A0": "microbe",
-  "1F9A1": "badger",
-  "1F9A2": "swan",
-  "1F9A3": "mammoth",
-  "1F9A4": "dodo",
-  "1F9A5": "sloth",
-  "1F9A6": "otter",
-  "1F9A7": "orangutan",
-  "1F9A8": "skunk",
-  "1F9A9": "flamingo",
-  "1F9AA": "oyster",
-  "1F9AB": "beaver",
-  "1F9AC": "bison",
-  "1F9AD": "seal",
-  "1F9AE": "guide_dog",
-  "1F9AF": "probing_cane",
-  "1F9B4": "bone",
-  "1F9B5": "leg",
-  "1F9B6": "foot",
-  "1F9B7": "tooth",
-  "1F9B8-200D-2640-FE0F": "female_superhero",
-  "1F9B8-200D-2642-FE0F": "male_superhero",
-  "1F9B8": "superhero",
-  "1F9B9-200D-2640-FE0F": "female_supervillain",
-  "1F9B9-200D-2642-FE0F": "male_supervillain",
-  "1F9B9": "supervillain",
-  "1F9BA": "safety_vest",
-  "1F9BB": "ear_with_hearing_aid",
-  "1F9BC": "motorized_wheelchair",
-  "1F9BD": "manual_wheelchair",
-  "1F9BE": "mechanical_arm",
-  "1F9BF": "mechanical_leg",
-  "1F9C0": "cheese_wedge",
-  "1F9C1": "cupcake",
-  "1F9C2": "salt",
-  "1F9C3": "beverage_box",
-  "1F9C4": "garlic",
-  "1F9C5": "onion",
-  "1F9C6": "falafel",
-  "1F9C7": "waffle",
-  "1F9C8": "butter",
-  "1F9C9": "mate_drink",
-  "1F9CA": "ice_cube",
-  "1F9CB": "bubble_tea",
-  "1F9CC": "troll",
-  "1F9CD-200D-2640-FE0F": "woman_standing",
-  "1F9CD-200D-2642-FE0F": "man_standing",
-  "1F9CD": "standing_person",
-  "1F9CE-200D-2640-FE0F": "woman_kneeling",
-  "1F9CE-200D-2640-FE0F-200D-27A1-FE0F": "woman_kneeling_facing_right",
-  "1F9CE-200D-2642-FE0F": "man_kneeling",
-  "1F9CE-200D-2642-FE0F-200D-27A1-FE0F": "man_kneeling_facing_right",
-  "1F9CE-200D-27A1-FE0F": "person_kneeling_facing_right",
-  "1F9CE": "kneeling_person",
-  "1F9CF-200D-2640-FE0F": "deaf_woman",
-  "1F9CF-200D-2642-FE0F": "deaf_man",
-  "1F9CF": "deaf_person",
-  "1F9D0": "face_with_monocle",
-  "1F9D1-200D-1F33E": "farmer",
-  "1F9D1-200D-1F373": "cook",
-  "1F9D1-200D-1F37C": "person_feeding_baby",
-  "1F9D1-200D-1F384": "mx_claus",
-  "1F9D1-200D-1F393": "student",
-  "1F9D1-200D-1F3A4": "singer",
-  "1F9D1-200D-1F3A8": "artist",
-  "1F9D1-200D-1F3EB": "teacher",
-  "1F9D1-200D-1F3ED": "factory_worker",
-  "1F9D1-200D-1F4BB": "technologist",
-  "1F9D1-200D-1F4BC": "office_worker",
-  "1F9D1-200D-1F527": "mechanic",
-  "1F9D1-200D-1F52C": "scientist",
-  "1F9D1-200D-1F680": "astronaut",
-  "1F9D1-200D-1F692": "firefighter",
-  "1F9D1-200D-1F91D-200D-1F9D1": "people_holding_hands",
-  "1F9D1-200D-1F9AF-200D-27A1-FE0F": "person_with_white_cane_facing_right",
-  "1F9D1-200D-1F9AF": "person_with_probing_cane",
-  "1F9D1-200D-1F9B0": "red_haired_person",
-  "1F9D1-200D-1F9B1": "curly_haired_person",
-  "1F9D1-200D-1F9B2": "bald_person",
-  "1F9D1-200D-1F9B3": "white_haired_person",
-  "1F9D1-200D-1F9BC-200D-27A1-FE0F": "person_in_motorized_wheelchair_facing_right",
-  "1F9D1-200D-1F9BC": "person_in_motorized_wheelchair",
-  "1F9D1-200D-1F9BD-200D-27A1-FE0F": "person_in_manual_wheelchair_facing_right",
-  "1F9D1-200D-1F9BD": "person_in_manual_wheelchair",
-  "1F9D1-200D-1F9D1-200D-1F9D2": "family_adult_adult_child",
-  "1F9D1-200D-1F9D1-200D-1F9D2-200D-1F9D2": "family_adult_adult_child_child",
-  "1F9D1-200D-1F9D2-200D-1F9D2": "family_adult_child_child",
-  "1F9D1-200D-1F9D2": "family_adult_child",
-  "1F9D1-200D-2695-FE0F": "health_worker",
-  "1F9D1-200D-2696-FE0F": "judge",
-  "1F9D1-200D-2708-FE0F": "pilot",
-  "1F9D1": "adult",
-  "1F9D2": "child",
-  "1F9D3": "older_adult",
-  "1F9D4-200D-2640-FE0F": "woman_with_beard",
-  "1F9D4-200D-2642-FE0F": "man_with_beard",
-  "1F9D4": "bearded_person",
-  "1F9D5": "person_with_headscarf",
-  "1F9D6-200D-2640-FE0F": "woman_in_steamy_room",
-  "1F9D6-200D-2642-FE0F": "man_in_steamy_room",
-  "1F9D6": "person_in_steamy_room",
-  "1F9D7-200D-2640-FE0F": "woman_climbing",
-  "1F9D7-200D-2642-FE0F": "man_climbing",
-  "1F9D7": "person_climbing",
-  "1F9D8-200D-2640-FE0F": "woman_in_lotus_position",
-  "1F9D8-200D-2642-FE0F": "man_in_lotus_position",
-  "1F9D8": "person_in_lotus_position",
-  "1F9D9-200D-2640-FE0F": "female_mage",
-  "1F9D9-200D-2642-FE0F": "male_mage",
-  "1F9D9": "mage",
-  "1F9DA-200D-2640-FE0F": "female_fairy",
-  "1F9DA-200D-2642-FE0F": "male_fairy",
-  "1F9DA": "fairy",
-  "1F9DB-200D-2640-FE0F": "female_vampire",
-  "1F9DB-200D-2642-FE0F": "male_vampire",
-  "1F9DB": "vampire",
-  "1F9DC-200D-2640-FE0F": "mermaid",
-  "1F9DC-200D-2642-FE0F": "merman",
-  "1F9DC": "merperson",
-  "1F9DD-200D-2640-FE0F": "female_elf",
-  "1F9DD-200D-2642-FE0F": "male_elf",
-  "1F9DD": "elf",
-  "1F9DE-200D-2640-FE0F": "female_genie",
-  "1F9DE-200D-2642-FE0F": "male_genie",
-  "1F9DE": "genie",
-  "1F9DF-200D-2640-FE0F": "female_zombie",
-  "1F9DF-200D-2642-FE0F": "male_zombie",
-  "1F9DF": "zombie",
-  "1F9E0": "brain",
-  "1F9E1": "orange_heart",
-  "1F9E2": "billed_cap",
-  "1F9E3": "scarf",
-  "1F9E4": "gloves",
-  "1F9E5": "coat",
-  "1F9E6": "socks",
-  "1F9E7": "red_envelope",
-  "1F9E8": "firecracker",
-  "1F9E9": "jigsaw",
-  "1F9EA": "test_tube",
-  "1F9EB": "petri_dish",
-  "1F9EC": "dna",
-  "1F9ED": "compass",
-  "1F9EE": "abacus",
-  "1F9EF": "fire_extinguisher",
-  "1F9F0": "toolbox",
-  "1F9F1": "bricks",
-  "1F9F2": "magnet",
-  "1F9F3": "luggage",
-  "1F9F4": "lotion_bottle",
-  "1F9F5": "thread",
-  "1F9F6": "yarn",
-  "1F9F7": "safety_pin",
-  "1F9F8": "teddy_bear",
-  "1F9F9": "broom",
-  "1F9FA": "basket",
-  "1F9FB": "roll_of_paper",
-  "1F9FC": "soap",
-  "1F9FD": "sponge",
-  "1F9FE": "receipt",
-  "1F9FF": "nazar_amulet",
-  "1FA70": "ballet_shoes",
-  "1FA71": "one-piece_swimsuit",
-  "1FA72": "briefs",
-  "1FA73": "shorts",
-  "1FA74": "thong_sandal",
-  "1FA75": "light_blue_heart",
-  "1FA76": "grey_heart",
-  "1FA77": "pink_heart",
-  "1FA78": "drop_of_blood",
-  "1FA79": "adhesive_bandage",
-  "1FA7A": "stethoscope",
-  "1FA7B": "x-ray",
-  "1FA7C": "crutch",
-  "1FA80": "yo-yo",
-  "1FA81": "kite",
-  "1FA82": "parachute",
-  "1FA83": "boomerang",
-  "1FA84": "magic_wand",
-  "1FA85": "pinata",
-  "1FA86": "nesting_dolls",
-  "1FA87": "maracas",
-  "1FA88": "flute",
-  "1FA90": "ringed_planet",
-  "1FA91": "chair",
-  "1FA92": "razor",
-  "1FA93": "axe",
-  "1FA94": "diya_lamp",
-  "1FA95": "banjo",
-  "1FA96": "military_helmet",
-  "1FA97": "accordion",
-  "1FA98": "long_drum",
-  "1FA99": "coin",
-  "1FA9A": "carpentry_saw",
-  "1FA9B": "screwdriver",
-  "1FA9C": "ladder",
-  "1FA9D": "hook",
-  "1FA9E": "mirror",
-  "1FA9F": "window",
-  "1FAA0": "plunger",
-  "1FAA1": "sewing_needle",
-  "1FAA2": "knot",
-  "1FAA3": "bucket",
-  "1FAA4": "mouse_trap",
-  "1FAA5": "toothbrush",
-  "1FAA6": "headstone",
-  "1FAA7": "placard",
-  "1FAA8": "rock",
-  "1FAA9": "mirror_ball",
-  "1FAAA": "identification_card",
-  "1FAAB": "low_battery",
-  "1FAAC": "hamsa",
-  "1FAAD": "folding_hand_fan",
-  "1FAAE": "hair_pick",
-  "1FAAF": "khanda",
-  "1FAB0": "fly",
-  "1FAB1": "worm",
-  "1FAB2": "beetle",
-  "1FAB3": "cockroach",
-  "1FAB4": "potted_plant",
-  "1FAB5": "wood",
-  "1FAB6": "feather",
-  "1FAB7": "lotus",
-  "1FAB8": "coral",
-  "1FAB9": "empty_nest",
-  "1FABA": "nest_with_eggs",
-  "1FABB": "hyacinth",
-  "1FABC": "jellyfish",
-  "1FABD": "wing",
-  "1FABF": "goose",
-  "1FAC0": "anatomical_heart",
-  "1FAC1": "lungs",
-  "1FAC2": "people_hugging",
-  "1FAC3": "pregnant_man",
-  "1FAC4": "pregnant_person",
-  "1FAC5": "person_with_crown",
-  "1FACE": "moose",
-  "1FACF": "donkey",
-  "1FAD0": "blueberries",
-  "1FAD1": "bell_pepper",
-  "1FAD2": "olive",
-  "1FAD3": "flatbread",
-  "1FAD4": "tamale",
-  "1FAD5": "fondue",
-  "1FAD6": "teapot",
-  "1FAD7": "pouring_liquid",
-  "1FAD8": "beans",
-  "1FAD9": "jar",
-  "1FADA": "ginger_root",
-  "1FADB": "pea_pod",
-  "1FAE0": "melting_face",
-  "1FAE1": "saluting_face",
-  "1FAE2": "face_with_open_eyes_and_hand_over_mouth",
-  "1FAE3": "face_with_peeking_eye",
-  "1FAE4": "face_with_diagonal_mouth",
-  "1FAE5": "dotted_line_face",
-  "1FAE6": "biting_lip",
-  "1FAE7": "bubbles",
-  "1FAE8": "shaking_face",
-  "1FAF0": "hand_with_index_finger_and_thumb_crossed",
-  "1FAF1": "rightwards_hand",
-  "1FAF2": "leftwards_hand",
-  "1FAF3": "palm_down_hand",
-  "1FAF4": "palm_up_hand",
-  "1FAF5": "index_pointing_at_the_viewer",
-  "1FAF6": "heart_hands",
-  "1FAF7": "leftwards_pushing_hand",
-  "1FAF8": "rightwards_pushing_hand",
-  "203C": "bangbang",
-  "21A9": "leftwards_arrow_with_hook",
-  "21AA": "arrow_right_hook",
-  "231A": "watch",
-  "231B": "hourglass",
-  "23CF": "eject",
-  "23E9": "fast_forward",
-  "23EA": "rewind",
-  "23EB": "arrow_double_up",
-  "23EC": "arrow_double_down",
-  "23ED": "black_right_pointing_double_triangle_with_vertical_bar",
-  "23EE": "black_left_pointing_double_triangle_with_vertical_bar",
-  "23EF": "black_right_pointing_triangle_with_double_vertical_bar",
-  "23F0": "alarm_clock",
-  "23F1": "stopwatch",
-  "23F2": "timer_clock",
-  "23F3": "hourglass_flowing_sand",
-  "23F8": "double_vertical_bar",
-  "23F9": "black_square_for_stop",
-  "23FA": "black_circle_for_record",
-  "24C2": "m",
-  "25AA": "black_small_square",
-  "25AB": "white_small_square",
-  "25B6": "arrow_forward",
-  "25C0": "arrow_backward",
-  "25FB": "white_medium_square",
-  "25FC": "black_medium_square",
-  "25FD": "white_medium_small_square",
-  "25FE": "black_medium_small_square",
-  "260E": [
-    "phone",
-    "telephone"
-  ],
-  "261D": "point_up",
-  "262A": "star_and_crescent",
-  "262E": "peace_symbol",
-  "262F": "yin_yang",
-  "263A": "relaxed",
-  "264A": "gemini",
-  "264B": "cancer",
-  "264C": "leo",
-  "264D": "virgo",
-  "264E": "libra",
-  "264F": "scorpius",
-  "265F": "chess_pawn",
-  "267B": "recycle",
-  "267E": "infinity",
-  "267F": "wheelchair",
-  "269B": "atom_symbol",
-  "269C": "fleur_de_lis",
-  "26A0": "warning",
-  "26A1": "zap",
-  "26A7": "transgender_symbol",
-  "26AA": "white_circle",
-  "26AB": "black_circle",
-  "26B0": "coffin",
-  "26B1": "funeral_urn",
-  "26BD": "soccer",
-  "26BE": "baseball",
-  "26C4": "snowman_without_snow",
-  "26C5": "partly_sunny",
-  "26C8": "thunder_cloud_and_rain",
-  "26CE": "ophiuchus",
-  "26CF": "pick",
-  "26D1": "helmet_with_white_cross",
-  "26D3-FE0F-200D-1F4A5": "broken_chain",
-  "26D3": "chains",
-  "26D4": "no_entry",
-  "26E9": "shinto_shrine",
-  "26EA": "church",
-  "26F0": "mountain",
-  "26F1": "umbrella_on_ground",
-  "26F2": "fountain",
-  "26F3": "golf",
-  "26F4": "ferry",
-  "26F5": [
-    "boat",
-    "sailboat"
-  ],
-  "26F7": "skier",
-  "26F8": "ice_skate",
-  "26F9-FE0F-200D-2640-FE0F": "woman-bouncing-ball",
-  "26F9-FE0F-200D-2642-FE0F": "man-bouncing-ball",
-  "26F9": "person_with_ball",
-  "26FA": "tent",
-  "26FD": "fuelpump",
-  "270A": "fist",
-  "270B": [
-    "hand",
-    "raised_hand"
-  ],
-  "270C": "v",
-  "270D": "writing_hand",
-  "270F": "pencil2",
-  "271D": "latin_cross",
-  "274C": "x",
-  "274E": "negative_squared_cross_mark",
-  "2764-FE0F-200D-1F525": "heart_on_fire",
-  "2764-FE0F-200D-1FA79": "mending_heart",
-  "27A1": "arrow_right",
-  "27B0": "curly_loop",
-  "27BF": "loop",
-  "2B05": "arrow_left",
-  "2B06": "arrow_up",
-  "2B07": "arrow_down",
-  "2B1B": "black_large_square",
-  "2B1C": "white_large_square",
-  "2B50": "star",
-  "2B55": "o",
-  "303D": "part_alternation_mark"
+import { clsx as clsx$1 } from "clsx";
+import { b as browser } from "./false.js";
+import * as devalue from "devalue";
+var is_array = Array.isArray;
+var index_of = Array.prototype.indexOf;
+var includes = Array.prototype.includes;
+var array_from = Array.from;
+var define_property = Object.defineProperty;
+var get_descriptor = Object.getOwnPropertyDescriptor;
+var object_prototype = Object.prototype;
+var array_prototype = Array.prototype;
+var get_prototype_of = Object.getPrototypeOf;
+var is_extensible = Object.isExtensible;
+var has_own_property = Object.prototype.hasOwnProperty;
+const noop = () => {
 };
-const createNewChat = async (token, chat, folderId, variables = null) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/new`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      chat,
-      ...variables !== null ? { variables } : {},
-      folder_id: folderId ?? null
-    })
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).catch((err) => {
-    error = err;
-    return null;
+function run(fn) {
+  return fn();
+}
+function run_all(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    arr[i]();
+  }
+}
+function deferred() {
+  var resolve;
+  var reject;
+  var promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
   });
-  if (error) {
-    throw error;
+  return { promise, resolve, reject };
+}
+function fallback(value, fallback2, lazy = false) {
+  return value === void 0 ? lazy ? (
+    /** @type {() => V} */
+    fallback2()
+  ) : (
+    /** @type {V} */
+    fallback2
+  ) : value;
+}
+function equals(value) {
+  return value === this.v;
+}
+function safe_not_equal(a, b) {
+  return a != a ? b == b : a !== b || a !== null && typeof a === "object" || typeof a === "function";
+}
+function safe_equals(value) {
+  return !safe_not_equal(value, this.v);
+}
+const DERIVED = 1 << 1;
+const EFFECT = 1 << 2;
+const RENDER_EFFECT = 1 << 3;
+const MANAGED_EFFECT = 1 << 24;
+const BLOCK_EFFECT = 1 << 4;
+const BRANCH_EFFECT = 1 << 5;
+const ROOT_EFFECT = 1 << 6;
+const BOUNDARY_EFFECT = 1 << 7;
+const CONNECTED = 1 << 9;
+const CLEAN = 1 << 10;
+const DIRTY = 1 << 11;
+const MAYBE_DIRTY = 1 << 12;
+const INERT = 1 << 13;
+const DESTROYED = 1 << 14;
+const REACTION_RAN = 1 << 15;
+const DESTROYING = 1 << 25;
+const EFFECT_TRANSPARENT = 1 << 16;
+const EAGER_EFFECT = 1 << 17;
+const HEAD_EFFECT = 1 << 18;
+const EFFECT_PRESERVED = 1 << 19;
+const USER_EFFECT = 1 << 20;
+const WAS_MARKED = 1 << 16;
+const REACTION_IS_UPDATING = 1 << 21;
+const ASYNC = 1 << 22;
+const ERROR_VALUE = 1 << 23;
+const STATE_SYMBOL = Symbol("$state");
+const LEGACY_PROPS = Symbol("legacy props");
+const ATTRIBUTES_CACHE = Symbol("attributes");
+const CLASS_CACHE = Symbol("class");
+const STYLE_CACHE = Symbol("style");
+const TEXT_CACHE = Symbol("text");
+const STALE_REACTION = new class StaleReactionError extends Error {
+  name = "StaleReactionError";
+  message = "The reaction that called `getAbortSignal()` was re-run or destroyed";
+}();
+const COMMENT_NODE = 8;
+function invalid_default_snippet() {
+  {
+    throw new Error(`https://svelte.dev/e/invalid_default_snippet`);
   }
-  return res;
-};
-const getChatList = async (token = "", page = null, include_pinned = false, include_folders = false) => {
-  let error = null;
-  const searchParams = new URLSearchParams();
-  if (page !== null) {
-    searchParams.append("page", `${page}`);
+}
+function lifecycle_outside_component(name) {
+  {
+    throw new Error(`https://svelte.dev/e/lifecycle_outside_component`);
   }
-  if (include_folders) {
-    searchParams.append("include_folders", "true");
+}
+function effect_update_depth_exceeded() {
+  {
+    throw new Error(`https://svelte.dev/e/effect_update_depth_exceeded`);
   }
-  if (include_pinned) {
-    searchParams.append("include_pinned", "true");
+}
+function hydration_failed() {
+  {
+    throw new Error(`https://svelte.dev/e/hydration_failed`);
   }
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/?${searchParams.toString()}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+}
+function state_descriptors_fixed() {
+  {
+    throw new Error(`https://svelte.dev/e/state_descriptors_fixed`);
+  }
+}
+function state_prototype_fixed() {
+  {
+    throw new Error(`https://svelte.dev/e/state_prototype_fixed`);
+  }
+}
+function state_unsafe_mutation() {
+  {
+    throw new Error(`https://svelte.dev/e/state_unsafe_mutation`);
+  }
+}
+function svelte_boundary_reset_onerror() {
+  {
+    throw new Error(`https://svelte.dev/e/svelte_boundary_reset_onerror`);
+  }
+}
+const HYDRATION_START = "[";
+const HYDRATION_START_ELSE = "[!";
+const HYDRATION_START_FAILED = "[?";
+const HYDRATION_END = "]";
+const HYDRATION_ERROR = {};
+const ELEMENT_IS_NAMESPACED = 1;
+const ELEMENT_PRESERVE_ATTRIBUTE_CASE = 1 << 1;
+const ELEMENT_IS_INPUT = 1 << 2;
+const UNINITIALIZED = Symbol("uninitialized");
+const ATTACHMENT_KEY = "@attach";
+function derived_inert() {
+  {
+    console.warn(`https://svelte.dev/e/derived_inert`);
+  }
+}
+function hydration_mismatch(location) {
+  {
+    console.warn(`https://svelte.dev/e/hydration_mismatch`);
+  }
+}
+function svelte_boundary_reset_noop() {
+  {
+    console.warn(`https://svelte.dev/e/svelte_boundary_reset_noop`);
+  }
+}
+let tracing_mode_flag = false;
+let component_context = null;
+function set_component_context(context) {
+  component_context = context;
+}
+function push$1(props, runes = false, fn) {
+  component_context = {
+    p: component_context,
+    i: false,
+    c: null,
+    e: null,
+    s: props,
+    x: null,
+    r: (
+      /** @type {Effect} */
+      active_effect
+    ),
+    l: null
+  };
+}
+function pop$1(component) {
+  var context = (
+    /** @type {ComponentContext} */
+    component_context
+  );
+  var effects = context.e;
+  if (effects !== null) {
+    context.e = null;
+    for (var fn of effects) {
+      create_user_effect(fn);
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
+  }
+  context.i = true;
+  component_context = context.p;
+  return (
+    /** @type {T} */
+    {}
+  );
+}
+function is_runes() {
+  return true;
+}
+let micro_tasks = [];
+function run_micro_tasks() {
+  var tasks = micro_tasks;
+  micro_tasks = [];
+  run_all(tasks);
+}
+function queue_micro_task(fn) {
+  if (micro_tasks.length === 0 && !is_flushing_sync) {
+    var tasks = micro_tasks;
+    queueMicrotask(() => {
+      if (tasks === micro_tasks) run_micro_tasks();
+    });
+  }
+  micro_tasks.push(fn);
+}
+function flush_tasks() {
+  while (micro_tasks.length > 0) {
+    run_micro_tasks();
+  }
+}
+function handle_error(error) {
+  var effect = active_effect;
+  if (effect === null) {
+    active_reaction.f |= ERROR_VALUE;
+    return error;
+  }
+  if ((effect.f & REACTION_RAN) === 0 && (effect.f & EFFECT) === 0) {
     throw error;
   }
-  if (!res) {
-    return [];
+  invoke_error_boundary(error, effect);
+}
+function invoke_error_boundary(error, effect) {
+  while (effect !== null) {
+    if ((effect.f & BOUNDARY_EFFECT) !== 0) {
+      if ((effect.f & REACTION_RAN) === 0) {
+        throw error;
+      }
+      try {
+        effect.b.error(error);
+        return;
+      } catch (e) {
+        error = e;
+      }
+    }
+    effect = effect.parent;
   }
-  return res.map((chat) => ({
-    ...chat,
-    time_range: getTimeRange(chat.updated_at)
-  }));
-};
-const getSharedChatList = async (token = "", page = 1, filter) => {
-  let error = null;
-  const searchParams = new URLSearchParams();
-  searchParams.append("page", `${page}`);
-  if (filter) {
-    Object.entries(filter).forEach(([key, value]) => {
-      if (value !== void 0 && value !== null) {
-        searchParams.append(key, value.toString());
+  throw error;
+}
+const STATUS_MASK = -7169;
+function set_signal_status(signal, status) {
+  signal.f = signal.f & STATUS_MASK | status;
+}
+function update_derived_status(derived2) {
+  if ((derived2.f & CONNECTED) !== 0 || derived2.deps === null) {
+    set_signal_status(derived2, CLEAN);
+  } else {
+    set_signal_status(derived2, MAYBE_DIRTY);
+  }
+}
+function clear_marked(deps) {
+  if (deps === null) return;
+  for (const dep of deps) {
+    if ((dep.f & DERIVED) === 0 || (dep.f & WAS_MARKED) === 0) {
+      continue;
+    }
+    dep.f ^= WAS_MARKED;
+    clear_marked(
+      /** @type {Derived} */
+      dep.deps
+    );
+  }
+}
+function defer_effect(effect, dirty_effects, maybe_dirty_effects) {
+  if ((effect.f & DIRTY) !== 0) {
+    dirty_effects.add(effect);
+  } else if ((effect.f & MAYBE_DIRTY) !== 0) {
+    maybe_dirty_effects.add(effect);
+  }
+  clear_marked(effect.deps);
+  set_signal_status(effect, CLEAN);
+}
+let first_batch = null;
+let last_batch = null;
+let current_batch = null;
+let previous_batch = null;
+let batch_values = null;
+let last_scheduled_effect = null;
+let is_flushing_sync = false;
+let is_processing = false;
+let collected_effects = null;
+let legacy_updates = null;
+var flush_count = 0;
+var source_stacks = /* @__PURE__ */ new Set();
+let uid = 1;
+class Batch {
+  id = uid++;
+  /** True as soon as `#process` was called */
+  #started = false;
+  linked = true;
+  /** @type {Batch | null} */
+  #prev = null;
+  /** @type {Batch | null} */
+  #next = null;
+  /** @type {Map<Effect, ReturnType<typeof deferred<any>>>} */
+  async_deriveds = /* @__PURE__ */ new Map();
+  /**
+   * The current values of any signals that are updated in this batch.
+   * Tuple format: [value, is_derived] (note: is_derived is false for deriveds, too, if they were overridden via assignment)
+   * They keys of this map are identical to `this.#previous`
+   * @type {Map<Value, [any, boolean]>}
+   */
+  current = /* @__PURE__ */ new Map();
+  /**
+   * The values of any signals (sources and deriveds) that are updated in this batch _before_ those updates took place.
+   * They keys of this map are identical to `this.#current`
+   * @type {Map<Value, any>}
+   */
+  previous = /* @__PURE__ */ new Map();
+  /**
+   * When the batch is committed (and the DOM is updated), we need to remove old branches
+   * and append new ones by calling the functions added inside (if/each/key/etc) blocks
+   * @type {Set<(batch: Batch) => void>}
+   */
+  #commit_callbacks = /* @__PURE__ */ new Set();
+  /**
+   * If a fork is discarded, we need to destroy any effects that are no longer needed
+   * @type {Set<(batch: Batch) => void>}
+   */
+  #discard_callbacks = /* @__PURE__ */ new Set();
+  /**
+   * The number of async effects that are currently in flight
+   */
+  #pending = 0;
+  /**
+   * Async effects that are currently in flight, _not_ inside a pending boundary
+   * @type {Map<Effect, number>}
+   */
+  #blocking_pending = /* @__PURE__ */ new Map();
+  /**
+   * A deferred that resolves when the batch is committed, used with `settled()`
+   * TODO replace with Promise.withResolvers once supported widely enough
+   * @type {{ promise: Promise<void>, resolve: (value?: any) => void, reject: (reason: unknown) => void } | null}
+   */
+  #deferred = null;
+  /**
+   * The root effects that need to be flushed
+   * @type {Effect[]}
+   */
+  #roots = [];
+  /**
+   * Effects created while this batch was active.
+   * @type {Effect[]}
+   */
+  #new_effects = [];
+  /**
+   * Deferred effects (which run after async work has completed) that are DIRTY
+   * @type {Set<Effect>}
+   */
+  #dirty_effects = /* @__PURE__ */ new Set();
+  /**
+   * Deferred effects that are MAYBE_DIRTY
+   * @type {Set<Effect>}
+   */
+  #maybe_dirty_effects = /* @__PURE__ */ new Set();
+  /**
+   * A map of branches that still exist, but will be destroyed when this batch
+   * is committed — we skip over these during `process`.
+   * The value contains child effects that were dirty/maybe_dirty before being reset,
+   * so they can be rescheduled if the branch survives.
+   * @type {Map<Effect, { d: Effect[], m: Effect[] }>}
+   */
+  #skipped_branches = /* @__PURE__ */ new Map();
+  /**
+   * Inverse of #skipped_branches which we need to tell prior batches to unskip them when committing
+   * @type {Set<Effect>}
+   */
+  #unskipped_branches = /* @__PURE__ */ new Set();
+  is_fork = false;
+  #decrement_queued = false;
+  constructor() {
+    if (last_batch === null) {
+      first_batch = last_batch = this;
+    } else {
+      last_batch.#next = this;
+      this.#prev = last_batch;
+    }
+    last_batch = this;
+  }
+  #is_deferred() {
+    if (this.is_fork) return true;
+    for (const effect of this.#blocking_pending.keys()) {
+      var e = effect;
+      var skipped = false;
+      while (e.parent !== null) {
+        if (this.#skipped_branches.has(e)) {
+          skipped = true;
+          break;
+        }
+        e = e.parent;
+      }
+      if (!skipped) {
+        return true;
+      }
+    }
+    return false;
+  }
+  /**
+   * Add an effect to the #skipped_branches map and reset its children
+   * @param {Effect} effect
+   */
+  skip_effect(effect) {
+    if (!this.#skipped_branches.has(effect)) {
+      this.#skipped_branches.set(effect, { d: [], m: [] });
+    }
+    this.#unskipped_branches.delete(effect);
+  }
+  /**
+   * Remove an effect from the #skipped_branches map and reschedule
+   * any tracked dirty/maybe_dirty child effects
+   * @param {Effect} effect
+   * @param {(e: Effect) => void} callback
+   */
+  unskip_effect(effect, callback = (e) => this.schedule(e)) {
+    var tracked = this.#skipped_branches.get(effect);
+    if (tracked) {
+      this.#skipped_branches.delete(effect);
+      for (var e of tracked.d) {
+        set_signal_status(e, DIRTY);
+        callback(e);
+      }
+      for (e of tracked.m) {
+        set_signal_status(e, MAYBE_DIRTY);
+        callback(e);
+      }
+    }
+    this.#unskipped_branches.add(effect);
+  }
+  #process() {
+    this.#started = true;
+    if (flush_count++ > 1e3) {
+      this.#unlink();
+      infinite_loop_guard();
+    }
+    for (const e of this.#dirty_effects) {
+      this.#maybe_dirty_effects.delete(e);
+      set_signal_status(e, DIRTY);
+      this.schedule(e);
+    }
+    for (const e of this.#maybe_dirty_effects) {
+      set_signal_status(e, MAYBE_DIRTY);
+      this.schedule(e);
+    }
+    const roots = this.#roots;
+    this.#roots = [];
+    this.apply();
+    var effects = collected_effects = [];
+    var render_effects = [];
+    var updates = legacy_updates = [];
+    for (const root of roots) {
+      try {
+        this.#traverse(root, effects, render_effects);
+      } catch (e) {
+        reset_all(root);
+        if (!this.#is_deferred()) this.discard();
+        throw e;
+      }
+    }
+    current_batch = null;
+    if (updates.length > 0) {
+      var batch = Batch.ensure();
+      for (const e of updates) {
+        batch.schedule(e);
+      }
+    }
+    collected_effects = null;
+    legacy_updates = null;
+    if (this.#is_deferred()) {
+      this.#defer_effects(render_effects);
+      this.#defer_effects(effects);
+      for (const [e, t] of this.#skipped_branches) {
+        reset_branch(e, t);
+      }
+      if (updates.length > 0) {
+        /** @type {unknown} */
+        current_batch.#process();
+      }
+      return;
+    }
+    const earlier_batch = this.#find_earlier_batch();
+    if (earlier_batch) {
+      this.#defer_effects(render_effects);
+      this.#defer_effects(effects);
+      earlier_batch.#merge(this);
+      return;
+    }
+    this.#dirty_effects.clear();
+    this.#maybe_dirty_effects.clear();
+    for (const fn of this.#commit_callbacks) fn(this);
+    this.#commit_callbacks.clear();
+    previous_batch = this;
+    flush_queued_effects(render_effects);
+    flush_queued_effects(effects);
+    previous_batch = null;
+    this.#deferred?.resolve();
+    var next_batch = (
+      /** @type {Batch | null} */
+      /** @type {unknown} */
+      current_batch
+    );
+    if (this.#pending === 0 && (this.#roots.length === 0 || next_batch !== null)) {
+      this.#unlink();
+    }
+    if (this.#roots.length > 0) {
+      if (next_batch !== null) {
+        const batch2 = next_batch;
+        batch2.#roots.push(...this.#roots.filter((r) => !batch2.#roots.includes(r)));
+      } else {
+        next_batch = this;
+      }
+    }
+    if (next_batch !== null) {
+      next_batch.#process();
+    }
+  }
+  /**
+   * Traverse the effect tree, executing effects or stashing
+   * them for later execution as appropriate
+   * @param {Effect} root
+   * @param {Effect[]} effects
+   * @param {Effect[]} render_effects
+   */
+  #traverse(root, effects, render_effects) {
+    root.f ^= CLEAN;
+    var effect = root.first;
+    while (effect !== null) {
+      var flags = effect.f;
+      var is_branch = (flags & (BRANCH_EFFECT | ROOT_EFFECT)) !== 0;
+      var is_skippable_branch = is_branch && (flags & CLEAN) !== 0;
+      var skip = is_skippable_branch || (flags & INERT) !== 0 || this.#skipped_branches.has(effect);
+      if (!skip && effect.fn !== null) {
+        if (is_branch) {
+          effect.f ^= CLEAN;
+        } else if ((flags & EFFECT) !== 0) {
+          effects.push(effect);
+        } else if (is_dirty(effect)) {
+          if ((flags & BLOCK_EFFECT) !== 0) this.#maybe_dirty_effects.add(effect);
+          update_effect(effect);
+        }
+        var child = effect.first;
+        if (child !== null) {
+          effect = child;
+          continue;
+        }
+      }
+      while (effect !== null) {
+        var next = effect.next;
+        if (next !== null) {
+          effect = next;
+          break;
+        }
+        effect = effect.parent;
+      }
+    }
+  }
+  #find_earlier_batch() {
+    var batch = this.#prev;
+    while (batch !== null) {
+      if (!batch.is_fork) {
+        for (const [value, [, is_derived]] of this.current) {
+          if (batch.current.has(value) && !is_derived) {
+            return batch;
+          }
+        }
+      }
+      batch = batch.#prev;
+    }
+    return null;
+  }
+  /**
+   * @param {Batch} batch
+   */
+  #merge(batch) {
+    for (const [source2, value] of batch.current) {
+      if (!this.previous.has(source2) && batch.previous.has(source2)) {
+        this.previous.set(source2, batch.previous.get(source2));
+      }
+      this.current.set(source2, value);
+    }
+    for (const [effect, deferred2] of batch.async_deriveds) {
+      const d = this.async_deriveds.get(effect);
+      if (d) deferred2.promise.then(d.resolve).catch(d.reject);
+    }
+    this.transfer_effects(batch.#dirty_effects, batch.#maybe_dirty_effects);
+    const mark = (value) => {
+      var reactions = value.reactions;
+      if (reactions === null) return;
+      for (const reaction of reactions) {
+        var flags = reaction.f;
+        if ((flags & DERIVED) !== 0) {
+          mark(
+            /** @type {Derived} */
+            reaction
+          );
+        } else {
+          var effect = (
+            /** @type {Effect} */
+            reaction
+          );
+          if (flags & (ASYNC | BLOCK_EFFECT) && !this.async_deriveds.has(effect)) {
+            this.#maybe_dirty_effects.delete(effect);
+            set_signal_status(effect, DIRTY);
+            this.schedule(effect);
+          }
+        }
+      }
+    };
+    for (const source2 of this.current.keys()) {
+      mark(source2);
+    }
+    this.oncommit(() => batch.discard());
+    batch.#unlink();
+    current_batch = this;
+    this.#process();
+  }
+  /**
+   * @param {Effect[]} effects
+   */
+  #defer_effects(effects) {
+    for (var i = 0; i < effects.length; i += 1) {
+      defer_effect(effects[i], this.#dirty_effects, this.#maybe_dirty_effects);
+    }
+  }
+  /**
+   * Associate a change to a given source with the current
+   * batch, noting its previous and current values
+   * @param {Value} source
+   * @param {any} value
+   * @param {boolean} [is_derived]
+   */
+  capture(source2, value, is_derived = false) {
+    if (source2.v !== UNINITIALIZED && !this.previous.has(source2)) {
+      this.previous.set(source2, source2.v);
+    }
+    if ((source2.f & ERROR_VALUE) === 0) {
+      this.current.set(source2, [value, is_derived]);
+      batch_values?.set(source2, value);
+    }
+    if (!this.is_fork) {
+      source2.v = value;
+    }
+  }
+  activate() {
+    current_batch = this;
+  }
+  deactivate() {
+    current_batch = null;
+    batch_values = null;
+  }
+  flush() {
+    try {
+      if (browser) ;
+      is_processing = true;
+      current_batch = this;
+      this.#process();
+    } finally {
+      flush_count = 0;
+      last_scheduled_effect = null;
+      collected_effects = null;
+      legacy_updates = null;
+      is_processing = false;
+      current_batch = null;
+      batch_values = null;
+      old_values.clear();
+    }
+  }
+  discard() {
+    for (const fn of this.#discard_callbacks) fn(this);
+    this.#discard_callbacks.clear();
+    this.#unlink();
+    this.#deferred?.resolve();
+  }
+  /**
+   * @param {Effect} effect
+   */
+  register_created_effect(effect) {
+    this.#new_effects.push(effect);
+  }
+  #commit() {
+    for (let batch = first_batch; batch !== null; batch = batch.#next) {
+      var is_earlier = batch.id < this.id;
+      var sources = [];
+      for (const [source3, [value, is_derived]] of this.current) {
+        if (batch.current.has(source3)) {
+          var batch_value = (
+            /** @type {[any, boolean]} */
+            batch.current.get(source3)[0]
+          );
+          if (is_earlier && value !== batch_value) {
+            batch.current.set(source3, [value, is_derived]);
+          } else {
+            continue;
+          }
+        }
+        sources.push(source3);
+      }
+      if (is_earlier) {
+        for (const [effect, deferred2] of this.async_deriveds) {
+          const d = batch.async_deriveds.get(effect);
+          if (d) deferred2.promise.then(d.resolve).catch(d.reject);
+        }
+      }
+      if (!batch.#started) continue;
+      var others = [...batch.current.keys()].filter(
+        (s) => !/** @type {[any, boolean]} */
+        batch.current.get(s)[1] && !this.current.has(s)
+      );
+      if (others.length === 0) {
+        if (is_earlier) {
+          batch.discard();
+        }
+      } else if (sources.length > 0) {
+        if (is_earlier) {
+          for (const unskipped of this.#unskipped_branches) {
+            batch.unskip_effect(unskipped, (e) => {
+              if ((e.f & (BLOCK_EFFECT | ASYNC)) !== 0) {
+                batch.schedule(e);
+              } else {
+                batch.#defer_effects([e]);
+              }
+            });
+          }
+        }
+        batch.activate();
+        var marked = /* @__PURE__ */ new Set();
+        var checked = /* @__PURE__ */ new Map();
+        for (var source2 of sources) {
+          mark_effects(source2, others, marked, checked);
+        }
+        checked = /* @__PURE__ */ new Map();
+        var current_unequal = [...batch.current].filter(([c, v1]) => {
+          const v2 = this.current.get(c);
+          if (!v2) return true;
+          return v2[0] !== v1[0] || v2[1] !== v1[1];
+        }).map(([c]) => c);
+        if (current_unequal.length > 0) {
+          for (const effect of this.#new_effects) {
+            if ((effect.f & (DESTROYED | INERT | EAGER_EFFECT)) === 0 && depends_on(effect, current_unequal, checked)) {
+              if ((effect.f & (ASYNC | BLOCK_EFFECT)) !== 0) {
+                set_signal_status(effect, DIRTY);
+                batch.schedule(effect);
+              } else {
+                batch.#dirty_effects.add(effect);
+              }
+            }
+          }
+        }
+        if (batch.#roots.length > 0 && !batch.#decrement_queued) {
+          batch.apply();
+          for (var root of batch.#roots) {
+            batch.#traverse(root, [], []);
+          }
+          batch.#roots = [];
+        }
+        batch.deactivate();
+      }
+    }
+  }
+  /**
+   * @param {boolean} blocking
+   * @param {Effect} effect
+   */
+  increment(blocking, effect) {
+    this.#pending += 1;
+    if (blocking) {
+      let blocking_pending_count = this.#blocking_pending.get(effect) ?? 0;
+      this.#blocking_pending.set(effect, blocking_pending_count + 1);
+    }
+  }
+  /**
+   * @param {boolean} blocking
+   * @param {Effect} effect
+   */
+  decrement(blocking, effect) {
+    this.#pending -= 1;
+    if (blocking) {
+      let blocking_pending_count = this.#blocking_pending.get(effect) ?? 0;
+      if (blocking_pending_count === 1) {
+        this.#blocking_pending.delete(effect);
+      } else {
+        this.#blocking_pending.set(effect, blocking_pending_count - 1);
+      }
+    }
+    if (this.#decrement_queued) return;
+    this.#decrement_queued = true;
+    queue_micro_task(() => {
+      this.#decrement_queued = false;
+      if (this.linked) {
+        this.flush();
       }
     });
   }
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/shared?${searchParams.toString()}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+  /**
+   * @param {Set<Effect>} dirty_effects
+   * @param {Set<Effect>} maybe_dirty_effects
+   */
+  transfer_effects(dirty_effects, maybe_dirty_effects) {
+    for (const e of dirty_effects) {
+      this.#dirty_effects.add(e);
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res.map((chat) => ({
-    ...chat,
-    time_range: getTimeRange(chat.updated_at)
-  }));
-};
-const getChatListBySearchText = async (token, text, page = 1) => {
-  let error = null;
-  const searchParams = new URLSearchParams();
-  searchParams.append("text", text);
-  searchParams.append("page", `${page}`);
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/search?${searchParams.toString()}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+    for (const e of maybe_dirty_effects) {
+      this.#maybe_dirty_effects.add(e);
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
+    dirty_effects.clear();
+    maybe_dirty_effects.clear();
   }
-  return res.map((chat) => ({
-    ...chat,
-    time_range: getTimeRange(chat.updated_at)
-  }));
-};
-const getChatsByFolderId = async (token, folderId) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/folder/${folderId}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+  /** @param {(batch: Batch) => void} fn */
+  oncommit(fn) {
+    this.#commit_callbacks.add(fn);
+  }
+  /** @param {(batch: Batch) => void} fn */
+  ondiscard(fn) {
+    this.#discard_callbacks.add(fn);
+  }
+  settled() {
+    return (this.#deferred ??= deferred()).promise;
+  }
+  static ensure() {
+    if (current_batch === null) {
+      const batch = current_batch = new Batch();
+      if (!is_processing && !is_flushing_sync) {
+        queue_micro_task(() => {
+          if (!batch.#started) {
+            batch.flush();
+          }
+        });
+      }
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
+    return current_batch;
   }
-  return res;
-};
-const getChatListByFolderId = async (token, folderId, page = 1) => {
-  let error = null;
-  const searchParams = new URLSearchParams();
-  if (page !== null) {
-    searchParams.append("page", `${page}`);
-  }
-  const res = await fetch(
-    `${WEBUI_API_BASE_URL}/chats/folder/${folderId}/list?${searchParams.toString()}`,
+  apply() {
     {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        ...token && { authorization: `Bearer ${token}` }
+      batch_values = null;
+      return;
+    }
+  }
+  /**
+   *
+   * @param {Effect} effect
+   */
+  schedule(effect) {
+    last_scheduled_effect = effect;
+    if (effect.b?.is_pending && (effect.f & (EFFECT | RENDER_EFFECT | MANAGED_EFFECT)) !== 0 && (effect.f & REACTION_RAN) === 0) {
+      effect.b.defer_effect(effect);
+      return;
+    }
+    var e = effect;
+    while (e.parent !== null) {
+      e = e.parent;
+      var flags = e.f;
+      if (collected_effects !== null && e === active_effect) {
+        if ((active_reaction === null || (active_reaction.f & DERIVED) === 0) && true) {
+          return;
+        }
+      }
+      if ((flags & (ROOT_EFFECT | BRANCH_EFFECT)) !== 0) {
+        if ((flags & CLEAN) === 0) {
+          return;
+        }
+        e.f ^= CLEAN;
       }
     }
-  ).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
+    this.#roots.push(e);
   }
-  return res;
-};
-const getAllTags = async (token) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/all/tags`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getPinnedChatList = async (token = "") => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/pinned`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res.map((chat) => ({
-    ...chat,
-    time_range: getTimeRange(chat.updated_at)
-  }));
-};
-const getChatById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err.detail;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getChatByShareId = async (token, share_id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/share/${share_id}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getChatPinnedStatusById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/pinned`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    if ("detail" in err) {
-      error = err.detail;
+  #unlink() {
+    if (!this.linked) return;
+    var prev = this.#prev;
+    var next = this.#next;
+    if (prev === null) {
+      first_batch = next;
     } else {
-      error = err;
+      prev.#next = next;
     }
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const markChatUnreadById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/unread`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).catch((err) => {
-    error = "detail" in err ? err.detail : err;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const cloneChatById = async (token, id, title) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/clone`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    },
-    body: JSON.stringify({
-      ...title && { title }
-    })
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    if ("detail" in err) {
-      error = err.detail;
+    if (next === null) {
+      last_batch = prev;
     } else {
-      error = err;
+      next.#prev = prev;
     }
-    return null;
-  });
-  if (error) {
-    throw error;
+    this.linked = false;
   }
-  return res;
-};
-const forkChatById = async (token, id, messageId) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/fork`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    },
-    body: JSON.stringify({
-      message_id: messageId ?? null
-    })
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    if ("detail" in err) {
-      error = err.detail;
-    } else {
-      error = err;
+}
+function flushSync(fn) {
+  var was_flushing_sync = is_flushing_sync;
+  is_flushing_sync = true;
+  try {
+    var result;
+    if (fn) ;
+    while (true) {
+      flush_tasks();
+      if (current_batch === null) {
+        return (
+          /** @type {T} */
+          result
+        );
+      }
+      current_batch.flush();
     }
-    return null;
-  });
-  if (error) {
-    throw error;
+  } finally {
+    is_flushing_sync = was_flushing_sync;
   }
-  return res;
-};
-const updateChatFolderIdById = async (token, id, folderId) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/folder`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    },
-    body: JSON.stringify({
-      folder_id: folderId
-    })
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
+}
+function infinite_loop_guard() {
+  try {
+    effect_update_depth_exceeded();
+  } catch (error) {
+    invoke_error_boundary(error, last_scheduled_effect);
   }
-  return res;
-};
-const archiveChatById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/archive`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+}
+let eager_block_effects = null;
+function flush_queued_effects(effects) {
+  var length = effects.length;
+  if (length === 0) return;
+  var i = 0;
+  while (i < length) {
+    var effect = effects[i++];
+    if ((effect.f & (DESTROYED | INERT)) === 0 && is_dirty(effect)) {
+      eager_block_effects = /* @__PURE__ */ new Set();
+      update_effect(effect);
+      if (effect.deps === null && effect.first === null && effect.nodes === null && effect.teardown === null && effect.ac === null) {
+        unlink_effect(effect);
+      }
+      if (eager_block_effects?.size > 0) {
+        old_values.clear();
+        for (const e of eager_block_effects) {
+          if ((e.f & (DESTROYED | INERT)) !== 0) continue;
+          const ordered_effects = [e];
+          let ancestor = e.parent;
+          while (ancestor !== null) {
+            if (eager_block_effects.has(ancestor)) {
+              eager_block_effects.delete(ancestor);
+              ordered_effects.push(ancestor);
+            }
+            ancestor = ancestor.parent;
+          }
+          for (let j = ordered_effects.length - 1; j >= 0; j--) {
+            const e2 = ordered_effects[j];
+            if ((e2.f & (DESTROYED | INERT)) !== 0) continue;
+            update_effect(e2);
+          }
+        }
+        eager_block_effects.clear();
+      }
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
   }
-  return res;
-};
-const deleteSharedChatById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/share`, {
-    method: "DELETE",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+  eager_block_effects = null;
+}
+function mark_effects(value, sources, marked, checked) {
+  if (marked.has(value)) return;
+  marked.add(value);
+  if (value.reactions !== null) {
+    for (const reaction of value.reactions) {
+      const flags = reaction.f;
+      if ((flags & DERIVED) !== 0) {
+        mark_effects(
+          /** @type {Derived} */
+          reaction,
+          sources,
+          marked,
+          checked
+        );
+      } else if ((flags & (ASYNC | BLOCK_EFFECT)) !== 0 && (flags & DIRTY) === 0 && depends_on(reaction, sources, checked)) {
+        set_signal_status(reaction, DIRTY);
+        schedule_effect(
+          /** @type {Effect} */
+          reaction
+        );
+      }
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
   }
-  return res;
-};
-const updateChatAccessGrants = async (token, id, accessGrants) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/shared/${id}/access/update`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    },
-    body: JSON.stringify({
-      access_grants: accessGrants
-    })
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
-  }
-  return res;
-};
-const getChatAccessGrants = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/shared/${id}/access`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+}
+function depends_on(reaction, sources, checked) {
+  const depends = checked.get(reaction);
+  if (depends !== void 0) return depends;
+  if (reaction.deps !== null) {
+    for (const dep of reaction.deps) {
+      if (includes.call(sources, dep)) {
+        return true;
+      }
+      if ((dep.f & DERIVED) !== 0 && depends_on(
+        /** @type {Derived} */
+        dep,
+        sources,
+        checked
+      )) {
+        checked.set(
+          /** @type {Derived} */
+          dep,
+          true
+        );
+        return true;
+      }
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
   }
-  return res;
-};
-const updateChatById = async (token, id, chat, variables = null) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    },
-    body: JSON.stringify({
-      chat,
-      ...variables !== null ? { variables } : {}
-    })
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
+  checked.set(reaction, false);
+  return false;
+}
+function schedule_effect(effect) {
+  current_batch.schedule(effect);
+}
+function reset_branch(effect, tracked) {
+  if ((effect.f & BRANCH_EFFECT) !== 0 && (effect.f & CLEAN) !== 0) {
+    return;
   }
-  return res;
-};
-const compactChatById = async (token, id, model) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/compact`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
-    },
-    body: JSON.stringify({ model })
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
+  if ((effect.f & DIRTY) !== 0) {
+    tracked.d.push(effect);
+  } else if ((effect.f & MAYBE_DIRTY) !== 0) {
+    tracked.m.push(effect);
   }
-  return res;
-};
-const deleteChatMessageById = async (token, id, messageId) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/messages/${messageId}`, {
-    method: "DELETE",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+  set_signal_status(effect, CLEAN);
+  var e = effect.first;
+  while (e !== null) {
+    reset_branch(e, tracked);
+    e = e.next;
+  }
+}
+function reset_all(effect) {
+  set_signal_status(effect, CLEAN);
+  var e = effect.first;
+  while (e !== null) {
+    reset_all(e);
+    e = e.next;
+  }
+}
+function destroy_derived_effects(derived2) {
+  var effects = derived2.effects;
+  if (effects !== null) {
+    derived2.effects = null;
+    for (var i = 0; i < effects.length; i += 1) {
+      destroy_effect(
+        /** @type {Effect} */
+        effects[i]
+      );
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
   }
-  return res;
-};
-const getTagsById = async (token, id) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/${id}/tags`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+}
+function execute_derived(derived2) {
+  var value;
+  var prev_active_effect = active_effect;
+  var parent = derived2.parent;
+  if (!is_destroying_effect && parent !== null && derived2.v !== UNINITIALIZED && // if it was never evaluated before, it's guaranteed to fail downstream, so we try to execute instead
+  (parent.f & (DESTROYED | INERT)) !== 0) {
+    derived_inert();
+    return derived2.v;
+  }
+  set_active_effect(parent);
+  {
+    try {
+      derived2.f &= ~WAS_MARKED;
+      destroy_derived_effects(derived2);
+      value = update_reaction(derived2);
+    } finally {
+      set_active_effect(prev_active_effect);
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
   }
-  return res;
-};
-const exportSingleChatStats = async (token, chatId2) => {
-  let error = null;
-  const res = await fetch(`${WEBUI_API_BASE_URL}/chats/stats/export/${chatId2}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...token && { authorization: `Bearer ${token}` }
+  return value;
+}
+function update_derived(derived2) {
+  var value = execute_derived(derived2);
+  if (!derived2.equals(value)) {
+    derived2.wv = increment_write_version();
+    if (!current_batch?.is_fork || derived2.deps === null) {
+      if (current_batch !== null) {
+        current_batch.capture(derived2, value, true);
+        previous_batch?.capture(derived2, value, true);
+      } else {
+        derived2.v = value;
+      }
+      if (derived2.deps === null) {
+        set_signal_status(derived2, CLEAN);
+        return;
+      }
     }
-  }).then(async (res2) => {
-    if (!res2.ok) throw await res2.json();
-    return res2.json();
-  }).then((json) => {
-    return json;
-  }).catch((err) => {
-    error = err;
-    return null;
-  });
-  if (error) {
-    throw error;
   }
-  return res;
-};
-const chatsStore = writable(null);
-const pinnedChatsStore = writable([]);
-const chats = readonly(chatsStore);
-const pinnedChats = readonly(pinnedChatsStore);
-let requestGeneration = 0;
-let allLoaded = false;
-const refreshChatList = async (token = "", options = {}) => {
-  const generation = ++requestGeneration;
-  const [nextChats, nextPinnedChats] = await Promise.all([
-    getChatList(token, 1),
-    options.refreshPinned && !options.clearPinned ? getPinnedChatList(token) : Promise.resolve(void 0)
-  ]);
-  if (generation !== requestGeneration) {
-    return { accepted: false, allLoaded };
+  if (is_destroying_effect) {
+    return;
   }
-  chatsStore.set(nextChats);
-  allLoaded = nextChats.length === 0;
-  if (options.clearPinned) {
-    pinnedChatsStore.set([]);
-  } else if (options.refreshPinned) {
-    pinnedChatsStore.set(nextPinnedChats ?? []);
-  }
-  return { accepted: true, allLoaded };
-};
-const folderRefreshHandlers = /* @__PURE__ */ new Set();
-const refreshFolderChatLists = async (folderId, chat) => {
-  await Promise.all([...folderRefreshHandlers].map((handler) => handler(folderId, chat)));
-};
-const setChatReadAt = (chatId2, lastReadAt) => {
-  let found = false;
-  const updateChat = (chat) => {
-    if (chat.id !== chatId2) {
-      return chat;
+  if (batch_values !== null) {
+    if (effect_tracking() || current_batch?.is_fork) {
+      batch_values.set(derived2, value);
     }
-    found = true;
-    return { ...chat, last_read_at: lastReadAt };
+  } else {
+    update_derived_status(derived2);
+  }
+}
+function freeze_derived_effects(derived2) {
+  if (derived2.effects === null) return;
+  for (const e of derived2.effects) {
+    if (e.teardown || e.ac) {
+      e.teardown?.();
+      e.ac?.abort(STALE_REACTION);
+      if (e.fn !== null) e.teardown = noop;
+      e.ac = null;
+      remove_reactions(e, 0);
+      destroy_effect_children(e);
+    }
+  }
+}
+function unfreeze_derived_effects(derived2) {
+  if (derived2.effects === null) return;
+  for (const e of derived2.effects) {
+    if (e.teardown && e.fn !== null) {
+      update_effect(e);
+    }
+  }
+}
+let eager_effects = /* @__PURE__ */ new Set();
+const old_values = /* @__PURE__ */ new Map();
+let eager_effects_deferred = false;
+function source(v, stack) {
+  var signal = {
+    f: 0,
+    // TODO ideally we could skip this altogether, but it causes type errors
+    v,
+    reactions: null,
+    equals,
+    rv: 0,
+    wv: 0
   };
-  chatsStore.update((items) => items ? items.map(updateChat) : items);
-  pinnedChatsStore.update((items) => items.map(updateChat));
-  return found;
-};
-const WEBUI_NAME = writable(APP_NAME);
-const config = writable(void 0);
-const user = writable(void 0);
-const isApp = writable(false);
-const mobile = writable(false);
-const socket = writable(null);
-const theme = writable("system");
-const shortCodesToEmojis = writable(
-  Object.entries(emojiShortCodes).reduce((acc, [key, value]) => {
-    if (typeof value === "string") {
-      acc[value] = key;
-    } else {
-      for (const v of value) {
-        acc[v] = key;
+  return signal;
+}
+// @__NO_SIDE_EFFECTS__
+function state(v, stack) {
+  const s = source(v);
+  push_reaction_value(s);
+  return s;
+}
+// @__NO_SIDE_EFFECTS__
+function mutable_source(initial_value, immutable = false, trackable = true) {
+  const s = source(initial_value);
+  if (!immutable) {
+    s.equals = safe_equals;
+  }
+  return s;
+}
+function set(source2, value, should_proxy = false) {
+  if (active_reaction !== null && // since we are untracking the function inside `$inspect.with` we need to add this check
+  // to ensure we error if state is set inside an inspect effect
+  (!untracking || (active_reaction.f & EAGER_EFFECT) !== 0) && is_runes() && (active_reaction.f & (DERIVED | BLOCK_EFFECT | ASYNC | EAGER_EFFECT)) !== 0 && (current_sources === null || !current_sources.has(source2))) {
+    state_unsafe_mutation();
+  }
+  let new_value = should_proxy ? proxy(value) : value;
+  return internal_set(source2, new_value, legacy_updates);
+}
+function internal_set(source2, value, updated_during_traversal = null) {
+  if (!source2.equals(value)) {
+    old_values.set(source2, is_destroying_effect ? value : source2.v);
+    var batch = Batch.ensure();
+    batch.capture(source2, value);
+    if ((source2.f & DERIVED) !== 0) {
+      const derived2 = (
+        /** @type {Derived} */
+        source2
+      );
+      if ((source2.f & DIRTY) !== 0) {
+        execute_derived(derived2);
+      }
+      if (batch_values === null) {
+        update_derived_status(derived2);
       }
     }
-    return acc;
-  }, {})
+    source2.wv = increment_write_version();
+    mark_reactions(source2, DIRTY, updated_during_traversal);
+    if (active_effect !== null && (active_effect.f & CLEAN) !== 0 && (active_effect.f & (BRANCH_EFFECT | ROOT_EFFECT)) === 0) {
+      if (untracked_writes === null) {
+        set_untracked_writes([source2]);
+      } else {
+        untracked_writes.push(source2);
+      }
+    }
+    if (!batch.is_fork && eager_effects.size > 0 && !eager_effects_deferred) {
+      flush_eager_effects();
+    }
+  }
+  return value;
+}
+function flush_eager_effects() {
+  eager_effects_deferred = false;
+  for (const effect of eager_effects) {
+    if ((effect.f & CLEAN) !== 0) {
+      set_signal_status(effect, MAYBE_DIRTY);
+    }
+    let dirty;
+    try {
+      dirty = is_dirty(effect);
+    } catch {
+      dirty = true;
+    }
+    if (dirty) {
+      update_effect(effect);
+    }
+  }
+  eager_effects.clear();
+}
+function increment(source2) {
+  set(source2, source2.v + 1);
+}
+function mark_reactions(signal, status, updated_during_traversal) {
+  var reactions = signal.reactions;
+  if (reactions === null) return;
+  var length = reactions.length;
+  for (var i = 0; i < length; i++) {
+    var reaction = reactions[i];
+    var flags = reaction.f;
+    var not_dirty = (flags & DIRTY) === 0;
+    if (not_dirty) {
+      set_signal_status(reaction, status);
+    }
+    if ((flags & EAGER_EFFECT) !== 0) {
+      eager_effects.add(
+        /** @type {Effect} */
+        reaction
+      );
+    } else if ((flags & DERIVED) !== 0) {
+      var derived2 = (
+        /** @type {Derived} */
+        reaction
+      );
+      batch_values?.delete(derived2);
+      if ((flags & WAS_MARKED) === 0) {
+        if (flags & CONNECTED && (active_effect === null || (active_effect.f & REACTION_IS_UPDATING) === 0)) {
+          reaction.f |= WAS_MARKED;
+        }
+        mark_reactions(derived2, MAYBE_DIRTY, updated_during_traversal);
+      }
+    } else if (not_dirty) {
+      var effect = (
+        /** @type {Effect} */
+        reaction
+      );
+      if ((flags & BLOCK_EFFECT) !== 0 && eager_block_effects !== null) {
+        eager_block_effects.add(effect);
+      }
+      if (updated_during_traversal !== null) {
+        updated_during_traversal.push(effect);
+      } else {
+        schedule_effect(effect);
+      }
+    }
+  }
+}
+function proxy(value) {
+  if (typeof value !== "object" || value === null || STATE_SYMBOL in value) {
+    return value;
+  }
+  const prototype = get_prototype_of(value);
+  if (prototype !== object_prototype && prototype !== array_prototype) {
+    return value;
+  }
+  var sources = /* @__PURE__ */ new Map();
+  var is_proxied_array = is_array(value);
+  var version = /* @__PURE__ */ state(0);
+  var parent_version = update_version;
+  var with_parent = (fn) => {
+    if (update_version === parent_version) {
+      return fn();
+    }
+    var reaction = active_reaction;
+    var version2 = update_version;
+    set_active_reaction(null);
+    set_update_version(parent_version);
+    var result = fn();
+    set_active_reaction(reaction);
+    set_update_version(version2);
+    return result;
+  };
+  if (is_proxied_array) {
+    sources.set("length", /* @__PURE__ */ state(
+      /** @type {any[]} */
+      value.length
+    ));
+  }
+  return new Proxy(
+    /** @type {any} */
+    value,
+    {
+      defineProperty(_, prop, descriptor) {
+        if (!("value" in descriptor) || descriptor.configurable === false || descriptor.enumerable === false || descriptor.writable === false) {
+          state_descriptors_fixed();
+        }
+        var s = sources.get(prop);
+        if (s === void 0) {
+          with_parent(() => {
+            var s2 = /* @__PURE__ */ state(descriptor.value);
+            sources.set(prop, s2);
+            return s2;
+          });
+        } else {
+          set(s, descriptor.value, true);
+        }
+        return true;
+      },
+      deleteProperty(target, prop) {
+        var s = sources.get(prop);
+        if (s === void 0) {
+          if (prop in target) {
+            const s2 = with_parent(() => /* @__PURE__ */ state(UNINITIALIZED));
+            sources.set(prop, s2);
+            increment(version);
+          }
+        } else {
+          set(s, UNINITIALIZED);
+          increment(version);
+        }
+        return true;
+      },
+      get(target, prop, receiver) {
+        if (prop === STATE_SYMBOL) {
+          return value;
+        }
+        var s = sources.get(prop);
+        var exists = prop in target;
+        if (s === void 0 && (!exists || get_descriptor(target, prop)?.writable)) {
+          s = with_parent(() => {
+            var p = proxy(exists ? target[prop] : UNINITIALIZED);
+            var s2 = /* @__PURE__ */ state(p);
+            return s2;
+          });
+          sources.set(prop, s);
+        }
+        if (s !== void 0) {
+          var v = get(s);
+          return v === UNINITIALIZED ? void 0 : v;
+        }
+        return Reflect.get(target, prop, receiver);
+      },
+      getOwnPropertyDescriptor(target, prop) {
+        var descriptor = Reflect.getOwnPropertyDescriptor(target, prop);
+        if (descriptor && "value" in descriptor) {
+          var s = sources.get(prop);
+          if (s) descriptor.value = get(s);
+        } else if (descriptor === void 0) {
+          var source2 = sources.get(prop);
+          var value2 = source2?.v;
+          if (source2 !== void 0 && value2 !== UNINITIALIZED) {
+            return {
+              enumerable: true,
+              configurable: true,
+              value: value2,
+              writable: true
+            };
+          }
+        }
+        return descriptor;
+      },
+      has(target, prop) {
+        if (prop === STATE_SYMBOL) {
+          return true;
+        }
+        var s = sources.get(prop);
+        var has = s !== void 0 && s.v !== UNINITIALIZED || Reflect.has(target, prop);
+        if (s !== void 0 || active_effect !== null && (!has || get_descriptor(target, prop)?.writable)) {
+          if (s === void 0) {
+            s = with_parent(() => {
+              var p = has ? proxy(target[prop]) : UNINITIALIZED;
+              var s2 = /* @__PURE__ */ state(p);
+              return s2;
+            });
+            sources.set(prop, s);
+          }
+          var value2 = get(s);
+          if (value2 === UNINITIALIZED) {
+            return false;
+          }
+        }
+        return has;
+      },
+      set(target, prop, value2, receiver) {
+        var s = sources.get(prop);
+        var has = prop in target;
+        if (is_proxied_array && prop === "length") {
+          for (var i = value2; i < /** @type {Source<number>} */
+          s.v; i += 1) {
+            var other_s = sources.get(i + "");
+            if (other_s !== void 0) {
+              set(other_s, UNINITIALIZED);
+            } else if (i in target) {
+              other_s = with_parent(() => /* @__PURE__ */ state(UNINITIALIZED));
+              sources.set(i + "", other_s);
+            }
+          }
+        }
+        if (s === void 0) {
+          if (!has || get_descriptor(target, prop)?.writable) {
+            s = with_parent(() => /* @__PURE__ */ state(void 0));
+            set(s, proxy(value2));
+            sources.set(prop, s);
+          }
+        } else {
+          has = s.v !== UNINITIALIZED;
+          var p = with_parent(() => proxy(value2));
+          set(s, p);
+        }
+        var descriptor = Reflect.getOwnPropertyDescriptor(target, prop);
+        if (descriptor?.set) {
+          descriptor.set.call(receiver, value2);
+        }
+        if (!has) {
+          if (is_proxied_array && typeof prop === "string") {
+            var ls = (
+              /** @type {Source<number>} */
+              sources.get("length")
+            );
+            var n = Number(prop);
+            if (Number.isInteger(n) && n >= ls.v) {
+              set(ls, n + 1);
+            }
+          }
+          increment(version);
+        }
+        return true;
+      },
+      ownKeys(target) {
+        get(version);
+        var own_keys = Reflect.ownKeys(target).filter((key2) => {
+          var source3 = sources.get(key2);
+          return source3 === void 0 || source3.v !== UNINITIALIZED;
+        });
+        for (var [key, source2] of sources) {
+          if (source2.v !== UNINITIALIZED && !(key in target)) {
+            own_keys.push(key);
+          }
+        }
+        return own_keys;
+      },
+      setPrototypeOf() {
+        state_prototype_fixed();
+      }
+    }
+  );
+}
+var $window;
+var first_child_getter;
+var next_sibling_getter;
+function init_operations() {
+  if ($window !== void 0) {
+    return;
+  }
+  $window = window;
+  var element_prototype = Element.prototype;
+  var node_prototype = Node.prototype;
+  var text_prototype = Text.prototype;
+  first_child_getter = get_descriptor(node_prototype, "firstChild").get;
+  next_sibling_getter = get_descriptor(node_prototype, "nextSibling").get;
+  if (is_extensible(element_prototype)) {
+    element_prototype[CLASS_CACHE] = void 0;
+    element_prototype[ATTRIBUTES_CACHE] = null;
+    element_prototype[STYLE_CACHE] = void 0;
+    element_prototype.__e = void 0;
+  }
+  if (is_extensible(text_prototype)) {
+    text_prototype[TEXT_CACHE] = void 0;
+  }
+}
+function create_text(value = "") {
+  return document.createTextNode(value);
+}
+// @__NO_SIDE_EFFECTS__
+function get_first_child(node) {
+  return (
+    /** @type {TemplateNode | null} */
+    first_child_getter.call(node)
+  );
+}
+// @__NO_SIDE_EFFECTS__
+function get_next_sibling(node) {
+  return (
+    /** @type {TemplateNode | null} */
+    next_sibling_getter.call(node)
+  );
+}
+function clear_text_content(node) {
+  node.textContent = "";
+}
+function without_reactive_context(fn) {
+  var previous_reaction = active_reaction;
+  var previous_effect = active_effect;
+  set_active_reaction(null);
+  set_active_effect(null);
+  try {
+    return fn();
+  } finally {
+    set_active_reaction(previous_reaction);
+    set_active_effect(previous_effect);
+  }
+}
+function push_effect(effect, parent_effect) {
+  var parent_last = parent_effect.last;
+  if (parent_last === null) {
+    parent_effect.last = parent_effect.first = effect;
+  } else {
+    parent_last.next = effect;
+    effect.prev = parent_last;
+    parent_effect.last = effect;
+  }
+}
+function create_effect(type, fn) {
+  var parent = active_effect;
+  if (parent !== null && (parent.f & INERT) !== 0) {
+    type |= INERT;
+  }
+  var effect = {
+    ctx: component_context,
+    deps: null,
+    nodes: null,
+    f: type | DIRTY | CONNECTED,
+    first: null,
+    fn,
+    last: null,
+    next: null,
+    parent,
+    b: parent && parent.b,
+    prev: null,
+    teardown: null,
+    wv: 0,
+    ac: null
+  };
+  current_batch?.register_created_effect(effect);
+  var e = effect;
+  if ((type & EFFECT) !== 0) {
+    if (collected_effects !== null) {
+      collected_effects.push(effect);
+    } else {
+      Batch.ensure().schedule(effect);
+    }
+  } else if (fn !== null) {
+    try {
+      update_effect(effect);
+    } catch (e2) {
+      destroy_effect(effect);
+      throw e2;
+    }
+    if (e.deps === null && e.teardown === null && e.nodes === null && e.first === e.last && // either `null`, or a singular child
+    (e.f & EFFECT_PRESERVED) === 0) {
+      e = e.first;
+      if ((type & BLOCK_EFFECT) !== 0 && (type & EFFECT_TRANSPARENT) !== 0 && e !== null) {
+        e.f |= EFFECT_TRANSPARENT;
+      }
+    }
+  }
+  if (e !== null) {
+    e.parent = parent;
+    if (parent !== null) {
+      push_effect(e, parent);
+    }
+    if (active_reaction !== null && (active_reaction.f & DERIVED) !== 0 && (type & ROOT_EFFECT) === 0) {
+      var derived2 = (
+        /** @type {Derived} */
+        active_reaction
+      );
+      (derived2.effects ??= []).push(e);
+    }
+  }
+  return effect;
+}
+function effect_tracking() {
+  return active_reaction !== null && !untracking;
+}
+function create_user_effect(fn) {
+  return create_effect(EFFECT | USER_EFFECT, fn);
+}
+function component_root(fn) {
+  Batch.ensure();
+  const effect = create_effect(ROOT_EFFECT | EFFECT_PRESERVED, fn);
+  return (options = {}) => {
+    return new Promise((fulfil) => {
+      if (options.outro) {
+        pause_effect(effect, () => {
+          destroy_effect(effect);
+          fulfil(void 0);
+        });
+      } else {
+        destroy_effect(effect);
+        fulfil(void 0);
+      }
+    });
+  };
+}
+function render_effect(fn, flags = 0) {
+  return create_effect(RENDER_EFFECT | flags, fn);
+}
+function block(fn, flags = 0) {
+  var effect = create_effect(BLOCK_EFFECT | flags, fn);
+  return effect;
+}
+function branch(fn) {
+  return create_effect(BRANCH_EFFECT | EFFECT_PRESERVED, fn);
+}
+function execute_effect_teardown(effect) {
+  var teardown = effect.teardown;
+  if (teardown !== null) {
+    const previously_destroying_effect = is_destroying_effect;
+    const previous_reaction = active_reaction;
+    set_is_destroying_effect(true);
+    set_active_reaction(null);
+    try {
+      teardown.call(null);
+    } finally {
+      set_is_destroying_effect(previously_destroying_effect);
+      set_active_reaction(previous_reaction);
+    }
+  }
+}
+function destroy_effect_children(signal, remove_dom = false) {
+  var effect = signal.first;
+  signal.first = signal.last = null;
+  while (effect !== null) {
+    const controller2 = effect.ac;
+    if (controller2 !== null) {
+      without_reactive_context(() => {
+        controller2.abort(STALE_REACTION);
+      });
+    }
+    var next = effect.next;
+    if ((effect.f & ROOT_EFFECT) !== 0) {
+      effect.parent = null;
+    } else {
+      destroy_effect(effect, remove_dom);
+    }
+    effect = next;
+  }
+}
+function destroy_block_effect_children(signal) {
+  var effect = signal.first;
+  while (effect !== null) {
+    var next = effect.next;
+    if ((effect.f & BRANCH_EFFECT) === 0) {
+      destroy_effect(effect);
+    }
+    effect = next;
+  }
+}
+function destroy_effect(effect, remove_dom = true) {
+  var removed = false;
+  if ((remove_dom || (effect.f & HEAD_EFFECT) !== 0) && effect.nodes !== null && effect.nodes.end !== null) {
+    remove_effect_dom(
+      effect.nodes.start,
+      /** @type {TemplateNode} */
+      effect.nodes.end
+    );
+    removed = true;
+  }
+  set_signal_status(effect, DESTROYING);
+  destroy_effect_children(effect, remove_dom && !removed);
+  remove_reactions(effect, 0);
+  var transitions = effect.nodes && effect.nodes.t;
+  if (transitions !== null) {
+    for (const transition of transitions) {
+      transition.stop();
+    }
+  }
+  execute_effect_teardown(effect);
+  effect.f ^= DESTROYING;
+  effect.f |= DESTROYED;
+  var parent = effect.parent;
+  if (parent !== null && parent.first !== null) {
+    unlink_effect(effect);
+  }
+  effect.next = effect.prev = effect.teardown = effect.ctx = effect.deps = effect.fn = effect.nodes = effect.ac = effect.b = null;
+}
+function remove_effect_dom(node, end) {
+  while (node !== null) {
+    var next = node === end ? null : /* @__PURE__ */ get_next_sibling(node);
+    node.remove();
+    node = next;
+  }
+}
+function unlink_effect(effect) {
+  var parent = effect.parent;
+  var prev = effect.prev;
+  var next = effect.next;
+  if (prev !== null) prev.next = next;
+  if (next !== null) next.prev = prev;
+  if (parent !== null) {
+    if (parent.first === effect) parent.first = next;
+    if (parent.last === effect) parent.last = prev;
+  }
+}
+function pause_effect(effect, callback, destroy = true) {
+  var transitions = [];
+  pause_children(effect, transitions, true);
+  var fn = () => {
+    if (destroy) destroy_effect(effect);
+    if (callback) callback();
+  };
+  var remaining = transitions.length;
+  if (remaining > 0) {
+    var check = () => --remaining || fn();
+    for (var transition of transitions) {
+      transition.out(check);
+    }
+  } else {
+    fn();
+  }
+}
+function pause_children(effect, transitions, local) {
+  if ((effect.f & INERT) !== 0) return;
+  effect.f ^= INERT;
+  var t = effect.nodes && effect.nodes.t;
+  if (t !== null) {
+    for (const transition of t) {
+      if (transition.is_global || local) {
+        transitions.push(transition);
+      }
+    }
+  }
+  var child = effect.first;
+  while (child !== null) {
+    var sibling = child.next;
+    if ((child.f & ROOT_EFFECT) === 0) {
+      var transparent = (child.f & EFFECT_TRANSPARENT) !== 0 || // If this is a branch effect without a block effect parent,
+      // it means the parent block effect was pruned. In that case,
+      // transparency information was transferred to the branch effect.
+      (child.f & BRANCH_EFFECT) !== 0 && (effect.f & BLOCK_EFFECT) !== 0;
+      pause_children(child, transitions, transparent ? local : false);
+    }
+    child = sibling;
+  }
+}
+function move_effect(effect, fragment) {
+  if (!effect.nodes) return;
+  var node = effect.nodes.start;
+  var end = effect.nodes.end;
+  while (node !== null) {
+    var next = node === end ? null : /* @__PURE__ */ get_next_sibling(node);
+    fragment.append(node);
+    node = next;
+  }
+}
+let is_updating_effect = false;
+let is_destroying_effect = false;
+function set_is_destroying_effect(value) {
+  is_destroying_effect = value;
+}
+let active_reaction = null;
+let untracking = false;
+function set_active_reaction(reaction) {
+  active_reaction = reaction;
+}
+let active_effect = null;
+function set_active_effect(effect) {
+  active_effect = effect;
+}
+let current_sources = null;
+function push_reaction_value(value) {
+  if (active_reaction !== null && true) {
+    (current_sources ??= /* @__PURE__ */ new Set()).add(value);
+  }
+}
+let new_deps = null;
+let skipped_deps = 0;
+let untracked_writes = null;
+function set_untracked_writes(value) {
+  untracked_writes = value;
+}
+let write_version = 1;
+let read_version = 0;
+let update_version = read_version;
+function set_update_version(value) {
+  update_version = value;
+}
+function increment_write_version() {
+  return ++write_version;
+}
+function is_dirty(reaction) {
+  var flags = reaction.f;
+  if ((flags & DIRTY) !== 0) {
+    return true;
+  }
+  if (flags & DERIVED) {
+    reaction.f &= ~WAS_MARKED;
+  }
+  if ((flags & MAYBE_DIRTY) !== 0) {
+    var dependencies = (
+      /** @type {Value[]} */
+      reaction.deps
+    );
+    var length = dependencies.length;
+    for (var i = 0; i < length; i++) {
+      var dependency = dependencies[i];
+      if (is_dirty(
+        /** @type {Derived} */
+        dependency
+      )) {
+        update_derived(
+          /** @type {Derived} */
+          dependency
+        );
+      }
+      if (dependency.wv > reaction.wv) {
+        return true;
+      }
+    }
+    if ((flags & CONNECTED) !== 0 && // During time traveling we don't want to reset the status so that
+    // traversal of the graph in the other batches still happens
+    batch_values === null) {
+      set_signal_status(reaction, CLEAN);
+    }
+  }
+  return false;
+}
+function schedule_possible_effect_self_invalidation(signal, effect, root = true) {
+  var reactions = signal.reactions;
+  if (reactions === null) return;
+  if (current_sources !== null && current_sources.has(signal)) {
+    return;
+  }
+  for (var i = 0; i < reactions.length; i++) {
+    var reaction = reactions[i];
+    if ((reaction.f & DERIVED) !== 0) {
+      schedule_possible_effect_self_invalidation(
+        /** @type {Derived} */
+        reaction,
+        effect,
+        false
+      );
+    } else if (effect === reaction) {
+      if (root) {
+        set_signal_status(reaction, DIRTY);
+      } else if ((reaction.f & CLEAN) !== 0) {
+        set_signal_status(reaction, MAYBE_DIRTY);
+      }
+      schedule_effect(
+        /** @type {Effect} */
+        reaction
+      );
+    }
+  }
+}
+function update_reaction(reaction) {
+  var previous_deps = new_deps;
+  var previous_skipped_deps = skipped_deps;
+  var previous_untracked_writes = untracked_writes;
+  var previous_reaction = active_reaction;
+  var previous_sources = current_sources;
+  var previous_component_context = component_context;
+  var previous_untracking = untracking;
+  var previous_update_version = update_version;
+  var flags = reaction.f;
+  new_deps = /** @type {null | Value[]} */
+  null;
+  skipped_deps = 0;
+  untracked_writes = null;
+  active_reaction = (flags & (BRANCH_EFFECT | ROOT_EFFECT)) === 0 ? reaction : null;
+  current_sources = null;
+  set_component_context(reaction.ctx);
+  untracking = false;
+  update_version = ++read_version;
+  if (reaction.ac !== null) {
+    without_reactive_context(() => {
+      reaction.ac.abort(STALE_REACTION);
+    });
+    reaction.ac = null;
+  }
+  try {
+    reaction.f |= REACTION_IS_UPDATING;
+    var fn = (
+      /** @type {Function} */
+      reaction.fn
+    );
+    var result = fn();
+    reaction.f |= REACTION_RAN;
+    var deps = reaction.deps;
+    var is_fork = current_batch?.is_fork;
+    if (new_deps !== null) {
+      var i;
+      if (!is_fork) {
+        remove_reactions(reaction, skipped_deps);
+      }
+      if (deps !== null && skipped_deps > 0) {
+        deps.length = skipped_deps + new_deps.length;
+        for (i = 0; i < new_deps.length; i++) {
+          deps[skipped_deps + i] = new_deps[i];
+        }
+      } else {
+        reaction.deps = deps = new_deps;
+      }
+      if (effect_tracking() && (reaction.f & CONNECTED) !== 0) {
+        for (i = skipped_deps; i < deps.length; i++) {
+          (deps[i].reactions ??= []).push(reaction);
+        }
+      }
+    } else if (!is_fork && deps !== null && skipped_deps < deps.length) {
+      remove_reactions(reaction, skipped_deps);
+      deps.length = skipped_deps;
+    }
+    if (is_runes() && untracked_writes !== null && !untracking && deps !== null && (reaction.f & (DERIVED | MAYBE_DIRTY | DIRTY)) === 0) {
+      for (i = 0; i < /** @type {Source[]} */
+      untracked_writes.length; i++) {
+        schedule_possible_effect_self_invalidation(
+          untracked_writes[i],
+          /** @type {Effect} */
+          reaction
+        );
+      }
+    }
+    if (previous_reaction !== null && previous_reaction !== reaction) {
+      read_version++;
+      if (previous_reaction.deps !== null) {
+        for (let i2 = 0; i2 < previous_skipped_deps; i2 += 1) {
+          previous_reaction.deps[i2].rv = read_version;
+        }
+      }
+      if (previous_deps !== null) {
+        for (const dep of previous_deps) {
+          dep.rv = read_version;
+        }
+      }
+      if (untracked_writes !== null) {
+        if (previous_untracked_writes === null) {
+          previous_untracked_writes = untracked_writes;
+        } else {
+          previous_untracked_writes.push(.../** @type {Source[]} */
+          untracked_writes);
+        }
+      }
+    }
+    if ((reaction.f & ERROR_VALUE) !== 0) {
+      reaction.f ^= ERROR_VALUE;
+    }
+    return result;
+  } catch (error) {
+    return handle_error(error);
+  } finally {
+    reaction.f ^= REACTION_IS_UPDATING;
+    new_deps = previous_deps;
+    skipped_deps = previous_skipped_deps;
+    untracked_writes = previous_untracked_writes;
+    active_reaction = previous_reaction;
+    current_sources = previous_sources;
+    set_component_context(previous_component_context);
+    untracking = previous_untracking;
+    update_version = previous_update_version;
+  }
+}
+function remove_reaction(signal, dependency) {
+  let reactions = dependency.reactions;
+  if (reactions !== null) {
+    var index = index_of.call(reactions, signal);
+    if (index !== -1) {
+      var new_length = reactions.length - 1;
+      if (new_length === 0) {
+        reactions = dependency.reactions = null;
+      } else {
+        reactions[index] = reactions[new_length];
+        reactions.pop();
+      }
+    }
+  }
+  if (reactions === null && (dependency.f & DERIVED) !== 0 && // Destroying a child effect while updating a parent effect can cause a dependency to appear
+  // to be unused, when in fact it is used by the currently-updating parent. Checking `new_deps`
+  // allows us to skip the expensive work of disconnecting and immediately reconnecting it
+  (new_deps === null || !includes.call(new_deps, dependency))) {
+    var derived2 = (
+      /** @type {Derived} */
+      dependency
+    );
+    if ((derived2.f & CONNECTED) !== 0) {
+      derived2.f ^= CONNECTED;
+      derived2.f &= ~WAS_MARKED;
+    }
+    if (derived2.v !== UNINITIALIZED) {
+      update_derived_status(derived2);
+    }
+    freeze_derived_effects(derived2);
+    remove_reactions(derived2, 0);
+  }
+}
+function remove_reactions(signal, start_index) {
+  var dependencies = signal.deps;
+  if (dependencies === null) return;
+  for (var i = start_index; i < dependencies.length; i++) {
+    remove_reaction(signal, dependencies[i]);
+  }
+}
+function update_effect(effect) {
+  var flags = effect.f;
+  if ((flags & DESTROYED) !== 0) {
+    return;
+  }
+  set_signal_status(effect, CLEAN);
+  var previous_effect = active_effect;
+  var was_updating_effect = is_updating_effect;
+  active_effect = effect;
+  is_updating_effect = true;
+  try {
+    if ((flags & (BLOCK_EFFECT | MANAGED_EFFECT)) !== 0) {
+      destroy_block_effect_children(effect);
+    } else {
+      destroy_effect_children(effect);
+    }
+    execute_effect_teardown(effect);
+    var teardown = update_reaction(effect);
+    effect.teardown = typeof teardown === "function" ? teardown : null;
+    effect.wv = write_version;
+    var dep;
+    if (browser && tracing_mode_flag && (effect.f & DIRTY) !== 0 && effect.deps !== null) ;
+  } finally {
+    is_updating_effect = was_updating_effect;
+    active_effect = previous_effect;
+  }
+}
+function get(signal) {
+  var flags = signal.f;
+  var is_derived = (flags & DERIVED) !== 0;
+  if (active_reaction !== null && !untracking) {
+    var destroyed = active_effect !== null && (active_effect.f & DESTROYED) !== 0;
+    if (!destroyed && (current_sources === null || !current_sources.has(signal))) {
+      var deps = active_reaction.deps;
+      if ((active_reaction.f & REACTION_IS_UPDATING) !== 0) {
+        if (signal.rv < read_version) {
+          signal.rv = read_version;
+          if (new_deps === null && deps !== null && deps[skipped_deps] === signal) {
+            skipped_deps++;
+          } else if (new_deps === null) {
+            new_deps = [signal];
+          } else {
+            new_deps.push(signal);
+          }
+        }
+      } else {
+        active_reaction.deps ??= [];
+        if (!includes.call(active_reaction.deps, signal)) {
+          active_reaction.deps.push(signal);
+        }
+        var reactions = signal.reactions;
+        if (reactions === null) {
+          signal.reactions = [active_reaction];
+        } else if (!includes.call(reactions, active_reaction)) {
+          reactions.push(active_reaction);
+        }
+      }
+    }
+  }
+  if (is_destroying_effect && old_values.has(signal)) {
+    return old_values.get(signal);
+  }
+  if (is_derived) {
+    var derived2 = (
+      /** @type {Derived} */
+      signal
+    );
+    if (is_destroying_effect) {
+      var value = derived2.v;
+      if ((derived2.f & CLEAN) === 0 && derived2.reactions !== null || depends_on_old_values(derived2)) {
+        value = execute_derived(derived2);
+      }
+      old_values.set(derived2, value);
+      return value;
+    }
+    var should_connect = (derived2.f & CONNECTED) === 0 && !untracking && active_reaction !== null && (is_updating_effect || (active_reaction.f & CONNECTED) !== 0);
+    var is_new = (derived2.f & REACTION_RAN) === 0;
+    if (is_dirty(derived2)) {
+      if (should_connect) {
+        derived2.f |= CONNECTED;
+      }
+      update_derived(derived2);
+    }
+    if (should_connect && !is_new) {
+      unfreeze_derived_effects(derived2);
+      reconnect(derived2);
+    }
+  }
+  if (batch_values?.has(signal)) {
+    return batch_values.get(signal);
+  }
+  if ((signal.f & ERROR_VALUE) !== 0) {
+    throw signal.v;
+  }
+  return signal.v;
+}
+function reconnect(derived2) {
+  derived2.f |= CONNECTED;
+  if (derived2.deps === null) return;
+  for (const dep of derived2.deps) {
+    (dep.reactions ??= []).push(derived2);
+    if ((dep.f & DERIVED) !== 0 && (dep.f & CONNECTED) === 0) {
+      unfreeze_derived_effects(
+        /** @type {Derived} */
+        dep
+      );
+      reconnect(
+        /** @type {Derived} */
+        dep
+      );
+    }
+  }
+}
+function depends_on_old_values(derived2) {
+  if (derived2.v === UNINITIALIZED) return true;
+  if (derived2.deps === null) return false;
+  for (const dep of derived2.deps) {
+    if (old_values.has(dep)) {
+      return true;
+    }
+    if ((dep.f & DERIVED) !== 0 && depends_on_old_values(
+      /** @type {Derived} */
+      dep
+    )) {
+      return true;
+    }
+  }
+  return false;
+}
+function untrack(fn) {
+  var previous_untracking = untracking;
+  try {
+    untracking = true;
+    return fn();
+  } finally {
+    untracking = previous_untracking;
+  }
+}
+function subscribe_to_store(store, run2, invalidate) {
+  if (store == null) {
+    run2(void 0);
+    if (invalidate) invalidate(void 0);
+    return noop;
+  }
+  const unsub = untrack(
+    () => store.subscribe(
+      run2,
+      // @ts-expect-error
+      invalidate
+    )
+  );
+  return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
+}
+const VOID_ELEMENT_NAMES = [
+  "area",
+  "base",
+  "br",
+  "col",
+  "command",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "keygen",
+  "link",
+  "meta",
+  "param",
+  "source",
+  "track",
+  "wbr"
+];
+function is_void(name) {
+  return VOID_ELEMENT_NAMES.includes(name) || name.toLowerCase() === "!doctype";
+}
+const DOM_BOOLEAN_ATTRIBUTES = [
+  "allowfullscreen",
+  "async",
+  "autofocus",
+  "autoplay",
+  "checked",
+  "controls",
+  "default",
+  "disabled",
+  "formnovalidate",
+  "indeterminate",
+  "inert",
+  "ismap",
+  "loop",
+  "multiple",
+  "muted",
+  "nomodule",
+  "novalidate",
+  "open",
+  "playsinline",
+  "readonly",
+  "required",
+  "reversed",
+  "seamless",
+  "selected",
+  "webkitdirectory",
+  "defer",
+  "disablepictureinpicture",
+  "disableremoteplayback"
+];
+function is_boolean_attribute(name) {
+  return DOM_BOOLEAN_ATTRIBUTES.includes(name);
+}
+const PASSIVE_EVENTS = ["touchstart", "touchmove"];
+function is_passive_event(name) {
+  return PASSIVE_EVENTS.includes(name);
+}
+const RAW_TEXT_ELEMENTS = (
+  /** @type {const} */
+  ["textarea", "script", "style", "title"]
 );
-const TTSWorker = writable(null);
-const chatId = writable("");
-const chatTitle = writable("");
-const channels = writable([]);
-const channelId = writable(null);
-const pinnedNotes = writable([]);
-const tags = writable([]);
-const folders = writable([]);
-const selectedFolder = writable(null);
-const models = writable([]);
-const tools = writable(null);
-const skills = writable(null);
-const functions = writable(null);
-const workspaceActions = writable([]);
-const adminUserCount = writable(null);
-const adminGroupCount = writable(null);
-const adminLeaderboardCount = writable(null);
-const adminFeedbackCount = writable(null);
-const toolServers = writable([]);
-const terminalServers = writable(null);
-const pyodideWorker = writable(null);
-const banners = writable([]);
-const settings = writable({});
-const chatRequestQueues = writable({});
-const showSidebar = writable(false);
-const showSearch = writable(false);
-const showSettings = writable(false);
-const showChangelog = writable(false);
-const showControls = writable(false);
-const showEmbeds = writable(false);
-const showArtifacts = writable(false);
-const showCallOverlay = writable(false);
-const showFileNavPath = writable(null);
-const selectedTerminalId = writable(null);
-const artifactCode = writable(null);
-const artifactContents = writable(null);
-const embed = writable(null);
-const temporaryChatEnabled = writable(false);
-const desktopEvent = writable(null);
+function is_raw_text_element(name) {
+  return RAW_TEXT_ELEMENTS.includes(
+    /** @type {typeof RAW_TEXT_ELEMENTS[number]} */
+    name
+  );
+}
+const REGEX_VALID_TAG_NAME = /^[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z0-9.\-_\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}]*)?$/u;
+const ATTR_REGEX = /[&"<]/g;
+const CONTENT_REGEX = /[&<]/g;
+function escape_html(value, is_attr) {
+  const str = String(value ?? "");
+  const pattern = is_attr ? ATTR_REGEX : CONTENT_REGEX;
+  pattern.lastIndex = 0;
+  let escaped = "";
+  let last = 0;
+  while (pattern.test(str)) {
+    const i = pattern.lastIndex - 1;
+    const ch = str[i];
+    escaped += str.substring(last, i) + (ch === "&" ? "&amp;" : ch === '"' ? "&quot;" : "&lt;");
+    last = i + 1;
+  }
+  return escaped + str.substring(last);
+}
+const replacements = {
+  translate: /* @__PURE__ */ new Map([
+    [true, "yes"],
+    [false, "no"]
+  ])
+};
+function attr(name, value, is_boolean = false) {
+  if (name === "hidden" && value !== "until-found") {
+    is_boolean = true;
+  }
+  if (value == null || !value && is_boolean) return "";
+  const normalized = has_own_property.call(replacements, name) && replacements[name].get(value) || value;
+  const assignment = is_boolean ? `=""` : `="${escape_html(normalized, true)}"`;
+  return ` ${name}${assignment}`;
+}
+function clsx(value) {
+  if (typeof value === "object") {
+    return clsx$1(value);
+  } else {
+    return value ?? "";
+  }
+}
+const whitespace = [..." 	\n\r\f \v\uFEFF"];
+function to_class(value, hash, directives) {
+  var classname = value == null ? "" : "" + value;
+  if (hash) {
+    classname = classname ? classname + " " + hash : hash;
+  }
+  if (directives) {
+    for (var key of Object.keys(directives)) {
+      if (directives[key]) {
+        classname = classname ? classname + " " + key : key;
+      } else if (classname.length) {
+        var len = key.length;
+        var a = 0;
+        while ((a = classname.indexOf(key, a)) >= 0) {
+          var b = a + len;
+          if ((a === 0 || whitespace.includes(classname[a - 1])) && (b === classname.length || whitespace.includes(classname[b]))) {
+            classname = (a === 0 ? "" : classname.substring(0, a)) + classname.substring(b + 1);
+          } else {
+            a = b;
+          }
+        }
+      }
+    }
+  }
+  return classname === "" ? null : classname;
+}
+function append_styles(styles, important = false) {
+  var separator = important ? " !important;" : ";";
+  var css = "";
+  for (var key of Object.keys(styles)) {
+    var value = styles[key];
+    if (value != null && value !== "") {
+      css += " " + key + ": " + value + separator;
+    }
+  }
+  return css;
+}
+function to_css_name(name) {
+  if (name[0] !== "-" || name[1] !== "-") {
+    return name.toLowerCase();
+  }
+  return name;
+}
+function to_style(value, styles) {
+  if (styles) {
+    var new_style = "";
+    var normal_styles;
+    var important_styles;
+    if (Array.isArray(styles)) {
+      normal_styles = styles[0];
+      important_styles = styles[1];
+    } else {
+      normal_styles = styles;
+    }
+    if (value) {
+      value = String(value).replaceAll(/\s*\/\*.*?\*\/\s*/g, "").trim();
+      var in_str = false;
+      var in_apo = 0;
+      var in_comment = false;
+      var reserved_names = [];
+      if (normal_styles) {
+        reserved_names.push(...Object.keys(normal_styles).map(to_css_name));
+      }
+      if (important_styles) {
+        reserved_names.push(...Object.keys(important_styles).map(to_css_name));
+      }
+      var start_index = 0;
+      var name_index = -1;
+      const len = value.length;
+      for (var i = 0; i < len; i++) {
+        var c = value[i];
+        if (in_comment) {
+          if (c === "/" && value[i - 1] === "*") {
+            in_comment = false;
+          }
+        } else if (in_str) {
+          if (in_str === c) {
+            in_str = false;
+          }
+        } else if (c === "/" && value[i + 1] === "*") {
+          in_comment = true;
+        } else if (c === '"' || c === "'") {
+          in_str = c;
+        } else if (c === "(") {
+          in_apo++;
+        } else if (c === ")") {
+          in_apo--;
+        }
+        if (!in_comment && in_str === false && in_apo === 0) {
+          if (c === ":" && name_index === -1) {
+            name_index = i;
+          } else if (c === ";" || i === len - 1) {
+            if (name_index !== -1) {
+              var name = to_css_name(value.substring(start_index, name_index).trim());
+              if (!reserved_names.includes(name)) {
+                if (c !== ";") {
+                  i++;
+                }
+                var property = value.substring(start_index, i).trim();
+                new_style += " " + property + ";";
+              }
+            }
+            start_index = i + 1;
+            name_index = -1;
+          }
+        }
+      }
+    }
+    if (normal_styles) {
+      new_style += append_styles(normal_styles);
+    }
+    if (important_styles) {
+      new_style += append_styles(important_styles, true);
+    }
+    new_style = new_style.trim();
+    return new_style === "" ? null : new_style;
+  }
+  return value == null ? null : String(value);
+}
+const BLOCK_OPEN = `<!--${HYDRATION_START}-->`;
+const BLOCK_CLOSE = `<!--${HYDRATION_END}-->`;
+const EMPTY_COMMENT = `<!---->`;
+let controller = null;
+function abort() {
+  controller?.abort(STALE_REACTION);
+  controller = null;
+}
+function await_invalid() {
+  const error = new Error(`await_invalid
+Encountered asynchronous work while rendering synchronously.
+https://svelte.dev/e/await_invalid`);
+  error.name = "Svelte error";
+  throw error;
+}
+function dynamic_element_invalid_tag(tag) {
+  const error = new Error(`dynamic_element_invalid_tag
+\`<svelte:element this="${tag}">\` is not a valid element name — the element will not be rendered
+https://svelte.dev/e/dynamic_element_invalid_tag`);
+  error.name = "Svelte error";
+  throw error;
+}
+function invalid_csp() {
+  const error = new Error(`invalid_csp
+\`csp.nonce\` was set while \`csp.hash\` was \`true\`. These options cannot be used simultaneously.
+https://svelte.dev/e/invalid_csp`);
+  error.name = "Svelte error";
+  throw error;
+}
+function invalid_id_prefix() {
+  const error = new Error(`invalid_id_prefix
+The \`idPrefix\` option cannot include \`--\`.
+https://svelte.dev/e/invalid_id_prefix`);
+  error.name = "Svelte error";
+  throw error;
+}
+function lifecycle_function_unavailable(name) {
+  const error = new Error(`lifecycle_function_unavailable
+\`${name}(...)\` is not available on the server
+https://svelte.dev/e/lifecycle_function_unavailable`);
+  error.name = "Svelte error";
+  throw error;
+}
+function server_context_required() {
+  const error = new Error(`server_context_required
+Could not resolve \`render\` context.
+https://svelte.dev/e/server_context_required`);
+  error.name = "Svelte error";
+  throw error;
+}
+var ssr_context = null;
+function set_ssr_context(v) {
+  ssr_context = v;
+}
+function getContext(key) {
+  const context_map = get_or_init_context_map();
+  const result = (
+    /** @type {T} */
+    context_map.get(key)
+  );
+  return result;
+}
+function setContext(key, context) {
+  get_or_init_context_map().set(key, context);
+  return context;
+}
+function hasContext(key) {
+  return get_or_init_context_map().has(key);
+}
+function getAllContexts() {
+  return get_or_init_context_map();
+}
+function get_or_init_context_map(name) {
+  if (ssr_context === null) {
+    lifecycle_outside_component();
+  }
+  return ssr_context.c ??= new Map(get_parent_context(ssr_context) || void 0);
+}
+function push(fn) {
+  ssr_context = { p: ssr_context, c: null, r: null };
+}
+function pop() {
+  ssr_context = /** @type {SSRContext} */
+  ssr_context.p;
+}
+function get_parent_context(ssr_context2) {
+  let parent = ssr_context2.p;
+  while (parent !== null) {
+    const context_map = parent.c;
+    if (context_map !== null) {
+      return context_map;
+    }
+    parent = parent.p;
+  }
+  return null;
+}
+function unresolved_hydratable(key, stack) {
+  {
+    console.warn(`https://svelte.dev/e/unresolved_hydratable`);
+  }
+}
+function get_render_context() {
+  const store = als?.getStore();
+  {
+    server_context_required();
+  }
+  return store;
+}
+let als = null;
+let text_encoder;
+let crypto;
+const obfuscated_import = (module_name) => import(
+  /* @vite-ignore */
+  module_name
+);
+async function sha256(data) {
+  text_encoder ??= new TextEncoder();
+  crypto ??= globalThis.crypto?.subtle?.digest ? globalThis.crypto : (
+    // @ts-ignore - we don't install node types in the prod build
+    // don't use import('node:crypto') directly because static analysers will think we rely on node when we don't
+    (await obfuscated_import("node:crypto")).webcrypto
+  );
+  const hash_buffer = await crypto.subtle.digest("SHA-256", text_encoder.encode(data));
+  return base64_encode(hash_buffer);
+}
+function base64_encode(bytes) {
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(bytes).toString("base64");
+  }
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+class Renderer {
+  /**
+   * The contents of the renderer.
+   * @type {RendererItem[]}
+   */
+  #out = [];
+  /**
+   * Any `onDestroy` callbacks registered during execution of this renderer.
+   * @type {(() => void)[] | undefined}
+   */
+  #on_destroy = void 0;
+  /**
+   * Whether this renderer is a component body.
+   * @type {boolean}
+   */
+  #is_component_body = false;
+  /**
+   * If set, this renderer is an error boundary. When async collection
+   * of the children fails, the failed snippet is rendered instead.
+   * @type {{
+   * 	failed: (renderer: Renderer, error: unknown, reset: () => void) => void;
+   * 	transformError: (error: unknown) => unknown;
+   * 	context: SSRContext | null;
+   * } | null}
+   */
+  #boundary = null;
+  /**
+   * The type of string content that this renderer is accumulating.
+   * @type {RendererType}
+   */
+  type;
+  /** @type {Renderer | undefined} */
+  #parent;
+  /**
+   * Asynchronous work associated with this renderer
+   * @type {Promise<void> | undefined}
+   */
+  promise = void 0;
+  /**
+   * State which is associated with the content tree as a whole.
+   * It will be re-exposed, uncopied, on all children.
+   * @type {SSRState}
+   * @readonly
+   */
+  global;
+  /**
+   * State that is local to the branch it is declared in.
+   * It will be shallow-copied to all children.
+   *
+   * @type {{ select_value: string | undefined }}
+   */
+  local;
+  /**
+   * @param {SSRState} global
+   * @param {Renderer | undefined} [parent]
+   */
+  constructor(global, parent) {
+    this.#parent = parent;
+    this.global = global;
+    this.local = parent ? { ...parent.local } : { select_value: void 0 };
+    this.type = parent ? parent.type : "body";
+  }
+  /**
+   * @param {(renderer: Renderer) => void} fn
+   */
+  head(fn) {
+    const head2 = new Renderer(this.global, this);
+    head2.type = "head";
+    this.#out.push(head2);
+    head2.child(fn);
+  }
+  /**
+   * @param {Array<Promise<void>>} blockers
+   * @param {(renderer: Renderer) => void} fn
+   */
+  async_block(blockers, fn) {
+    this.#out.push(BLOCK_OPEN);
+    this.async(blockers, fn);
+    this.#out.push(BLOCK_CLOSE);
+  }
+  /**
+   * @param {Array<Promise<void>>} blockers
+   * @param {(renderer: Renderer) => void} fn
+   */
+  async(blockers, fn) {
+    let callback = fn;
+    if (blockers.length > 0) {
+      const context = ssr_context;
+      callback = (renderer) => {
+        return Promise.all(blockers).then(() => {
+          const previous_context = ssr_context;
+          try {
+            set_ssr_context(context);
+            return fn(renderer);
+          } finally {
+            set_ssr_context(previous_context);
+          }
+        });
+      };
+    }
+    this.child(callback);
+  }
+  /**
+   * @param {Array<() => void>} thunks
+   */
+  run(thunks) {
+    const context = ssr_context;
+    let promise = Promise.resolve(thunks[0]());
+    const promises = [promise];
+    for (const fn of thunks.slice(1)) {
+      promise = promise.then(() => {
+        const previous_context = ssr_context;
+        set_ssr_context(context);
+        try {
+          return fn();
+        } finally {
+          set_ssr_context(previous_context);
+        }
+      });
+      promises.push(promise);
+    }
+    promise.catch(noop);
+    this.promise = promise;
+    return promises;
+  }
+  /**
+   * @param {(renderer: Renderer) => MaybePromise<void>} fn
+   */
+  child_block(fn) {
+    this.#out.push(BLOCK_OPEN);
+    this.child(fn);
+    this.#out.push(BLOCK_CLOSE);
+  }
+  /**
+   * Create a child renderer. The child renderer inherits the state from the parent,
+   * but has its own content.
+   * @param {(renderer: Renderer) => MaybePromise<void>} fn
+   */
+  child(fn) {
+    const child = new Renderer(this.global, this);
+    this.#out.push(child);
+    const parent = ssr_context;
+    set_ssr_context({
+      ...ssr_context,
+      p: parent,
+      c: null,
+      r: child
+    });
+    const result = fn(child);
+    set_ssr_context(parent);
+    if (result instanceof Promise) {
+      result.catch(noop);
+      result.finally(() => set_ssr_context(null)).catch(noop);
+      if (child.global.mode === "sync") {
+        await_invalid();
+      }
+      child.promise = result;
+    }
+    return child;
+  }
+  /**
+   * Render children inside an error boundary. If the children throw and the API-level
+   * `transformError` transform handles the error (doesn't re-throw), the `failed` snippet is
+   * rendered instead. Otherwise the error propagates.
+   *
+   * @param {{ failed?: (renderer: Renderer, error: unknown, reset: () => void) => void }} props
+   * @param {(renderer: Renderer) => MaybePromise<void>} children_fn
+   */
+  boundary(props, children_fn) {
+    const child = new Renderer(this.global, this);
+    this.#out.push(child);
+    const parent_context = ssr_context;
+    if (props.failed) {
+      child.#boundary = {
+        failed: props.failed,
+        transformError: this.global.transformError,
+        context: parent_context
+      };
+    }
+    set_ssr_context({
+      ...ssr_context,
+      p: parent_context,
+      c: null,
+      r: child
+    });
+    try {
+      const result = children_fn(child);
+      set_ssr_context(parent_context);
+      if (result instanceof Promise) {
+        if (child.global.mode === "sync") {
+          await_invalid();
+        }
+        result.catch(noop);
+        child.promise = result;
+      }
+    } catch (error) {
+      set_ssr_context(parent_context);
+      const failed_snippet = props.failed;
+      if (!failed_snippet) throw error;
+      const result = this.global.transformError(error);
+      child.#out.length = 0;
+      child.#boundary = null;
+      if (result instanceof Promise) {
+        if (this.global.mode === "sync") {
+          await_invalid();
+        }
+        child.promise = /** @type {Promise<unknown>} */
+        result.then((transformed) => {
+          set_ssr_context(parent_context);
+          child.#out.push(Renderer.#serialize_failed_boundary(transformed));
+          failed_snippet(child, transformed, noop);
+          child.#out.push(BLOCK_CLOSE);
+        });
+        child.promise.catch(noop);
+      } else {
+        child.#out.push(Renderer.#serialize_failed_boundary(result));
+        failed_snippet(child, result, noop);
+        child.#out.push(BLOCK_CLOSE);
+      }
+    }
+  }
+  /**
+   * Create a component renderer. The component renderer inherits the state from the parent,
+   * but has its own content. It is treated as an ordering boundary for ondestroy callbacks.
+   * @param {(renderer: Renderer) => MaybePromise<void>} fn
+   * @param {Function} [component_fn]
+   * @returns {void}
+   */
+  component(fn, component_fn) {
+    push();
+    const child = this.child(fn);
+    child.#is_component_body = true;
+    pop();
+  }
+  /**
+   * @param {Record<string, any>} attrs
+   * @param {(renderer: Renderer) => void} fn
+   * @param {string | undefined} [css_hash]
+   * @param {Record<string, boolean> | undefined} [classes]
+   * @param {Record<string, string> | undefined} [styles]
+   * @param {number | undefined} [flags]
+   * @param {boolean | undefined} [is_rich]
+   * @returns {void}
+   */
+  select(attrs, fn, css_hash, classes, styles, flags, is_rich) {
+    const { value, ...select_attrs } = attrs;
+    this.push(`<select${attributes(select_attrs, css_hash, classes, styles, flags)}>`);
+    this.child((renderer) => {
+      renderer.local.select_value = value;
+      fn(renderer);
+    });
+    this.push(`${is_rich ? "<!>" : ""}</select>`);
+  }
+  /**
+   * @param {Record<string, any>} attrs
+   * @param {string | number | boolean | ((renderer: Renderer) => void)} body
+   * @param {string | undefined} [css_hash]
+   * @param {Record<string, boolean> | undefined} [classes]
+   * @param {Record<string, string> | undefined} [styles]
+   * @param {number | undefined} [flags]
+   * @param {boolean | undefined} [is_rich]
+   */
+  option(attrs, body, css_hash, classes, styles, flags, is_rich) {
+    this.#out.push(`<option${attributes(attrs, css_hash, classes, styles, flags)}`);
+    const close = (renderer, value, { head: head2, body: body2 }) => {
+      if (has_own_property.call(attrs, "value")) {
+        value = attrs.value;
+      }
+      if (value === this.local.select_value) {
+        renderer.#out.push(' selected=""');
+      }
+      renderer.#out.push(`>${body2}${is_rich ? "<!>" : ""}</option>`);
+      if (head2) {
+        renderer.head((child) => child.push(head2));
+      }
+    };
+    if (typeof body === "function") {
+      this.child((renderer) => {
+        const r = new Renderer(this.global, this);
+        body(r);
+        if (this.global.mode === "async") {
+          return r.#collect_content_async().then((content) => {
+            close(renderer, content.body.replaceAll("<!---->", ""), content);
+          });
+        } else {
+          const content = r.#collect_content();
+          close(renderer, content.body.replaceAll("<!---->", ""), content);
+        }
+      });
+    } else {
+      close(this, body, { body: escape_html(body) });
+    }
+  }
+  /**
+   * @param {(renderer: Renderer) => void} fn
+   */
+  title(fn) {
+    const path = this.get_path();
+    const close = (head2) => {
+      this.global.set_title(head2, path);
+    };
+    this.child((renderer) => {
+      const r = new Renderer(renderer.global, renderer);
+      fn(r);
+      if (renderer.global.mode === "async") {
+        return r.#collect_content_async().then((content) => {
+          close(content.head);
+        });
+      } else {
+        const content = r.#collect_content();
+        close(content.head);
+      }
+    });
+  }
+  /**
+   * @param {string | (() => Promise<string>)} content
+   */
+  push(content) {
+    if (typeof content === "function") {
+      this.child(async (renderer) => renderer.push(await content()));
+    } else {
+      this.#out.push(content);
+    }
+  }
+  /**
+   * @param {() => void} fn
+   */
+  on_destroy(fn) {
+    (this.#on_destroy ??= []).push(fn);
+  }
+  /**
+   * @returns {number[]}
+   */
+  get_path() {
+    return this.#parent ? [...this.#parent.get_path(), this.#parent.#out.indexOf(this)] : [];
+  }
+  /**
+   * @deprecated this is needed for legacy component bindings
+   */
+  copy() {
+    const copy = new Renderer(this.global, this.#parent);
+    copy.#out = this.#out.map((item) => item instanceof Renderer ? item.copy() : item);
+    copy.promise = this.promise;
+    return copy;
+  }
+  /**
+   * @param {Renderer} other
+   * @deprecated this is needed for legacy component bindings
+   */
+  subsume(other) {
+    if (this.global.mode !== other.global.mode) {
+      throw new Error(
+        "invariant: A renderer cannot switch modes. If you're seeing this, there's a compiler bug. File an issue!"
+      );
+    }
+    this.local = other.local;
+    this.#out = other.#out.map((item, i) => {
+      const current = this.#out[i];
+      if (current instanceof Renderer && item instanceof Renderer) {
+        current.subsume(item);
+        return current;
+      }
+      return item;
+    });
+    this.promise = other.promise;
+    this.type = other.type;
+  }
+  get length() {
+    return this.#out.length;
+  }
+  /**
+   * Creates the hydration comment that marks the start of a failed boundary.
+   * The error is JSON-serialized and embedded inside an HTML comment for the client
+   * to parse during hydration. The JSON is escaped to prevent `-->` or `<!--` sequences
+   * from breaking out of the comment (XSS). Uses unicode escapes which `JSON.parse()`
+   * handles transparently.
+   * @param {unknown} error
+   * @returns {string}
+   */
+  static #serialize_failed_boundary(error) {
+    var json = JSON.stringify(error);
+    var escaped = json.replace(/>/g, "\\u003e").replace(/</g, "\\u003c");
+    return `<!--${HYDRATION_START_FAILED}${escaped}-->`;
+  }
+  /**
+   * Only available on the server and when compiling with the `server` option.
+   * Takes a component and returns an object with `body` and `head` properties on it, which you can use to populate the HTML when server-rendering your app.
+   * @template {Record<string, any>} Props
+   * @param {Component<Props>} component
+   * @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp }} [options]
+   * @returns {RenderOutput}
+   */
+  static render(component, options = {}) {
+    let sync;
+    const result = (
+      /** @type {RenderOutput} */
+      {}
+    );
+    Object.defineProperties(result, {
+      html: {
+        get: () => {
+          return (sync ??= Renderer.#render(component, options)).body;
+        }
+      },
+      head: {
+        get: () => {
+          return (sync ??= Renderer.#render(component, options)).head;
+        }
+      },
+      body: {
+        get: () => {
+          return (sync ??= Renderer.#render(component, options)).body;
+        }
+      },
+      hashes: {
+        value: {
+          script: ""
+        }
+      },
+      then: {
+        value: (
+          /**
+           * this is not type-safe, but honestly it's the best I can do right now, and it's a straightforward function.
+           *
+           * @template TResult1
+           * @template [TResult2=never]
+           * @param { (value: SyncRenderOutput) => TResult1 } onfulfilled
+           * @param { (reason: unknown) => TResult2 } onrejected
+           */
+          (onfulfilled, onrejected) => {
+            {
+              const result2 = sync ??= Renderer.#render(component, options);
+              const user_result = onfulfilled({
+                head: result2.head,
+                body: result2.body,
+                html: result2.body,
+                hashes: { script: [] }
+              });
+              return Promise.resolve(user_result);
+            }
+          }
+        )
+      }
+    });
+    return result;
+  }
+  /**
+   * Collect all of the `onDestroy` callbacks registered during rendering. In an async context, this is only safe to call
+   * after awaiting `collect_async`.
+   *
+   * Child renderers are "porous" and don't affect execution order, but component body renderers
+   * create ordering boundaries. Within a renderer, callbacks run in order until hitting a component boundary.
+   * @returns {Iterable<() => void>}
+   */
+  *#collect_on_destroy() {
+    for (const component of this.#traverse_components()) {
+      yield* component.#collect_ondestroy();
+    }
+  }
+  /**
+   * Performs a depth-first search of renderers, yielding the deepest components first, then additional components as we backtrack up the tree.
+   * @returns {Iterable<Renderer>}
+   */
+  *#traverse_components() {
+    for (const child of this.#out) {
+      if (typeof child !== "string") {
+        yield* child.#traverse_components();
+      }
+    }
+    if (this.#is_component_body) {
+      yield this;
+    }
+  }
+  /**
+   * @returns {Iterable<() => void>}
+   */
+  *#collect_ondestroy() {
+    if (this.#on_destroy) {
+      for (const fn of this.#on_destroy) {
+        yield fn;
+      }
+    }
+    for (const child of this.#out) {
+      if (child instanceof Renderer && !child.#is_component_body) {
+        yield* child.#collect_ondestroy();
+      }
+    }
+  }
+  /**
+   * Render a component. Throws if any of the children are performing asynchronous work.
+   *
+   * @template {Record<string, any>} Props
+   * @param {Component<Props>} component
+   * @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string }} options
+   * @returns {AccumulatedContent}
+   */
+  static #render(component, options) {
+    var previous_context = ssr_context;
+    try {
+      const renderer = Renderer.#open_render("sync", component, options);
+      const content = renderer.#collect_content();
+      return Renderer.#close_render(content, renderer);
+    } finally {
+      abort();
+      set_ssr_context(previous_context);
+    }
+  }
+  /**
+   * Render a component.
+   *
+   * @template {Record<string, any>} Props
+   * @param {Component<Props>} component
+   * @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp }} options
+   * @returns {Promise<AccumulatedContent & { hashes: { script: Sha256Source[] } }>}
+   */
+  static async #render_async(component, options) {
+    const previous_context = ssr_context;
+    try {
+      const renderer = Renderer.#open_render("async", component, options);
+      const content = await renderer.#collect_content_async();
+      const hydratables = await renderer.#collect_hydratables();
+      if (hydratables !== null) {
+        content.head = hydratables + content.head;
+      }
+      return Renderer.#close_render(content, renderer);
+    } finally {
+      set_ssr_context(previous_context);
+      abort();
+    }
+  }
+  /**
+   * Collect all of the code from the `out` array and return it as a string, or a promise resolving to a string.
+   * @param {AccumulatedContent} content
+   * @returns {AccumulatedContent}
+   */
+  #collect_content(content = { head: "", body: "" }) {
+    for (const item of this.#out) {
+      if (typeof item === "string") {
+        content[this.type] += item;
+      } else if (item instanceof Renderer) {
+        item.#collect_content(content);
+      }
+    }
+    return content;
+  }
+  /**
+   * Collect all of the code from the `out` array and return it as a string.
+   * @param {AccumulatedContent} content
+   * @returns {Promise<AccumulatedContent>}
+   */
+  async #collect_content_async(content = { head: "", body: "" }) {
+    await this.promise;
+    for (const item of this.#out) {
+      if (typeof item === "string") {
+        content[this.type] += item;
+      } else if (item instanceof Renderer) {
+        if (item.#boundary) {
+          const boundary_content = { head: "", body: "" };
+          try {
+            await item.#collect_content_async(boundary_content);
+            content.head += boundary_content.head;
+            content.body += boundary_content.body;
+          } catch (error) {
+            const { context, failed, transformError } = item.#boundary;
+            set_ssr_context(context);
+            let promise = transformError(error);
+            set_ssr_context(null);
+            let transformed = await promise;
+            set_ssr_context(context);
+            const failed_renderer = new Renderer(item.global, item);
+            failed_renderer.type = item.type;
+            failed_renderer.#out.push(Renderer.#serialize_failed_boundary(transformed));
+            failed(failed_renderer, transformed, noop);
+            failed_renderer.#out.push(BLOCK_CLOSE);
+            await failed_renderer.#collect_content_async(content);
+          }
+        } else {
+          await item.#collect_content_async(content);
+        }
+      }
+    }
+    return content;
+  }
+  async #collect_hydratables() {
+    const ctx = get_render_context().hydratable;
+    for (const [_, key] of ctx.unresolved_promises) {
+      unresolved_hydratable(key, ctx.lookup.get(key)?.stack ?? "<missing stack trace>");
+    }
+    for (const comparison of ctx.comparisons) {
+      await comparison;
+    }
+    return await this.#hydratable_block(ctx);
+  }
+  /**
+   * @template {Record<string, any>} Props
+   * @param {'sync' | 'async'} mode
+   * @param {import('svelte').Component<Props>} component
+   * @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp; transformError?: (error: unknown) => unknown }} options
+   * @returns {Renderer}
+   */
+  static #open_render(mode, component, options) {
+    if (options.idPrefix?.includes("--")) {
+      invalid_id_prefix();
+    }
+    var previous_context = ssr_context;
+    try {
+      const renderer = new Renderer(
+        new SSRState(
+          mode,
+          options.idPrefix ? options.idPrefix + "-" : "",
+          options.csp,
+          options.transformError
+        )
+      );
+      const context = { p: null, c: options.context ?? null, r: renderer };
+      set_ssr_context(context);
+      renderer.push(BLOCK_OPEN);
+      component(renderer, options.props ?? {});
+      renderer.push(BLOCK_CLOSE);
+      return renderer;
+    } finally {
+      set_ssr_context(previous_context);
+    }
+  }
+  /**
+   * @param {AccumulatedContent} content
+   * @param {Renderer} renderer
+   * @returns {AccumulatedContent & { hashes: { script: Sha256Source[] } }}
+   */
+  static #close_render(content, renderer) {
+    for (const cleanup of renderer.#collect_on_destroy()) {
+      cleanup();
+    }
+    let head2 = content.head + renderer.global.get_title();
+    let body = content.body;
+    for (const { hash, code } of renderer.global.css) {
+      head2 += `<style id="${hash}">${code}</style>`;
+    }
+    return {
+      head: head2,
+      body,
+      hashes: {
+        script: renderer.global.csp.script_hashes
+      }
+    };
+  }
+  /**
+   * @param {HydratableContext} ctx
+   */
+  async #hydratable_block(ctx) {
+    if (ctx.lookup.size === 0) {
+      return null;
+    }
+    let entries = [];
+    let has_promises = false;
+    for (const [k, v] of ctx.lookup) {
+      if (v.promises) {
+        has_promises = true;
+        for (const p of v.promises) await p;
+      }
+      entries.push(`[${devalue.uneval(k)},${v.serialized}]`);
+    }
+    let prelude = `const h = (window.__svelte ??= {}).h ??= new Map();`;
+    if (has_promises) {
+      prelude = `const r = (v) => Promise.resolve(v);
+				${prelude}`;
+    }
+    const body = `
+			{
+				${prelude}
+
+				for (const [k, v] of [
+					${entries.join(",\n					")}
+				]) {
+					h.set(k, v);
+				}
+			}
+		`;
+    let csp_attr = "";
+    if (this.global.csp.nonce) {
+      csp_attr = ` nonce="${this.global.csp.nonce}"`;
+    } else if (this.global.csp.hash) {
+      const hash = await sha256(body);
+      this.global.csp.script_hashes.push(`sha256-${hash}`);
+    }
+    return `
+		<script${csp_attr}>${body}<\/script>`;
+  }
+}
+class SSRState {
+  /** @readonly @type {Csp & { script_hashes: Sha256Source[] }} */
+  csp;
+  /** @readonly @type {'sync' | 'async'} */
+  mode;
+  /** @readonly @type {() => string} */
+  uid;
+  /** @readonly @type {Set<{ hash: string; code: string }>} */
+  css = /* @__PURE__ */ new Set();
+  /**
+   * `transformError` passed to `render`. Called when an error boundary catches an error.
+   * Throws by default if unset in `render`.
+   * @type {(error: unknown) => unknown}
+   */
+  transformError;
+  /** @type {{ path: number[], value: string }} */
+  #title = { path: [], value: "" };
+  /**
+   * @param {'sync' | 'async'} mode
+   * @param {string} id_prefix
+   * @param {Csp} csp
+   * @param {((error: unknown) => unknown) | undefined} [transformError]
+   */
+  constructor(mode, id_prefix = "", csp = { hash: false }, transformError) {
+    this.mode = mode;
+    this.csp = { ...csp, script_hashes: [] };
+    this.transformError = transformError ?? ((error) => {
+      throw error;
+    });
+    let uid2 = 1;
+    this.uid = () => `${id_prefix}s${uid2++}`;
+  }
+  get_title() {
+    return this.#title.value;
+  }
+  /**
+   * Performs a depth-first (lexicographic) comparison using the path. Rejects sets
+   * from earlier than or equal to the current value.
+   * @param {string} value
+   * @param {number[]} path
+   */
+  set_title(value, path) {
+    const current = this.#title.path;
+    let i = 0;
+    let l = Math.min(path.length, current.length);
+    while (i < l && path[i] === current[i]) i += 1;
+    if (path[i] === void 0) return;
+    if (current[i] === void 0 || path[i] > current[i]) {
+      this.#title.path = path;
+      this.#title.value = value;
+    }
+  }
+}
+const INVALID_ATTR_NAME_CHAR_REGEX = /[\s'">/=\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;
+function element(renderer, tag, attributes_fn = noop, children_fn = noop) {
+  renderer.push("<!---->");
+  if (tag) {
+    if (!REGEX_VALID_TAG_NAME.test(tag)) {
+      dynamic_element_invalid_tag(tag);
+    }
+    renderer.push(`<${tag}`);
+    attributes_fn();
+    renderer.push(`>`);
+    if (!is_void(tag)) {
+      children_fn();
+      if (!is_raw_text_element(tag)) {
+        renderer.push(EMPTY_COMMENT);
+      }
+      renderer.push(`</${tag}>`);
+    }
+  }
+  renderer.push("<!---->");
+}
+function render(component, options = {}) {
+  if (options.csp?.hash && options.csp.nonce) {
+    invalid_csp();
+  }
+  return Renderer.render(
+    /** @type {Component<Props>} */
+    component,
+    options
+  );
+}
+function head(hash, renderer, fn) {
+  renderer.head((renderer2) => {
+    renderer2.push(`<!--${hash}-->`);
+    renderer2.child(fn);
+    renderer2.push(EMPTY_COMMENT);
+  });
+}
+function attributes(attrs, css_hash, classes, styles, flags = 0) {
+  if (styles) {
+    attrs.style = to_style(attrs.style, styles);
+  }
+  if (attrs.class) {
+    attrs.class = clsx(attrs.class);
+  }
+  if (css_hash || classes) {
+    attrs.class = to_class(attrs.class, css_hash, classes);
+  }
+  let attr_str = "";
+  let name;
+  const is_html = (flags & ELEMENT_IS_NAMESPACED) === 0;
+  const lowercase = (flags & ELEMENT_PRESERVE_ATTRIBUTE_CASE) === 0;
+  const is_input = (flags & ELEMENT_IS_INPUT) !== 0;
+  for (name of Object.keys(attrs)) {
+    if (typeof attrs[name] === "function") continue;
+    if (name[0] === "$" && name[1] === "$") continue;
+    if (name === "" || INVALID_ATTR_NAME_CHAR_REGEX.test(name)) continue;
+    var value = attrs[name];
+    var lower = name.toLowerCase();
+    if (lowercase) name = lower;
+    if (lower.length > 2 && lower.startsWith("on")) continue;
+    if (is_input) {
+      if (name === "defaultvalue" || name === "defaultchecked") {
+        name = name === "defaultvalue" ? "value" : "checked";
+        if (attrs[name]) continue;
+      }
+    }
+    attr_str += attr(name, value, is_html && is_boolean_attribute(name));
+  }
+  return attr_str;
+}
+function spread_props(props) {
+  const merged_props = {};
+  let key;
+  for (let i = 0; i < props.length; i++) {
+    const obj = props[i];
+    if (obj == null) continue;
+    for (key of Object.keys(obj)) {
+      const desc = Object.getOwnPropertyDescriptor(obj, key);
+      if (desc) {
+        Object.defineProperty(merged_props, key, desc);
+      } else {
+        merged_props[key] = obj[key];
+      }
+    }
+  }
+  return merged_props;
+}
+function stringify(value) {
+  return typeof value === "string" ? value : value == null ? "" : value + "";
+}
+function attr_class(value, hash, directives) {
+  var result = to_class(value, hash, directives);
+  return result ? ` class="${escape_html(result, true)}"` : "";
+}
+function attr_style(value, directives) {
+  var result = to_style(value, directives);
+  return result ? ` style="${escape_html(result, true)}"` : "";
+}
+function store_get(store_values, store_name, store) {
+  if (store_name in store_values && store_values[store_name][0] === store) {
+    return store_values[store_name][2];
+  }
+  store_values[store_name]?.[1]();
+  store_values[store_name] = [store, null, void 0];
+  const unsub = subscribe_to_store(
+    store,
+    /** @param {any} v */
+    (v) => store_values[store_name][2] = v
+  );
+  store_values[store_name][1] = unsub;
+  return store_values[store_name][2];
+}
+function store_set(store, value) {
+  store.set(value);
+  return value;
+}
+function unsubscribe_stores(store_values) {
+  for (const store_name of Object.keys(store_values)) {
+    store_values[store_name][1]();
+  }
+}
+function slot(renderer, $$props, name, slot_props, fallback_fn) {
+  var slot_fn = $$props.$$slots?.[name];
+  if (slot_fn === true) {
+    slot_fn = $$props[name === "default" ? "children" : name];
+  }
+  if (slot_fn !== void 0) {
+    slot_fn(renderer, slot_props);
+  } else {
+    fallback_fn?.();
+  }
+}
+function rest_props(props, rest) {
+  const rest_props2 = {};
+  let key;
+  for (key of Object.keys(props)) {
+    if (!rest.includes(key)) {
+      rest_props2[key] = props[key];
+    }
+  }
+  return rest_props2;
+}
+function sanitize_props(props) {
+  const { children, $$slots, ...sanitized } = props;
+  return sanitized;
+}
+function sanitize_slots(props) {
+  const sanitized = {};
+  if (props.children) sanitized.default = true;
+  for (const key of Object.keys(props.$$slots || {})) {
+    sanitized[key] = true;
+  }
+  return sanitized;
+}
+function bind_props(props_parent, props_now) {
+  for (const key of Object.keys(props_now)) {
+    const initial_value = props_parent[key];
+    const value = props_now[key];
+    if (initial_value === void 0 && value !== void 0 && Object.getOwnPropertyDescriptor(props_parent, key)?.set) {
+      props_parent[key] = value;
+    }
+  }
+}
+function ensure_array_like(array_like_or_iterator) {
+  if (array_like_or_iterator) {
+    return array_like_or_iterator.length !== void 0 ? array_like_or_iterator : Array.from(array_like_or_iterator);
+  }
+  return [];
+}
+function once(get_value) {
+  let value = (
+    /** @type {V} */
+    UNINITIALIZED
+  );
+  return () => {
+    if (value === UNINITIALIZED) {
+      value = get_value();
+    }
+    return value;
+  };
+}
+function props_id(renderer) {
+  const uid2 = renderer.global.uid();
+  renderer.push("<!--$" + uid2 + "-->");
+  return uid2;
+}
+function derived(fn) {
+  const get_value = ssr_context === null ? fn : once(fn);
+  let updated_value;
+  return function(new_value) {
+    if (arguments.length === 0) {
+      return updated_value ?? get_value();
+    }
+    updated_value = new_value;
+    return updated_value;
+  };
+}
 export {
-  TTSWorker as $,
-  showSearch as A,
-  channels as B,
-  pinnedChats as C,
-  chats as D,
-  getAllTags as E,
-  setChatReadAt as F,
-  getSharedChatList as G,
-  deleteSharedChatById as H,
-  toolServers as I,
-  terminalServers as J,
-  showSettings as K,
-  showChangelog as L,
-  workspaceActions as M,
-  adminLeaderboardCount as N,
-  adminFeedbackCount as O,
-  functions as P,
-  adminUserCount as Q,
-  adminGroupCount as R,
-  tools as S,
-  skills as T,
-  shortCodesToEmojis as U,
-  selectedTerminalId as V,
-  WEBUI_NAME as W,
-  showCallOverlay as X,
-  temporaryChatEnabled as Y,
-  artifactContents as Z,
-  banners as _,
-  getChatById as a,
-  embed as a0,
-  pyodideWorker as a1,
-  showFileNavPath as a2,
-  showControls as a3,
-  showArtifacts as a4,
-  showEmbeds as a5,
-  chatTitle as a6,
-  getTagsById as a7,
-  chatRequestQueues as a8,
-  updateChatById as a9,
-  createNewChat as aa,
-  refreshFolderChatLists as ab,
-  desktopEvent as ac,
-  forkChatById as ad,
-  compactChatById as ae,
-  getChatAccessGrants as af,
-  updateChatAccessGrants as ag,
-  channelId as ah,
-  emojiShortCodes as ai,
-  artifactCode as aj,
-  deleteChatMessageById as ak,
-  getChatByShareId as al,
-  chatId as b,
-  config as c,
-  selectedFolder as d,
-  exportSingleChatStats as e,
-  folders as f,
-  getChatPinnedStatusById as g,
-  showSidebar as h,
-  markChatUnreadById as i,
-  updateChatFolderIdById as j,
-  archiveChatById as k,
-  cloneChatById as l,
-  mobile as m,
-  getChatListByFolderId as n,
-  getChatsByFolderId as o,
-  tags as p,
-  getChatList as q,
-  refreshChatList as r,
-  settings as s,
-  theme as t,
-  user as u,
-  getChatListBySearchText as v,
-  models as w,
-  pinnedNotes as x,
-  socket as y,
-  isApp as z
+  handle_error as $,
+  hydration_mismatch as A,
+  HYDRATION_END as B,
+  COMMENT_NODE as C,
+  HYDRATION_START as D,
+  HYDRATION_START_ELSE as E,
+  get_next_sibling as F,
+  effect_tracking as G,
+  HYDRATION_ERROR as H,
+  get as I,
+  render_effect as J,
+  source as K,
+  untrack as L,
+  increment as M,
+  queue_micro_task as N,
+  active_effect as O,
+  BOUNDARY_EFFECT as P,
+  block as Q,
+  branch as R,
+  create_text as S,
+  pause_effect as T,
+  current_batch as U,
+  move_effect as V,
+  defer_effect as W,
+  set_active_effect as X,
+  set_active_reaction as Y,
+  set_component_context as Z,
+  Batch as _,
+  attr as a,
+  active_reaction as a0,
+  component_context as a1,
+  internal_set as a2,
+  destroy_effect as a3,
+  invoke_error_boundary as a4,
+  svelte_boundary_reset_onerror as a5,
+  HYDRATION_START_FAILED as a6,
+  svelte_boundary_reset_noop as a7,
+  EFFECT_TRANSPARENT as a8,
+  EFFECT_PRESERVED as a9,
+  without_reactive_context as aa,
+  define_property as ab,
+  init_operations as ac,
+  get_first_child as ad,
+  hydration_failed as ae,
+  clear_text_content as af,
+  component_root as ag,
+  array_from as ah,
+  is_passive_event as ai,
+  push$1 as aj,
+  pop$1 as ak,
+  set as al,
+  LEGACY_PROPS as am,
+  flushSync as an,
+  mutable_source as ao,
+  render as ap,
+  safe_not_equal as aq,
+  subscribe_to_store as ar,
+  run_all as as,
+  ssr_context as at,
+  lifecycle_function_unavailable as au,
+  element as av,
+  getAllContexts as aw,
+  ATTACHMENT_KEY as ax,
+  run as ay,
+  bind_props as b,
+  store_get as c,
+  attr_class as d,
+  ensure_array_like as e,
+  fallback as f,
+  clsx as g,
+  attr_style as h,
+  spread_props as i,
+  slot as j,
+  escape_html as k,
+  attributes as l,
+  getContext as m,
+  noop as n,
+  setContext as o,
+  head as p,
+  stringify as q,
+  rest_props as r,
+  sanitize_props as s,
+  store_set as t,
+  unsubscribe_stores as u,
+  invalid_default_snippet as v,
+  sanitize_slots as w,
+  hasContext as x,
+  derived as y,
+  props_id as z
 };
 //# sourceMappingURL=index2.js.map

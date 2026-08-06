@@ -1,4 +1,4 @@
-import { o as getContext, f as fallback, b as bind_props, k as escape_html, c as store_get, u as unsubscribe_stores, a as attr, d as attr_class, g as clsx, t as stringify } from "./root.js";
+import { m as getContext, f as fallback, b as bind_props, k as escape_html, c as store_get, u as unsubscribe_stores, a as attr, d as attr_class, g as clsx, q as stringify } from "./index2.js";
 import { M as Modal } from "./Modal.js";
 import { A as AccessControl } from "./AccessControl.js";
 import { X as XMark } from "./XMark.js";

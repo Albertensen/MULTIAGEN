@@ -64,7 +64,8 @@ export const nodes = [
 	() => import('./nodes/52'),
 	() => import('./nodes/53'),
 	() => import('./nodes/54'),
-	() => import('./nodes/55')
+	() => import('./nodes/55'),
+	() => import('./nodes/56')
 ];
 
 export const server_loads = [];
@@ -99,7 +100,8 @@ export const dictionary = {
 		"/(app)/playground/completions": [33,[2,7]],
 		"/(app)/playground/images": [34,[2,7]],
 		"/s/[id]": [54],
-		"/watch": [55],
+		"/utest": [55],
+		"/watch": [56],
 		"/(app)/workspace": [35,[2,8]],
 		"/(app)/workspace/functions/create": [36,[2,8]],
 		"/(app)/workspace/knowledge": [37,[2,8]],

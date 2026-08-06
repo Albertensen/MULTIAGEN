@@ -1,11 +1,12 @@
-import { o as getContext, f as fallback, b as bind_props, a as attr, c as store_get, k as escape_html, e as ensure_array_like, d as attr_class, u as unsubscribe_stores, h as attr_style, t as stringify, q as head } from "../../../../chunks/root.js";
+import { m as getContext, f as fallback, b as bind_props, a as attr, c as store_get, k as escape_html, e as ensure_array_like, d as attr_class, u as unsubscribe_stores, h as attr_style, q as stringify, p as head } from "../../../../chunks/index2.js";
 import "../../../../chunks/Toaster.svelte_svelte_type_style_lang.js";
 import "@sveltejs/kit/internal";
 import "../../../../chunks/exports.js";
 import "../../../../chunks/utils.js";
 import "@sveltejs/kit/internal/server";
+import "../../../../chunks/root.js";
 import "../../../../chunks/state.svelte.js";
-import { W as WEBUI_NAME, h as showSidebar } from "../../../../chunks/index2.js";
+import { W as WEBUI_NAME, h as showSidebar } from "../../../../chunks/index3.js";
 import "dompurify";
 import "marked";
 /* empty css                                                             */

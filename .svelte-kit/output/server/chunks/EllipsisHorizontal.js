@@ -1,4 +1,4 @@
-import { f as fallback, a as attr, d as attr_class, g as clsx, k as escape_html, b as bind_props } from "./root.js";
+import { f as fallback, a as attr, d as attr_class, g as clsx, k as escape_html, b as bind_props } from "./index2.js";
 function Textarea($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {
     let value = fallback($$props["value"], "");

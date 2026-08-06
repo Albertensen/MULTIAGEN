@@ -1,7 +1,7 @@
-import { f as fallback, d as attr_class, g as clsx, j as slot, b as bind_props, o as getContext, a as attr, c as store_get, u as unsubscribe_stores, t as stringify, k as escape_html, h as attr_style, e as ensure_array_like, G as element } from "./root.js";
+import { f as fallback, d as attr_class, g as clsx, j as slot, b as bind_props, m as getContext, a as attr, c as store_get, u as unsubscribe_stores, q as stringify, k as escape_html, h as attr_style, e as ensure_array_like, av as element } from "./index2.js";
 import { o as onDestroy, t as tick } from "./index-server.js";
-import { W as WEBUI_BASE_URL, M as renderVegaVisualization, N as unescapeHtml, O as initMermaid, P as renderMermaidDiagram, e as decodeString, Q as markedKatexExtension, R as markedExtension, S as replaceTokens, T as processResponseContent } from "./index3.js";
-import { s as settings, c as config, B as channels, w as models, u as user } from "./index2.js";
+import { W as WEBUI_BASE_URL, M as renderVegaVisualization, N as unescapeHtml, O as initMermaid, P as renderMermaidDiagram, e as decodeString, Q as markedKatexExtension, R as markedExtension, S as replaceTokens, T as processResponseContent } from "./index4.js";
+import { s as settings, c as config, B as channels, w as models, u as user } from "./index3.js";
 import { decode } from "html-entities";
 import fileSaver from "file-saver";
 import { marked } from "marked";
@@ -26,6 +26,7 @@ import "@sveltejs/kit/internal";
 import "./exports.js";
 import "./utils.js";
 import "@sveltejs/kit/internal/server";
+import "./root.js";
 import "./state.svelte.js";
 import { X as XMark } from "./XMark.js";
 import { a as Link_preview, b as Link_preview_trigger, U as UserStatusLinkPreview, P as Portal, L as Link_preview_content } from "./UserStatusLinkPreview.js";

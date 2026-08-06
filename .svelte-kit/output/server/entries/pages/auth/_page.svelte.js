@@ -1,4 +1,4 @@
-import { o as getContext, f as fallback, k as escape_html, c as store_get, a as attr, u as unsubscribe_stores, b as bind_props, q as head } from "../../../chunks/root.js";
+import { m as getContext, f as fallback, k as escape_html, c as store_get, a as attr, u as unsubscribe_stores, b as bind_props, p as head } from "../../../chunks/index2.js";
 import "dompurify";
 import "marked";
 import "../../../chunks/Toaster.svelte_svelte_type_style_lang.js";
@@ -6,9 +6,10 @@ import "@sveltejs/kit/internal";
 import "../../../chunks/exports.js";
 import "../../../chunks/utils.js";
 import "@sveltejs/kit/internal/server";
+import "../../../chunks/root.js";
 import "../../../chunks/state.svelte.js";
-import "../../../chunks/index3.js";
-import { c as config, W as WEBUI_NAME } from "../../../chunks/index2.js";
+import "../../../chunks/index4.js";
+import { c as config, W as WEBUI_NAME } from "../../../chunks/index3.js";
 import "@sveltejs/kit";
 function OnBoarding($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {

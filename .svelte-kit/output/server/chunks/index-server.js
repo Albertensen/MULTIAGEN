@@ -1,4 +1,4 @@
-import { E as ssr_context, n as noop, F as lifecycle_function_unavailable } from "./root.js";
+import { at as ssr_context, n as noop, au as lifecycle_function_unavailable } from "./index2.js";
 import "clsx";
 function onDestroy(fn) {
   /** @type {SSRContext} */
