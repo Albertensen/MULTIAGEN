@@ -14,7 +14,7 @@
 ## ⚡ QUICK HEALTH CHECK COMMAND (JALANKAN DULUAN)
 
 ```bash
-curl -s [@url:`http://127.0.0.1:8080/health`](@url:`http://127.0.0.1:8080/health`)
+curl -s [@url:`http://127.0.0.1:8080/health`](@url:`http://127.0.1:8080/health`)
 curl -s -o /dev/null -w "%{http_code}\n" [@url:`http://127.0.1:8088`](@url:`http://127.0.1:8088`)
 ```
 
@@ -53,3 +53,9 @@ curl -s -o /dev/null -w "%{http_code}\n" [@url:`http://127.0.1:8088`](@url:`http
 - [[AGENTS]]
 - [[CHANGELOG]]
 - [[PROJECT_RULES]]
+
+
+## 🤖 HERMES AGENT PRIVILEGES & PC WORKSPACE CONTROL
+- **Full System & CLI Authority:** Hermes adalah Agen Sistem Utama dengan wewenang penuh untuk membaca, membuat, mengedit file lokal, serta mengeksekusi perintah terminal (Git, CLI, Python, Uvicorn, Vite) di workspace `C:\Users\Administrator\Documents\MY-WORKSPACE\open-webui-main`.
+- **Autonomous Execution:** Hermes wajib mengeksekusi perintah sistem secara mandiri untuk pengujian runtime, koding, dan git operations tanpa bersikap pasif.
+- **New Session Hydration:** Saat new session dimulai, Hermes harus langsung mengaktifkan mode otonom ini secara otomatis.
