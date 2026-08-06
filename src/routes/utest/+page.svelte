@@ -30,9 +30,12 @@
 		resolveAgentId,
 		processMessage,
 		watchTranscript,
+		generateAgentResponse,
 		on,
 		clearBus
 	} from '$lib/stores/orchestration/orchestration';
+
+	import { get } from 'svelte/store';
 
 	let log: string[] = [];
 
@@ -81,6 +84,73 @@
 	calls.subscribe((c) => (callCount = c.length));
 	let busCount = 0;
 	busHistory.subscribe((b) => (busCount = b.length));
+
+	// ===== Generate agent response via Ollama (Fase 3, item 3) =====
+	let genStatus = 'idle'; // idle | running | done | error
+	let genResult = '';
+	let genLog: string[] = [];
+
+	const generateFor = async (agentId: string, prompt: string) => {
+		const chatId = CHAT;
+		// catat prompt user ke transkrip agent tsb (biar ada konteks)
+		addMessage(chatId, agentId, { role: 'user', content: prompt });
+		genStatus = 'running';
+		genLog = [...genLog, `[${agentId}] generate: ${prompt}`];
+		const agent = $agents[agentId];
+		const history = getHistoryByAgent(chatId, agentId).map((m) => ({
+			role: m.role === 'system' ? 'system' : m.role,
+			content: m.content
+		}));
+		try {
+			const text = await generateAgentResponse({
+				chatId,
+				agentId,
+				model: agent.model,
+				systemPrompt: agent.systemPrompt,
+				history
+			});
+			genResult = text;
+			genStatus = 'done';
+			genLog = [...genLog, `[${agentId}] result: ${text.slice(0, 120)}...`];
+		} catch (e) {
+			genStatus = 'error';
+			genLog = [...genLog, `[${agentId}] ERROR: ${String(e)}`];
+		}
+	};
+
+	// auto-trigger: saat pesan dari agent mengandung [CALL: x], generate juga
+	// (simulasi Leader-Worker: Hermes mendelegasikan ke Planner/Critic)
+	const handleGenerated = (p: Record<string, unknown>) => {
+		const agentId = p.agentId as string;
+		const chatId = p.chatId as string;
+		// bila hasilnya memanggil agen lain, generate agen itu juga (1 level)
+		const targetIds = parseCalls(genResult);
+		if (targetIds.length > 0) {
+			for (const t of targetIds) {
+				const tid = resolveAgentId(t);
+				if (tid && tid !== agentId) {
+					const prompt = `(auto dari ${agentId}) ${genResult}`;
+					genLog = [...genLog, `[auto] ${agentId} -> ${tid}: ${prompt.slice(0, 80)}...`];
+					addMessage(chatId, tid, { role: 'user', content: prompt });
+					const tagent = $agents[tid];
+					const thistory = getHistoryByAgent(chatId, tid).map((m) => ({
+						role: m.role,
+						content: m.content
+					}));
+					generateAgentResponse({
+						chatId,
+						agentId: tid,
+						model: tagent.model,
+						systemPrompt: tagent.systemPrompt,
+						history: thistory
+					}).then((t) => {
+						genLog = [...genLog, `[${tid}] result: ${t.slice(0, 120)}...`];
+					});
+				}
+			}
+		}
+	};
+	on('agent:generated', handleGenerated);
 </script>
 
 <h1>Agent Store Harness</h1>
@@ -164,5 +234,27 @@
 	send CALL from user
 </button>
 <button on:click={() => clearBus()}>clear bus/calls</button>
+
+<hr />
+<h2>Generate via Ollama (Fase 3)</h2>
+<p><strong>status:</strong> {genStatus}</p>
+{#if genResult}
+	<p><strong>hasil:</strong> <em>{genResult}</em></p>
+{/if}
+<ul>
+	{#each genLog as l, i (i)}
+		<li>{l}</li>
+	{/each}
+</ul>
+<p>Trigger agent & auto-delegasi:</p>
+<button on:click={() => generateFor('a1', 'Rencanakan langkah & [CALL: planner] dan [CALL: critic] untuk artikel kecil')}>
+	Hermes -> generate & CALL planner+critic
+</button>
+<button on:click={() => generateFor('a2', 'Buat rencana 3 langkah [CALL: critic] review')}>
+	Planner -> generate & CALL critic
+</button>
+<button on:click={() => generateFor('a3', 'Review kualitas [CALL: planner]')}>
+	Critic -> generate & CALL planner
+</button>
 
 <pre>{JSON.stringify(summary)}</pre>

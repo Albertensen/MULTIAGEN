@@ -105,6 +105,73 @@ export const processMessage = (chatId: string, fromAgentId: string, content: str
 	}
 };
 
+// ==================== Generator (Fase 3, item 3) ====================
+
+export type GenerateOptions = {
+	chatId: string;
+	agentId: string;
+	model: string;
+	systemPrompt?: string;
+	history: { role: string; content: string }[];
+	onStream?: (text: string) => void; // opsional, utk UI live
+};
+
+// Minta backend generate respons agen via Ollama. Menambah pesan assistant
+// ke transkrip agent tsb + emit event bus 'agent:generated'.
+export const generateAgentResponse = async (opts: GenerateOptions): Promise<string> => {
+	emit('agent:generating', { chatId: opts.chatId, agentId: opts.agentId, model: opts.model });
+
+	const messages: { role: string; content: string }[] = [];
+	if (opts.systemPrompt) messages.push({ role: 'system', content: opts.systemPrompt });
+	messages.push(...opts.history);
+
+	let res: Response;
+	try {
+		res = await fetch('/api/v1/agents/generate', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ model: opts.model, messages, stream: false })
+		});
+	} catch (e) {
+		const msg = `[error] gagal hubungi backend: ${String(e)}`;
+		addMessage(opts.chatId, opts.agentId, { role: 'system', content: msg });
+		emit('agent:error', { chatId: opts.chatId, agentId: opts.agentId, error: String(e) });
+		return msg;
+	}
+
+	if (!res.ok) {
+		let detail = '';
+		try {
+			detail = (await res.json()).detail ?? '';
+		} catch {
+			/* ignore */
+		}
+		const msg = `[error] backend ${res.status}: ${detail}`;
+		addMessage(opts.chatId, opts.agentId, { role: 'system', content: msg });
+		emit('agent:error', { chatId: opts.chatId, agentId: opts.agentId, status: res.status, detail });
+		return msg;
+	}
+
+	let text = '';
+	try {
+		const data = await res.json();
+		text = data?.choices?.[0]?.message?.content ?? '';
+	} catch (e) {
+		const msg = `[error] respons backend tak valid: ${String(e)}`;
+		addMessage(opts.chatId, opts.agentId, { role: 'system', content: msg });
+		emit('agent:error', { chatId: opts.chatId, agentId: opts.agentId, error: String(e) });
+		return msg;
+	}
+
+	// auto-trigger: pesan baru mungkin mengandung [CALL: agent lain]
+	processMessage(opts.chatId, opts.agentId, text);
+
+	opts.onStream?.(text);
+	addMessage(opts.chatId, opts.agentId, { role: 'assistant', content: text });
+	emit('agent:generated', { chatId: opts.chatId, agentId: opts.agentId, model: opts.model });
+	return text;
+};
+
 // ==================== Monitor transkrip ====================
 
 // watch satu chat: proses pesan user/assistant yang BELUM terlihat.

@@ -26,6 +26,15 @@ export default defineConfig({
 	worker: {
 		format: 'es'
 	},
+	server: {
+		port: 8088,
+		proxy: {
+			'/api': {
+				target: 'http://127.0.0.1:8080',
+				changeOrigin: true
+			}
+		}
+	},
 	esbuild: {
 		pure: process.env.ENV === 'dev' ? [] : ['console.log', 'console.debug', 'console.error']
 	}
