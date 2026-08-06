@@ -94,6 +94,16 @@ cd /d C:\Users\Administrator\Downloads\open-webui-main
 .venv\Scripts\python.exe -m uvicorn open_webui.main:app --host 127.0.0.1 --port 8080
 ```
 
+### 3.2a STABLE LAUNCHER (DETACHED — recommended)
+> **Pitfall:** Hermes `terminal(background=true)` wrapper membunuh uvicorn tiap beberapa menit (exit 1, tanpa traceback, log tetap 200an). Solusi: spawn DETACHED_PROCESS via Python.
+
+```bash
+# Dari git-bash / cmd — jalankan sekali, proses survive shell parent
+.venv/Scripts/python.exe .hermes-audit/start_backend_detached.py
+# Output: "launched pid=<PID>" -> verifikasi:
+curl -s http://127.0.0.1:8080/health   # {"status":true}
+```
+
 > **Note:** Run in dedicated terminal/tab. Do **not** background via Hermes `terminal(background=true)` — it breaks job control and env propagation.
 
 ### 3.3 Health Check (Verified Working)
