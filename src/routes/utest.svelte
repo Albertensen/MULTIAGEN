@@ -1,12 +1,11 @@
 <script>
-  import { agentStore } from './agent/agentStore';
-  import { wsStatus } from './stores/orchestration';
-  import { on, busHistory } from './orchestration';
-  import { chatListStore } from './chatList';
+  import { agentStore } from '$lib/stores/agent/agentStore';
+  import { wsStatus, orchestrator } from '$lib/stores/orchestration';
+  import { on, busHistory } from '$lib/stores/orchestration';
+  import { chatListStore } from '$lib/stores/chatList';
+  import { onDestroy } from 'svelte';
 
-  // Connect to WebSocket from mainbrain.md orchestration (already handled in orchestration.ts)
   // UI State
-  let connectionStatus = $wsStatus; // Svelte reactive store
   let agents = agentStore.get();
 
   // Subscribe to agentStore updates
@@ -15,8 +14,9 @@
   });
 
   // Handle new incoming WebSocket messages via orchestration bus
+  // (optional: refresh UI when events happen)
   on('orchestration:call', (event) => {
-    // Refresh agent list when new assignments happen (already subscribed to agentStore)
+    // agents will update via agentStore subscription
   });
 
   // Handle agent status changes from WebSocket
@@ -35,10 +35,10 @@
   <h2>Phase 3 Item 6: WebSocket Integration Test</h2>
   <div class="status-indicator">
     <span class="status-label">WebSocket Status:</span>
-    <span class="status-value {connectionStatus}">
-      {#if connectionStatus === 'connected'}
+    <span class="status-value">
+      {#if $wsStatus === 'connected'}
         �� ⚡ Connected
-      {:else if connectionStatus === 'connecting'}
+      {:else if $wsStatus === 'connecting'}
         �� 🔄 Connecting...
       {:else}
         �� 🔴 Disconnected
@@ -96,10 +96,8 @@
       Create Test Agent
     </button>
     <button class="btn-secondary" on:click={() => {
-      // Clear event bus for clean test
-      // Note: clearBus is from orchestration store
-      // We need to import it; for simplicity, we can call via window or expose.
-      // Since we didn't export clearBus, we'll skip for now.
+      // Clear event bus (if exposed)
+      // Since clearBus is not exported from the store in this version, we skip.
       alert('Clear bus not exposed in this version.');
     }}>
       Clear Event Bus
@@ -126,17 +124,25 @@
   .status-label {
     font-weight: bold;
   }
-  .status-value.connected {
-    color: #28a745;
+  .status-value {
     font-weight: bold;
   }
-  .status-value.connecting {
-    color: #ffc107;
-    font-weight: bold;
+  .status-value::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
   }
-  .status-value.disconnected {
-    color: #dc3545;
-    font-weight: bold;
+  .status-value:has-text("Connected")::before {
+    background: #28a745;
+  }
+  .status-value:has-text("Connecting")::before {
+    background: #ffc107;
+  }
+  .status-value:has-text("Disconnected")::before {
+    background: #dc3545;
   }
   .agents-section, .events-section {
     margin-bottom: 20px;
