@@ -54,3 +54,10 @@ Setiap rilis harus diperbarui di RELEASE_NOTES.md.
 - File .env JANGAN pernah di-commit, ditimpa, atau dimodifikasi secara otonom.
 - Tidak ada backup git untuk .env.
 - Pastikan .env sudah masuk ke dalam .gitignore.
+
+## ⛔ Strict GitHub & Vault Sync Protocol (Zero-Drift Policy)
+
+1. **Mandatory Triple-Sync:** Setiap kali item/fitur selesai, WAJIB update secara bersamaan: (a) `PROJECT_ROADMAP.md`, (b) `mainbrain.md` & Session Log di Obsidian (vault `SECONDBRAIN`), dan (c) Git Push ke GitHub.
+2. **Zero Unpushed Commits:** Dilarang menganggap tugas selesai sebelum `git push origin master` sukses dieksekusi.
+3. **Verifikasi Remote:** Sebelum memberikan balasan akhir, jalankan `git status` untuk memastikan branch local sejajar dengan `origin/master` ("Your branch is up to date with 'origin/master'").
+4. **Vault adalah sumber docs utama** (mainbrain.md, HERMES_SYSTEM_CORE.md) — repo GitHub menyimpan versi roadmap/rules/changelog; jangan biarkan keduanya drift.
