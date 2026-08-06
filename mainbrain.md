@@ -14,9 +14,8 @@
 ## ⚡ QUICK HEALTH CHECK COMMAND (JALANKAN DULUAN)
 
 ```bash
-curl -s [@url:`http://127.0.0.1:8080/health`](@url:`http://127.0.1:8080/health`)
-curl -s -o /dev/null -w "%{http_code}\n" [@url:`http://127.0.1:8088`](@url:`http://127.0.1:8088`)
-```
+curl -s [http://127.0.0.1:8080/health](http://127.0.0.1:8080/health)
+curl -s -o /dev/null -w "%{http_code}\n" [http://127.0.1:8088](http://127.0.1:8088)
 
 **Harapan:** `health` (backend) = 200, frontend status code = 200.
 
@@ -24,9 +23,15 @@ curl -s -o /dev/null -w "%{http_code}\n" [@url:`http://127.0.1:8088`](@url:`http
 
 ## 🚀 STATUS TERKINI: FASE 3 BERJALAN (item 1-5 lunas)
 
-> **Fase 0-2:** Lunas & teruji 100% runtime. **Fase 3:** item 1 (Event Bus), item 2 ([CALL: agent] parser), item 3 (auto-trigger generasi via Ollama), item 4 (Inter-Agent File Sharing) selesai & teruji end-to-end di /utest. Item 5-10 roadmap masih [ ] — lanjut item 5 (backend CRUD+ws) / 10 (dry-run).
+> **Fase 0-2:** Lunas & teruji 100% runtime. **Fase 3:** item 1 (Event Bus), item 2 ([CALL: agent] parser), item 3 (auto-trigger generasi via Ollama), item 4 (Inter-Agent File Sharing), item 5 (Backend CRUD & WebSocket Broadcaster) selesai & teruji end-to-end di /utest. Item 6-10 roadmap masih [ ] — lanjut item 6 (Svelte Store WebSocket & /utest UI Integration).
 
-> **📌 RULES WAJIB:** (1) Triple-Sync Zero-Drift: roadmap + vault + git push serentak tiap item selesai; (2) Auto-Checkmark: `[ ]`→`[x]` di PROJECT_ROADMAP.md + mainbrain.md via file operations SEBELUM nyatakan selesai; (3) Zero unpushed commits; (4) verifikasi `git status` up-to-date dgn origin/master sebelum balasan akhir.
+> **📌 RULES WAJIB:** 
+> 1. **Triple-Sync Zero-Drift:** roadmap + vault + git push serentak tiap item selesai.
+> 2. **Auto-Checkmark:** `[ ]`→`[x]` di `PROJECT_ROADMAP.md` + `mainbrain.md` via file operations SEBELUM nyatakan selesai.
+> 3. **Auto-Push & Fallback Alert Rule:** Setelah tes runtime berhasil 100%, jalankan `git add .`, `git commit -m "..."`, dan `git push origin master`. JIKA `git push` GAGAL / BUTUH OTORISASI USER, Hermes WAJIB memanggil Notifikasi Pop-up Windows lewat PowerShell:
+>    `powershell -Command "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Git Push membutuhkan verifikasi/intervensi Anda di terminal!', 'Hermes Git Alert', 'OK', 'Warning')"`
+> 4. **Zero Unpushed Commits:** Verifikasi `git status` up-to-date dgn origin/master sebelum balasan akhir.
+
 
 ## 📁 INDEX FILE PROYEK
 
