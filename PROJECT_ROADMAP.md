@@ -48,7 +48,7 @@ Fokus pada pembuatan "ingatan" yang memisahkan percakapan berdasarkan identitas 
 - [x] Definisikan struktur pesan relasional: id, senderId (user/a1/a2), role, content, timestamp.
 - [x] Buat fungsi untuk memfilter riwayat obrolan secara global (main channel) dan spesifik per agen.
 - [x] Integrasikan dan uji transcriptStore berdampingan dengan agentStore di /utest.
-- [x] Persistensi lokal: simpan agen + transkrip ke localStorage (auto-save via subscribe, hydrate saat boot, clearPersisted* untuk reset). Teruji: tambah pesan → reload → data bertahan.
+- [x] Persistensi lokal: simpan agen + transkrip ke localStorage (auto-save subscribe, hydrate boot, clearPersisted* untuk reset). Teruji: tambah pesan → reload → data bertahan.
 
 ---
 
@@ -76,3 +76,4 @@ Fokus pada pembangunan mesin komunikasi dan pertukaran aset agar agen bisa salin
 - [ ] Main Chat (Tengah): Rancang alur pesan bersarang (utas/ threads) lengkap dengan nama pengirim, avatar, dan rendering UI untuk attachment file/kode.
 - [ ] Real-time UX: Tambahkan Typing Indicators saat Ollama memproses data, dan tombol "Buzz/Ping" untuk memaksa agen merespons.
 - [ ] Agent Observability & Error Logging UI: Implementasi panel log aktivitas real-time yang menampilkan jejak langkah (reasoning steps), status pengerjaan, serta log error sistematis untuk setiap agen guna memudahkan debugging dan transparansi.
+====================================================================
