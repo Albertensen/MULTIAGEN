@@ -52,3 +52,4 @@ pytest_cache/
 *.tar.gz
 # SvelteKit build cache
 .svelte-kit/
+.env
