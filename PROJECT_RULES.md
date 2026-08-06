@@ -61,3 +61,9 @@ Setiap rilis harus diperbarui di RELEASE_NOTES.md.
 2. **Zero Unpushed Commits:** Dilarang menganggap tugas selesai sebelum `git push origin master` sukses dieksekusi.
 3. **Verifikasi Remote:** Sebelum memberikan balasan akhir, jalankan `git status` untuk memastikan branch local sejajar dengan `origin/master` ("Your branch is up to date with 'origin/master'").
 4. **Vault adalah sumber docs utama** (mainbrain.md, HERMES_SYSTEM_CORE.md) — repo GitHub menyimpan versi roadmap/rules/changelog; jangan biarkan keduanya drift.
+
+### 📌 Rule: Immediate Roadmap Auto-Checkmark
+
+- Setiap kali sebuah sub-task/item roadmap selesai dibuat DAN teruji runtime (PASSED):
+  1. Hermes WAJIB langsung mengubah `[ ]` menjadi `[x]` pada file `PROJECT_ROADMAP.md` DAN `mainbrain.md` (file operations, disk fisik).
+  2. Hermes DILARANG menyatakan "Selesai" atau meminta tugas berikutnya sebelum `PROJECT_ROADMAP.md` di disk benar-benar terupdate dengan centang `[x]`.
