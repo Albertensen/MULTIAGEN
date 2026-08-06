@@ -16,14 +16,15 @@
 ```bash
 curl -s [http://127.0.0.1:8080/health](http://127.0.0.1:8080/health)
 curl -s -o /dev/null -w "%{http_code}\n" [http://127.0.1:8088](http://127.0.1:8088)
+```
 
 **Harapan:** `health` (backend) = 200, frontend status code = 200.
 
 ---
 
-## 🚀 STATUS TERKINI: FASE 3 BERJALAN (item 1-5 lunas)
+## 🚀 STATUS TERKINI: FASE 3 BERJALAN (item 1-6 lunas)
 
-> **Fase 0-2:** Lunas & teruji 100% runtime. **Fase 3:** item 1 (Event Bus), item 2 ([CALL: agent] parser), item 3 (auto-trigger generasi via Ollama), item 4 (Inter-Agent File Sharing), item 5 (Backend CRUD & WebSocket Broadcaster) selesai & teruji end-to-end di /utest. Item 6-10 roadmap masih [ ] — lanjut item 6 (Svelte Store WebSocket & /utest UI Integration).
+> **Fase 0-2:** Lunas & teruji 100% runtime. **Fase 3:** item 1 (Event Bus), item 2 ([CALL: agent] parser), item 3 (auto-trigger generasi via Ollama), item 4 (Inter-Agent File Sharing), item 5 (Backend CRUD & WebSocket Broadcaster), item 6 (Svelte Store WebSocket & /utest UI Integration) selesai & teruji end-to-end di /utest. Item 7-10 roadmap masih [ ] — lanjut item 7 (Hierarchical Task Delegation).
 
 > **📌 RULES WAJIB:** 
 > 1. **Triple-Sync Zero-Drift:** roadmap + vault + git push serentak tiap item selesai.
@@ -58,6 +59,7 @@ curl -s -o /dev/null -w "%{http_code}\n" [http://127.0.1:8088](http://127.0.1:80
 - [[AGENTS]]
 - [[CHANGELOG]]
 - [[PROJECT_RULES]]
+
 
 
 ## 🤖 HERMES AGENT PRIVILEGES & PC WORKSPACE CONTROL
