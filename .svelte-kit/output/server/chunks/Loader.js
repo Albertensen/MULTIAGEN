@@ -1,4 +1,4 @@
-import { j as slot, f as fallback, a as attr, d as attr_class, q as stringify, b as bind_props, g as clsx, e as ensure_array_like, k as escape_html, c as store_get, u as unsubscribe_stores, m as getContext } from "./index2.js";
+import { j as slot, f as fallback, a as attr, d as attr_class, b as bind_props, q as stringify, g as clsx, e as ensure_array_like, k as escape_html, c as store_get, u as unsubscribe_stores, m as getContext } from "./index2.js";
 import { W as WEBUI_BASE_URL, a as WEBUI_API_BASE_URL, u as formatFileSize, H as getLineCount } from "./index4.js";
 import { s as safeImageUrl, M as Markdown, c as ConsecutiveDetailsGroup, T as ToolCallDisplay, P as PanzoomContainer, d as CodeBlock, R as Reset } from "./FileItemModal.svelte_svelte_type_style_lang.js";
 import { C as Collapsible } from "./Download.js";

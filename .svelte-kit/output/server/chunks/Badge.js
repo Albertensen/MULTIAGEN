@@ -1,4 +1,4 @@
-import { f as fallback, d as attr_class, q as stringify, k as escape_html, b as bind_props } from "./index2.js";
+import { f as fallback, d as attr_class, k as escape_html, b as bind_props, q as stringify } from "./index2.js";
 function Badge($$renderer, $$props) {
   let type = fallback($$props["type"], "info");
   let content = fallback($$props["content"], "");
