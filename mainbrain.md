@@ -17,7 +17,7 @@
 ## 🔄 BOOT SEQUENCE (BACA JIKA SESI BARU / LUPA KONTEKS)
 1. `SECONDBRAIN/HERMES_SYSTEM_CORE.md` (Env, terminal, fix PIL/SQLite)
 2. `PROJECT_MULTIAGENT/HERMES_RUNBOOK.md` (Kill zombie 8080/8088 & uvicorn)
-3. `PROJECT_MULTIAGENT/PROJECT_ROADMAP.md` (Fase 0-2 [x], Fase 3 [1-15 x], Fase 4 [16-19 x, cleanup, L/R sidebar x])
+3. `PROJECT_MULTIAGENT/PROJECT_ROADMAP.md` (Fase 0-2 [x], Fase 3 [1-15 x], Fase 4 [SEMUA x — 16-19, cleanup, L/R sidebar, MainChat, Real-time UX, Observability])
 4. `PROJECT_MULTIAGENT/SESSION_LOGS/` (Log sesi terbaru)
 
 ---

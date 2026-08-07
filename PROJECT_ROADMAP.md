@@ -48,6 +48,6 @@
 - [x] Right Sidebar (Online Agents Panel & Status) — **DONE 2026-08-07: roster scoped workspace aktif, status Online/Idle/Busy/Thinking real-time, role 👑Leader/⚙Worker, E2E verified**
 - [x] Item 18: Casual Event-to-Chat Mapping — **DONE 2026-08-07: MainChat.svelte (template "Alright! 🚀", "Beres bosku! ✨", "Wait 🤔"), listener 6 event orkestrasi, E2E verified**
 - [x] Item 19: Discord-style Message Replies & Typing Indicators — **DONE 2026-08-07: typing "{name} is typing... 💬" real-time dari worker-started/feedback, E2E verified live saat delegasi**
-- [ ] Main Chat (Threads, Avatars, File/Code attachments rendering)
-- [ ] Real-time UX (Typing indicators, Buzz/Ping trigger)
-- [ ] Agent Observability & Error Logging UI
+- [x] Main Chat (Threads, Avatars, File/Code attachments rendering) — **DONE 2026-08-07: MainChat.svelte avatar inisial, code block ```lang → hljs highlight, E2E verified**
+- [x] Real-time UX (Typing indicators, Buzz/Ping trigger) — **DONE 2026-08-07: typing "{name} is typing... 💬" live + avatar ping shake (delegation-done → .msg-avatar.ping)**
+- [x] Agent Observability & Error Logging UI — **DONE 2026-08-07: drawer ⚠️ toggle (raw error orchestration:delegation-error, max 50, auto-open), E2E verified buka-tutup**

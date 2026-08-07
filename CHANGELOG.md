@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase4) — Final: code rendering, ping UX, observability UI: MainChat.svelte — code block ```lang → hljs syntax highlight (custom regex renderer), **bold**, avatar inisial dgn ping shake animation (delegation-done → .msg-avatar.ping), error log drawer ⚠️ toggle (raw error dari orchestration:delegation-error, max 50, auto-open); E2E verified: ```js → <pre><code class="hljs"> dgn hljs-attribute/operator/number span, drawer buka-tutup tanpa rusak layout 3-kolom
+
 ## [2026-08-07] fix(phase4) — Wire main chat input + cleanup utest: +page.svelte ditulis ulang 823→38 baris (murni 3 kolom: LeftSidebar/MainChat/AgentRosterPanel, seed agents idempotent); MainChat.svelte: input aktif (Enter → send() → triggerMention), pesan User render rata-kanan warna #5865f2, listener orchestration:mention ("📣 {agent} dipanggil! Siap gas! 🔥"); E2E verified: ketik @critic + Enter → user msg + mention response, layar zero debug text
 
 ## [2026-08-07] feat(phase4) — Item 18 & 19 Casual Event-to-Chat Mapping & Typing Indicators: MainChat.svelte (render event orkestrasi → template casual: "Alright! 🚀 ... @{worker}! 😎", "Beres bosku! ✨ ...", "Wait, butuh pencerahan 🤔"; listener on() ke 6 event; typing indicator "{name} is typing... 💬" dari worker-started/worker-feedback; diintegrasi layout 3-kolom /utest); E2E verified: assign/done template render, typing chip live saat delegasi
