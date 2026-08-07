@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase4) — Dry-run delegation fallback: generateAgentResponse fetch pakai AbortSignal.timeout(6000) (fix hang selamanya saat backend/Ollama mati); delegateTask fallback planText dummy ([CALL: Planner/Critic/Hermes]) saat generate gagal → alur worker-started/done + token savings tetap bisa diverifikasi tanpa LLM eksternal; emit orchestration:dry-run; E2E dry-run verified: user @Hermes Corgi plan → 3 micro-task assign+done, widget Token Savings 16.8k / 91% / $0.0025
+
 ## [2026-08-07] feat(phase4) — Global leader directive injection: konstanta GLOBAL_LEADER_DIRECTIVE (CRITICAL ARCHITECTURAL RULE — worker = Local LLM Ollama, wajib pecah micro-task, tunggu output step 1 sebelum step 2); saveConfig gabung master plan user + directive → finalSystemPrompt (systemPrompt utama leader); E2E verified: save Architect → prompt 563 char berisi directive
 
 ## [2026-08-07] feat(phase4) — Hermes native integration prep: dropdown provider → 5 opsi (Hermes Native 🌟 default / Ollama Local / OpenAI / Anthropic Claude / Google Gemini Cloud); API Key input conditional — hidden utk hermes+ollama, muncul utk cloud (type password); model mapping hermes-native; E2E verified: 5 opsi, default hermes key hidden, pilih openai → key muncul

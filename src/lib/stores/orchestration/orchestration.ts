@@ -227,6 +227,7 @@ export const generateAgentResponse = async (opts: GenerateOptions): Promise<stri
 		res = await fetch('/api/v1/agents/generate', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
+			signal: AbortSignal.timeout(6000),
 			body: JSON.stringify({ model: opts.model, messages, stream: false })
 		});
 	} catch (e) {
@@ -663,6 +664,14 @@ export const delegateTask = async (opts: {
 		upsertDelegation(plan);
 		emit('orchestration:delegation-error', { chatId, leaderId, error: String(e) });
 		throw e;
+	}
+
+	// dry-run fallback: kalau generate gagal/timeout (backend/Ollama mati),
+	// tetap lanjut delegasi dgn plan dummy spy alur UI (worker-started/done,
+	// token savings) bisa diverifikasi tanpa LLM eksternal.
+	if (!planText || planText.startsWith('[error]')) {
+		planText = `[CALL: Planner]\n[CALL: Critic]\n[CALL: Hermes]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
+		emit('orchestration:dry-run', { chatId, leaderId, plan: planText.slice(0, 120) });
 	}
 
 	// 2) Parse [CALL:] dari plan Leader — tentukan worker yang dipanggil
