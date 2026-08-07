@@ -1,6 +1,6 @@
 <script lang="ts">
 	// LeftSidebar.svelte — true Discord clone: Server Bar + Channel Sidebar hierarkis
-	import { workspaceList, activeWorkspaceId, activeChannel, activeLeaderId, createWorkspace } from '$lib/stores/workspace/workspaceStore';
+	import { workspaceList, activeWorkspaceId, activeChannel, activeLeaderId, createWorkspace, removeWorkspace } from '$lib/stores/workspace/workspaceStore';
 	import { agentList } from '$lib/stores/agent/agentStore';
 
 	export let onSwitch: (id: string) => void = () => {};
@@ -14,6 +14,14 @@
 		if (!name?.trim()) return;
 		const ws = createWorkspace({ name: name.trim(), agentIds: ['a1', 'a2', 'a3'] });
 		onAdd(ws.id);
+	};
+
+	// hapus workspace (dedup ganda / accidental)
+	const removeWs = (id: string, e: MouseEvent) => {
+		e.stopPropagation();
+		if (window.confirm('Hapus workspace ini?')) {
+			removeWorkspace(id);
+		}
 	};
 
 	// leader agen = agent dengan role 'leader' di workspace aktif (fallback: agent pertama)
@@ -37,13 +45,16 @@
 	<!-- SERVER BAR (paling kiri, w-16 / #1E1F22) -->
 	<nav class="server-bar">
 		{#each $workspaceList as ws (ws.id)}
-			<button
-				class="server-icon {$activeWorkspaceId === ws.id ? 'active' : ''}"
-				title={ws.name}
-				on:click={() => onSwitch(ws.id)}
-			>
-				{ws.name.slice(0, 2).toUpperCase()}
-			</button>
+			<div class="server-wrap">
+				<button
+					class="server-icon {$activeWorkspaceId === ws.id ? 'active' : ''}"
+					title={ws.name}
+					on:click={() => onSwitch(ws.id)}
+				>
+					{ws.name.slice(0, 2).toUpperCase()}
+				</button>
+				<button class="server-x" title="Hapus {ws.name}" on:click={(e) => removeWs(ws.id, e)}>×</button>
+			</div>
 		{/each}
 		<button class="server-icon add" title="Tambah workspace" on:click={addWs}>+</button>
 	</nav>
@@ -61,11 +72,11 @@
 			<div class="chan-group">
 				<span class="chan-group-label">👑 LEADER MANAGEMENT</span>
 				<button class="chan-item {$activeChannel === 'create-leader' ? 'active' : ''}" on:click={() => go('create-leader')}>
-					<span class="hash">🛠️</span> create-leader
+					<span class="hash"># 🛠️</span> create-leader
 				</button>
 				{#each leaders() as l (l.id)}
 					<button class="chan-item {$activeChannel === `leader:${l.id}` ? 'active' : ''}" on:click={() => go(`leader:${l.id}`, l.id)}>
-						<span class="hash">🧠</span> {l.name}
+						<span class="hash"># 🧠</span> {l.name}
 					</button>
 				{/each}
 			</div>
@@ -74,7 +85,7 @@
 				<span class="chan-group-label">⚡ TASK STREAMS</span>
 				{#each leaders() as l (l.id)}
 					<button class="chan-item {$activeChannel === `stream:${l.id}` ? 'active' : ''}" on:click={() => go(`stream:${l.id}`, l.id)}>
-						<span class="hash">⚡</span> stream-{l.name.toLowerCase().replace(/\s+/g, '-')}
+						<span class="hash"># ⚡</span> stream-{l.name.toLowerCase().replace(/\s+/g, '-')}
 					</button>
 				{/each}
 			</div>
@@ -137,6 +148,30 @@
 		border: 2px dashed #4e5058;
 		color: #23a55a;
 	}
+	.server-wrap {
+		position: relative;
+	}
+	.server-x {
+		position: absolute;
+		top: -4px;
+		right: -4px;
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		border: none;
+		background: #ed4245;
+		color: #fff;
+		font-size: 11px;
+		line-height: 1;
+		cursor: pointer;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+	}
+	.server-wrap:hover .server-x {
+		display: flex;
+	}
 	/* channel sidebar — w-60 */
 	.channel-sidebar {
 		width: 240px;
@@ -170,13 +205,15 @@
 		color: #949ba4;
 		padding-left: 8px;
 		letter-spacing: 0.4px;
+		text-transform: uppercase;
+		font-size: 10px;
 	}
 	.chan-item {
 		display: flex;
 		align-items: center;
 		gap: 6px;
 		width: 100%;
-		padding: 7px 8px;
+		padding: 7px 8px 7px 16px;
 		margin-top: 2px;
 		border: none;
 		border-radius: 5px;

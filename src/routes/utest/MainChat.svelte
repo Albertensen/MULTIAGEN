@@ -3,6 +3,7 @@
 	// Markdown+code render, avatar, ping effect, error log drawer.
 	import { on, triggerMention } from '$lib/stores/orchestration/orchestration';
 	import { agentList } from '$lib/stores/agent/agentStore';
+	import { activeChannel } from '$lib/stores/workspace/workspaceStore';
 	import { get } from 'svelte/store';
 	import hljs from 'highlight.js';
 
@@ -99,12 +100,18 @@
 		typing = new Set();
 		push('done', agentName(p.leaderId as string), tplDone(agentName(p.leaderId as string), String(p.finalText ?? '').slice(0, 200)), true);
 	});
+	// header tengah ikut channel aktif (reactive) — resolve nama agent dari id
+	$: channelName = $activeChannel.startsWith('leader:')
+		? (agentName($activeChannel.slice(7)) || $activeChannel.slice(7))
+		: $activeChannel.startsWith('stream:')
+			? `stream-${agentName($activeChannel.slice(7)) || $activeChannel.slice(7)}`
+			: $activeChannel;
 </script>
 
 <div class="main-chat">
 	<header class="chat-header">
 		<span class="ch-hash">#</span>
-		<span class="ch-name">general</span>
+		<span class="ch-name">{channelName}</span>
 		<span class="ch-topic">— orkestrasi agent lokal</span>
 	</header>
 

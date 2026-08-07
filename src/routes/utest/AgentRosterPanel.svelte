@@ -5,11 +5,13 @@
 	import { workspaceList, activeWorkspaceId } from '$lib/stores/workspace/workspaceStore';
 	import { costAudit } from '$lib/stores/costAudit/costAuditStore';
 
-	// agent roster di workspace aktif (fallback: semua agen)
+	// agent roster di workspace aktif (fallback: semua agen / kalau ws.agentIds kosong)
 	const rosterAgents = () => {
 		const ws = $workspaceList.find((w) => w.id === $activeWorkspaceId);
 		if (!ws) return $agentList;
-		return ws.agentIds
+		const ids = ws.agentIds ?? [];
+		if (ids.length === 0) return $agentList;
+		return ids
 			.map((id) => $agentList.find((a) => a.id === id))
 			.filter((a): a is NonNullable<typeof a> => !!a);
 	};
