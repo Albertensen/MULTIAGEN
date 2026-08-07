@@ -37,6 +37,8 @@
 		delegateTask,
 		delegations,
 		requestLeaderFeedback,
+		buildIsolatedPayload,
+		estimateTokens,
 		structuralGuard,
 		criticReview,
 		generateWithGuardrail,
@@ -286,6 +288,45 @@
 			provLog = [...provLog, `[prov] apiKey ERROR: ${String(e)}`];
 		}
 		provKeyInput[pid] = '';
+	};
+
+	// ===== Isolated Sub-task Payload & Context Pruning (Fase 3, item 14) =====
+	let pruneLog: string[] = [];
+	let pruneStatus = 'idle';
+
+	const runPruneTest = () => {
+		// simulasi history panjang worker (banyak pesan + 1 dengan keyword file)
+		const longHistory: { role: string; content: string }[] = [];
+		for (let i = 0; i < 40; i++) {
+			longHistory.push({
+				role: i % 2 === 0 ? 'user' : 'assistant',
+				content: `pesan lama #${i}: pembahasan umum yang panjang. `.repeat(30)
+			});
+		}
+		// sisipkan pesan relevan (file/kode) jauh di awal
+		longHistory[2] = {
+			role: 'assistant',
+			content: 'file analyze.py berisi kode python untuk parsing log. '.repeat(20)
+		};
+
+		const before = longHistory.reduce((a, m) => a + m.content.length, 0);
+		const beforeTok = estimateTokens(longHistory.map((m) => m.content).join(''));
+
+		const payload = buildIsolatedPayload({
+			task: 'Analisis log dan laporkan error.',
+			leaderName: 'Hermes',
+			planText: 'Langkah 1: baca log. Langkah 2: laporkan.',
+			history: longHistory
+		});
+
+		const { stats } = payload;
+		pruneLog = [
+			...pruneLog,
+			`[prune] before: ${before} chars (~${beforeTok} tok) -> after: ${stats.afterChars} chars (${stats.afterMsgs} msgs dari ${stats.beforeMsgs})`,
+			`[prune] HEMAT ${stats.savedPct}% input token (target 70-90%)`,
+			`[prune] payload worker: ${payload.messages.length} pesan, pesan#0 = instruksi sub-tugas (${payload.messages[0].content.slice(0, 40)}...)`
+		];
+		pruneStatus = stats.savedPct >= 70 ? 'PASS (≥70%)' : `FAIL (${stats.savedPct}%)`;
 	};
 
 	// ===== Generate agent response via Ollama (Fase 3, item 3) =====
@@ -546,6 +587,16 @@
 >
 	Leader a1 (Hermes) → delegate ke planner+critic
 </button>
+
+<hr />
+<h2>Isolated Payload & Context Pruning (Fase 3 item 14)</h2>
+<p><strong>status:</strong> {pruneStatus}</p>
+<button on:click={runPruneTest}>uji pruning (40 pesan → payload)</button>
+<ul>
+	{#each pruneLog as l, i (i)}
+		<li>{l}</li>
+	{/each}
+</ul>
 
 <hr />
 <h2>Dynamic Provider Selector for Leader (Fase 3 item 13)</h2>

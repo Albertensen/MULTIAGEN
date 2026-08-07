@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase3) — Item 14 Isolated Sub-task Payload & Context Pruning: pruneContext() (tail N pesan + keyword file/kode/error) + buildIsolatedPayload() (instruksi sub-tugas steril + potongan relevan, stats savedPct) + estimateTokens() di orchestration.ts; delegateTask kirim payload.messages ke worker (bukan history penuh) + event worker-payload; harness /utest uji pruning; E2E verified HEMAT 93% (54.6K→3.6K chars, 40→8 msgs)
+
 ## [2026-08-07] feat(phase3) — Item 13 Dynamic Provider Selector for Leader: providerStore.ts (5 provider: ollama/openai/anthropic/deepseek/gemini, API key + baseUrl + model, persist localStorage); Agent.provider field; backend GET/PUT /api/v1/agents/providers (Config store `multiagent.providers`, apiKey mask `***` saat read); harness /utest (load config, jadikan Leader, save key); E2E verified (a1 -> deepseek, backend sync) + 15/15 pytest
 
 ## [2026-08-07] feat(phase3) — Item 12 Sandboxed Workspace File Storage: backend/open_webui/routers/workspace_files.py (upload/list/read/delete per workspace di storage/workspaces/{ws_id}/, path-traversal guard `_SAFE` regex + realpath prefix check); register di main.py `/api/v1/workspaces`; test 4 baru (upload/list, read/delete, isolasi A≠B, traversal) → 13/13 passed

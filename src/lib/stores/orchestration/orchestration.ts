@@ -468,6 +468,76 @@ export const requestLeaderFeedback = async (opts: {
 	return leaderAnswer;
 };
 
+// ==================== Isolated Sub-task Payload & Context Pruning (Fase 3, item 14) ====================
+
+// Hitung estimasi token (~4 char/token, konservatif)
+export const estimateTokens = (text: string): number => Math.ceil(text.length / 4);
+
+// Pangkas riwayat chat panjang: simpan hanya N pesan TERAKHIR + pesan yang
+// mengandung kata kunci relevan (file/kode/error). Hemat 70-90% input token.
+export const pruneContext = (
+	history: { role: string; content: string }[],
+	opts: { maxMessages?: number; maxCharsPerMsg?: number; keepKeywords?: string[] } = {}
+): { role: string; content: string }[] => {
+	const { maxMessages = 8, maxCharsPerMsg = 600, keepKeywords = ['file', 'kode', 'code', 'error', 'attachment', 'script', 'json'] } = opts;
+
+	// tail: pesan terakhir (paling relevan)
+	const tail = history.slice(-maxMessages);
+	// pesan relevan (keyword) di luar tail — potong ke maxCharsPerMsg
+	const relevant = history
+		.slice(0, -maxMessages)
+		.filter((m) => keepKeywords.some((k) => m.content.toLowerCase().includes(k)))
+		.map((m) => ({ ...m, content: m.content.slice(-maxCharsPerMsg) }));
+
+	return [...relevant, ...tail].map((m) => ({
+		...m,
+		content: m.content.length > maxCharsPerMsg ? m.content.slice(-maxCharsPerMsg) : m.content
+	}));
+};
+
+// Payload isolasi utk Worker: HANYA instruksi sub-tugas + potongan terkait
+// (bukan seluruh memori chat). Kembalikan { messages, stats } utk audit.
+export const buildIsolatedPayload = (opts: {
+	task: string; // instruksi sub-tugas dari Leader
+	leaderName: string;
+	planText: string; // plan Leader
+	history: { role: string; content: string }[]; // history worker mentah
+	maxMessages?: number;
+	maxCharsPerMsg?: number;
+	includePlan?: boolean;
+}): { messages: { role: string; content: string }[]; stats: { beforeChars: number; afterChars: number; beforeMsgs: number; afterMsgs: number; savedPct: number } } => {
+	const { task, leaderName, planText, history, maxMessages = 6, maxCharsPerMsg = 500, includePlan = true } = opts;
+
+	const beforeChars = history.reduce((a, m) => a + m.content.length, 0);
+	const beforeMsgs = history.length;
+
+	const pruned = pruneContext(history, { maxMessages, maxCharsPerMsg });
+
+	// pesan steril: instruksi sub-tugas spesifik + plan (opsional)
+	const instruction: { role: string; content: string } = {
+		role: 'user',
+		content: includePlan
+			? `[TUGAS SUB-TASK dari ${leaderName}]\n${task}\n\n[KONTEKS PLAN]\n${planText.slice(0, maxCharsPerMsg)}`
+			: `[TUGAS SUB-TASK dari ${leaderName}]\n${task}`
+	};
+
+	const messages = [instruction, ...pruned];
+
+	const afterChars = messages.reduce((a, m) => a + m.content.length, 0);
+	const savedPct = beforeChars > 0 ? Math.round(((beforeChars - afterChars) / beforeChars) * 100) : 0;
+
+	return {
+		messages,
+		stats: {
+			beforeChars,
+			afterChars,
+			beforeMsgs,
+			afterMsgs: messages.length,
+			savedPct: Math.max(0, savedPct)
+		}
+	};
+};
+
 export type DelegationPlan = {
 	leaderId: string;
 	task: string;
@@ -561,9 +631,23 @@ export const delegateTask = async (opts: {
 			role: m.role,
 			content: m.content
 		}));
+		// Item 14: Isolated Sub-task Payload — worker HANYA terima instruksi
+		// sub-tugas + potongan relevan, bukan seluruh memori chat.
+		const payload = buildIsolatedPayload({
+			task,
+			leaderName: leader.name,
+			planText,
+			history: workerHistory
+		});
 		const prompt = `(dari ${leader.name}) ${planText}`;
 		addMessage(chatId, workerId, { role: 'user', content: prompt });
 		emit('orchestration:worker-started', { chatId, leaderId, workerId, task });
+		emit('orchestration:worker-payload', {
+			chatId,
+			leaderId,
+			workerId,
+			stats: payload.stats
+		});
 
 		let workerText: string;
 		try {
@@ -572,7 +656,7 @@ export const delegateTask = async (opts: {
 				agentId: workerId,
 				model: worker.model,
 				systemPrompt: worker.systemPrompt,
-				history: workerHistory
+				history: payload.messages
 			});
 		} catch (e) {
 			workerText = `[error] ${String(e)}`;
