@@ -33,9 +33,16 @@
 - [x] Item 11: Orchestration Dry-Run & Backend API Testing — **DONE 2026-08-07: backend/tests/test_orchestration_uat.py 9/9 passed (CRUD, generate LLM, leader plan [CALL:], WS broadcast); fix get_db async-for + set.add/discard await**
 - [ ] Item 12: Sandboxed Workspace File Storage
 
+### 🚀 FASE 3 (OPTIMASI HEMAT TOKEN)
+- [ ] Item 13: Dynamic Provider Selector for Leader (Bisa pilih API Cloud: OpenAI, Anthropic, DeepSeek, Gemini)
+- [ ] Item 14: Isolated Sub-task Payload & Context Pruning (Memangkas context history untuk worker lokal)
+- [ ] Item 15: Token Savings & Cost Audit Dashboard Widget
+
 ---
 
 ## 🎨 FASE 4: DISCORD-LIKE UI IMPLEMENTATION
+- [ ] Item 16: Discord-style Bot Mention System (@bot_id trigger for local agents)
+- [ ] Item 17: Workspace/Channel Custom Roster (Assign 1 Cloud Leader + Multiple Local Worker Bots per workspace)
 - [ ] Clean up `/utest` harness
 - [ ] Left Sidebar (Servers / Workspace Categories)
 - [ ] Right Sidebar (Online Agents Panel & Status)
