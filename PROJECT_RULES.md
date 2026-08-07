@@ -1,69 +1,35 @@
-# PROJECT_RULES.md
+# 📜 PROJECT_RULES.md - PROJECT POLICY & SYNC PROTOCOL
 
-## Changelog Wajib
+## ⚡ STATIC CONTEXT (CACHE OPTIMIZATION)
+- **Purpose:** Aturan wajib commit, testing gate, SOP WIP, keamanan .env, & Zero-Drift Triple-Sync.
+- **Read-on-Demand:** BACA HANYA saat melakukan commit, update roadmap, atau sebelum menutup sesi kerja.
 
-Setiap perubahan kode harus dicatat di CHANGELOG.md sebelum commit dan push.
+---
 
-**Format:**
-## [YYYY-MM-DD] <jenis> — <pesan>
+## 1. TESTING GATE & RUNTIME RULES
+- **Test Before Commit:** DILARANG commit kode yang belum diuji secara lokal. Codebase WAJIB 100% works.
+- **Quality Gate:** Build Success + Uji Runtime Fungsional berjalan normal di `localhost:8080` / `8088`.
+- **Frontend Bypass (Upstream Debt):** ABAIKAN 8,323 svelte-check / strict TS errors bawaan upstream Open-WebUI. Kriteria lulus: build success & aplikasi berjalan normal dengan engine LLM terhubung.
+- **LLM Engine:** Gunakan model LLM lokal Ollama yang terbukti terhubung (mis. `hermes3`, `gemma4`). Dilarang memakai API eksternal tak relevan.
+- **Security .env:** DILARANG commit, menimpa, atau mengubah `.env` secara otonom. Wajib masuk `.gitignore`.
 
-Commit harus selalu berisi file kode yang diubah + CHANGELOG.md sekaligus.
+---
 
+## 2. CHANGELOG & RELEASE NOTES FORMAT
+Setiap commit WAJIB menyertakan file kode + update `CHANGELOG.md` sekaligus.
+- **CHANGELOG Format:** `## [YYYY-MM-DD] <jenis> — <pesan>`
+- **RELEASE_NOTES Format:** `## v<MAJOR>.<MINOR>.<PATCH> — YYYY-MM-DD`
 
-## Commit Wajib
+---
 
-- Dilarang melakukan commit pada kode yang belum diuji secara lokal.
-- Pastikan kode sudah works 100% sebelum masuk ke Git.
+## 3. SOP WIP COMMIT (BERLAKU SAAT SESI DIHENTIKAN)
+- Jika sesi dihentikan (istirahat/off) saat progres setengah jalan/belum teruji, WAJIB `git add .` -> `git commit -m "WIP: <pesan>"` -> `git push`.
+- Saat sesi dilanjutkan: selesaikan verifikasi, lalu commit ulang tanpa penanda `WIP:` (status works).
 
-## Release Notes
+---
 
-Setiap rilis harus diperbarui di RELEASE_NOTES.md.
-
-**Format:**
-## v<MAJOR>.<MINOR>.<PATCH> — YYYY-MM-DD
-
-
-## Uji Dulu, Commit Belakangan
-
-- Uji aplikasi secara local sebelum commit.
-- Pastikan semua test lolos (status: works).
-- Gate kualitas commit: kode harus lolos build success DAN uji runtime fungsional (berjalan normal di localhost:8080).
-
-## SOP WIP Commit (Penting — Berlaku Saat Sesi Dihentikan)
-
-- Jika sesi berakhir (istirahat, matikan komputer, pergi) dan ada progres setengah jalan / belum teruji / pending, **WAJIB commit + push ke GitHub** sebelum menutup.
-- Gunakan penanda **`WIP:`** atau **`PENDING:`** pada pesan commit supaya jelas kode belum diverifikasi penuh.
-- Tujuan: tidak pernah kehilangan progres; sesi berikutnya lanjut dari titik yang jelas.
-- Saat sesi dilanjutkan: cari commit berpenanda `WIP:`/`PENDING:` terakhir, selesaikan verifikasi, lalu commit ulang tanpa penanda (status works).
-
-## Pengecualian Verifikasi Frontend (Deployed Foundation)
-
-- Tahap verifikasi frontend TIDAK menggunakan svelte-check / strict TypeScript linting dari codebase upstream Open WebUI.
-- Error typing bawaan upstream (8,323 svelte-check errors di file seperti RichTextInput/, routes/auth/, i18n store) adalah technical debt upstream, bukan kesalahan runtime pada fungsionalitas Multi-Agent.
-- Kriteria works: build success + uji runtime fungsional — aplikasi berjalan normal di localhost:8080 dengan engine LLM terhubung (Ollama lokal).
-- Status: 'Deployed Foundation' disetujui.
-- Integrasi UI Multi-Agent dan agennya boleh lanjut tanpa terblokir error typing bawaan upstream.
-
-## Aturan Model LLM
-
-- Gunakan engine LLM lokal (Ollama, mis. gemma4 / hermes3) yang sudah terbukti terhubung.
-- Jangan gunakan panggilan API eksternal yang tidak relevan.
-
-## Keamanan .env
-
-- File .env JANGAN pernah di-commit, ditimpa, atau dimodifikasi secara otonom.
-- Tidak ada backup git untuk .env.
-- Pastikan .env sudah masuk ke dalam .gitignore.
-
-## ⛔ Strict GitHub & Vault Sync Protocol (Zero-Drift Policy)
-
-1. **Mandatory Triple-Sync:** Setiap kali item/fitur selesai, WAJIB update secara bersamaan: (a) `PROJECT_ROADMAP.md`, (b) `mainbrain.md` & Session Log di Obsidian (vault `SECONDBRAIN`), dan (c) Git Push ke GitHub.
-2. **Zero Unpushed Commits:** Dilarang menganggap tugas selesai sebelum `git push origin master` sukses dieksekusi.
-3. **Verifikasi Remote:** Sebelum memberikan balasan akhir, jalankan `git status` untuk memastikan branch local sejajar dengan `origin/master` ("Your branch is up to date with 'origin/master'").
-4. **Vault adalah sumber docs utama** (mainbrain.md, HERMES_SYSTEM_CORE.md) — repo GitHub menyimpan versi roadmap/rules/changelog; jangan biarkan keduanya drift.
-
-### 📌 Rule: Immediate Roadmap Auto-Checkmark
-
-- Setiap kali sebuah sub-task/item roadmap selesai dibuat DAN teruji runtime (PASSED):
-  1. Hermes WAJIB langsung mengubah `[ ]` menjadi `[x]` pada file `PROJECT_ROADMAP.md` DAN `mainbrain.md` (file operations, disk fisik).
-  2. Hermes DILARANG menyatakan "Selesai" atau meminta tugas berikutnya sebelum `PROJECT_ROADMAP.md` di disk benar-benar terupdate dengan centang `[x]`.
+## 4. ⛔ ZERO-DRIFT TRIPLE-SYNC PROTOCOL
+Saat item/sub-task selesai & teruji runtime PASSED:
+1. **Auto-Checkmark:** Langsung ubah `[ ]` -> `[x]` di `PROJECT_ROADMAP.md` DAN `mainbrain.md` (file fisik di disk) SEBELUM menyatakan "Selesai".
+2. **Mandatory Triple-Sync:** Update serentak: (a) `PROJECT_ROADMAP.md`, (b) `mainbrain.md` & Session Log di Vault (`SECONDBRAIN`), dan (c) Git Push ke GitHub.
+3. **Zero Unpushed Commits:** Wajib `git status` memastikan branch local up-to-date dengan `origin/master` sebelum balasan akhir.

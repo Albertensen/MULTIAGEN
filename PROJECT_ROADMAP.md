@@ -1,80 +1,44 @@
-# PROJECT ROADMAP: Discord-Style Multi-Agent System
+# 🗺️ PROJECT_ROADMAP.md - MULTI-AGENT ROADMAP & GROUND TRUTH
 
-## �� 🎯 Visi Proyek
-Membangun platform Multi-Agent AI lokal berkinerja tinggi menggunakan arsitektur Open WebUI (Python/FastAPI Backend + SvelteKit Frontend). Platform ini akan berevolusi menjadi antarmuka komunikasi bergaya Discord, memungkinkan interaksi kompleks, real-time, eksekusi file, dan manajemen pengetahuan antar-agen AI.
-
-- **Hierarchical Task Delegation (Sistem Leader-Worker):** Agen Leader otonom yang menyusun plan dan mendelegasikan tugas ke spesialis.
-- **Multi-Tenant & Custom Team Workspaces:** Pengguna dapat membuat akun mandiri dan merakit 'Tim Virtual' mereka sendiri.
-
-## �� 🛠 Aturan Dasar (Sesuai PROJECT_RULES.md)
-- **Runtime-First:** Prioritaskan fungsionalitas dan reaktivitas di browser.
-- **Fleksibilitas Type:** Hindari strict TypeScript/static type-checking yang menghambat kecepatan iterasi.
-- **Modularitas:** Gunakan store Svelte murni tanpa dependensi internal yang rumit.
-- **Uji Dulu, Commit Belakangan:** Kode masuk Git hanya setelah verified working (build + runtime).
-- **Keamanan .env:** Secret key tidak pernah di-commit.
+## ⚡ STATIC CONTEXT (CACHE OPTIMIZATION)
+- **Purpose:** Single source of truth untuk progres fase, fitur [x] / [ ], & visi arsitektur proyek.
+- **Read-on-Demand:** BACA HANYA saat mengecek milestone, transisi fase, atau melakukan auto-checkmark.
 
 ---
 
-## �� 🏗 Fase 0: Fondasi & Deployment (Selesai)
-Fokus pada infrastruktur yang membuat proyek bisa jalan & aman di Git.
-
-- [x] Setup PROJECT_RULES.md + CHANGELOG.md + RELEASE_NOTES.md (kebijakan commit/push, changelog wajib).
-- [x] .gitignore standar (venv, cache, .env, .svelte-kit/).
-- [x] Inisialisasi repo Git + push awal ke GitHub (Albertensen/MULTIAGEN).
-- [x] Pengecualian verifikasi frontend: build + runtime fungsional, bukan svelte-check strict upstream (8,323 error TS = technical debt upstream, disetujui).
-- [x] .env di-set (env aman, tidak di-commit).
-- [x] Fix parser CHANGELOG di backend/open_webui/env.py (IndexError saat startup — format custom em-dash).
-- [x] Fix PYTHONPATH global Hermes yang menimpa venv project (PIL/uvicorn dari venv salah).
-- [x] Startup backend (uvicorn, port 8080) & frontend (vite, port 8088) terverifikasi LISTENING + health 200.
-- [x] Model lokal Ollama terverifikasi: gemma4:e4b (9.6GB), gemma4:12b (7.6GB), hermes3:latest (4.7GB), nomic-embed-text:latest (embedding).
+## 🎯 VISI & STACK PROYEK
+- **Visi:** Platform Multi-Agent AI lokal gaya Discord (Leader-Worker Delegation, Multi-Tenant Workspaces, Real-time Chat & File Sharing).
+- **Stack Utama:** Python/FastAPI Backend (Port 8080) + SvelteKit Frontend (Port 8088) + Ollama Local LLMs (`hermes3`, `gemma4`, `nomic-embed-text`).
 
 ---
 
-## �� 🚀 Fase 1: Agent State Management (Selesai)
-Fokus pada pembuatan "otak" dan manajemen identitas agen.
-
-- [x] Setup Infrastruktur Backend (FastAPI - Port 8080) & Frontend (SvelteKit - Port 8088).
-- [x] Konfigurasi integrasi model lokal (Ollama / gemma4:e4b).
-- [x] Implementasi agentStore.ts (CRUD, status aktif, ID, prompt sistem, penugasan model).
-- [x] Pembuatan /utest harness untuk pengujian runtime di browser.
-- [x] Verifikasi reaktivitas store (pergantian agen aktif berjalan sempurna).
+## ✅ FASE 0-2: FONDASI, AGENT STATE & RELATIONAL MEMORY (100% LUNAS)
+- [x] **Fase 0 (Fondasi):** Git setup, `.env` security, fix CHANGELOG parser & global `PYTHONPATH`, dual server 8080/8088 listening, Ollama models verified.
+- [x] **Fase 1 (Agent State):** FastAPI + SvelteKit infra, `agentStore.ts` CRUD & active status, `/utest` harness.
+- [x] **Fase 2 (Relational Memory):** `transcriptStore.ts` (`senderId` filtering), `localStorage` persistence survive reload.
 
 ---
 
-## �� 🧠 Fase 2: Relational Memory System (Selesai)
-Fokus pada pembuatan "ingatan" yang memisahkan percakapan berdasarkan identitas pengirim (User vs Agen).
-
-- [x] Buat transcriptStore.ts menggunakan Svelte store.
-- [x] Definisikan struktur pesan relasional: id, senderId (user/a1/a2), role, content, timestamp.
-- [x] Buat fungsi untuk memfilter riwayat obrolan secara global (main channel) dan spesifik per agen.
-- [x] Integrasikan dan uji transcriptStore berdampingan dengan agentStore di /utest.
-- [x] Persistensi lokal: simpan agen + transkrip ke localStorage (auto-save subscribe, hydrate boot, clearPersisted* untuk reset). Teruji: tambah pesan → reload → data bertahan.
-
----
-
-## �� ⚙��️ Fase 3: Orchestration, Message Bus & File Sharing (Mendatang)
-Fokus pada pembangunan mesin komunikasi dan pertukaran aset agar agen bisa saling berkolaborasi.
-
-- [x] Rancang arsitektur Event Bus/Router (di Svelte atau FastAPI).
-- [x] Implementasi sistem Mention/Call melalui System Prompt (misal: pengenalan token [CALL: a2]).
-- [x] Buat trigger otomatis: Jika Agen A menyebut Agen B, sistem akan secara otomatis memicu generasi teks dari Agen B.
-- [x] Inter-Agent File Sharing: Tambahkan dukungan payload attachment pada pesan sehingga agen dapat mengirim file (contoh: script Python, JSON, gambar) ke agen lain untuk dianalisis atau dieksekusi.
-- [x] Koneksi ke backend: endpoint FastAPI /api/v1/agents/* (CRUD agen + broadcast ke semua klien via websocket).
-- [x] Svelte store WebSocket & /utest UI integration: Hubungkan Svelte orchestration store ke endpoint WebSocket `/ws/agents` dan perbarui Dashboard UI `/utest` dengan indikator status koneksi WebSocket dan live event stream (agent_created, agent_updated, agent_deleted).
-- [ ] Hierarchical Task Delegation (Leader-Worker): Pengguna hanya perlu berinteraksi dengan satu agen Leader di dalam obrolan. Agen Leader ini bertugas secara otonom menganalisis permintaan, menyusun execution plan, dan mendelegasikan sub-tugas ke agen spesialis lainnya tanpa campur tangan manual.
-- [ ] Multi-Tenant & Custom Team Workspaces: Platform ini didesain agar multi-user. Setiap pengguna dapat membuat ruang kerja mereka sendiri dan merakit 'Tim Virtual' yang terdiri dari berbagai agen spesialis sesuai dengan kebutuhan proyek mereka.
-- [ ] Anti-Hallucination Guardrails & Critic Agent: Implementasi sistem validasi otonom. Output dari agen Leader akan dievaluasi secara otomatis oleh agen khusus (Critic/Reviewer) secara internal sebelum ditampilkan ke UI. Sistem juga akan memanfaatkan parameter deterministik (temperature rendah) dan validasi backend (seperti Pydantic untuk JSON) untuk mencegah dan mengoreksi halusinasi LLM secara real-time.
-- [ ] Worker-to-Leader Feedback Loop: Sub-agen memiliki kemampuan otonom untuk menggunakan sistem Mention/Call guna meminta klarifikasi, melaporkan hambatan, atau memohon persetujuan (approval) kembali kepada agen Leader sebelum melanjutkan eksekusi tugas.
-- [ ] Orchestration Dry-Run & API Testing: Melakukan pengujian menyeluruh (UAT internal) terhadap seluruh alur orkestrasi agen murni di level backend. Langkah ini wajib dilakukan sebelum masuk ke Fase 4 untuk memastikan logika otonom berjalan stabil tanpa potensi bug frontend.
-- [ ] Sandboxed Workspace File Storage: Menyediakan ruang penyimpanan file terisolasi (workspace drive/shared volume) khusus tempat file disimpan dan dikelola penuh oleh para agen, tanpa memerlukan akses kontrol penuh ke OS/PC pengguna (siap untuk rilis publik/SaaS).
+## ⚙️ FASE 3: ORCHESTRATION, MESSAGE BUS & FILE SHARING
+- [x] Item 1: Event Bus/Router Architecture (Svelte & FastAPI)
+- [x] Item 2: System Prompt Mention/Call parser (`[CALL: agent]`)
+- [x] Item 3: Auto-trigger inter-agent text generation
+- [x] Item 4: Inter-Agent File Sharing (Payload attachments)
+- [x] Item 5: Backend FastAPI `/api/v1/agents/*` CRUD + WebSocket Broadcaster
+- [x] Item 6: Svelte Store WS integration & `/utest` UI live stream
+- [ ] Item 7: Hierarchical Task Delegation (Leader-Worker autonomous plan) — **IN-PROGRESS**
+- [ ] Item 8: Multi-Tenant & Custom Team Workspaces
+- [ ] Item 9: Anti-Hallucination Guardrails & Critic Agent
+- [ ] Item 10: Worker-to-Leader Feedback Loop
+- [ ] Item 11: Orchestration Dry-Run & Backend API Testing
+- [ ] Item 12: Sandboxed Workspace File Storage
 
 ---
 
-## �� 🎨 Fase 4: Discord-like UI Implementation (Mendatang)
-- [ ] Hapus harness /utest yang sudah tidak terpakai.
-- [ ] Sidebar Kiri (Kategori): Implementasi pemisah untuk berbagai ruang kerja atau grup agen (mirip Servers atau Channels).
-- [ ] Sidebar Kanan (Online Agents): Buat panel yang menampilkan status aktif dari agen di agentStore (misal: �� 🟢 Planner, �� 🔴 Critic).
-- [ ] Main Chat (Tengah): Rancang alur pesan bersarang (utas/ threads) lengkap dengan nama pengirim, avatar, dan rendering UI untuk attachment file/kode.
-- [ ] Real-time UX: Tambahkan Typing Indicators saat Ollama memproses data, dan tombol "Buzz/Ping" untuk memaksa agen merespons.
-- [ ] Agent Observability & Error Logging UI: Implementasi panel log aktivitas real-time yang menampilkan jejak langkah (reasoning steps), status pengerjaan, serta log error sistematis untuk setiap agen guna memudahkan debugging dan transparansi.
-====================================================================
+## 🎨 FASE 4: DISCORD-LIKE UI IMPLEMENTATION
+- [ ] Clean up `/utest` harness
+- [ ] Left Sidebar (Servers / Workspace Categories)
+- [ ] Right Sidebar (Online Agents Panel & Status)
+- [ ] Main Chat (Threads, Avatars, File/Code attachments rendering)
+- [ ] Real-time UX (Typing indicators, Buzz/Ping trigger)
+- [ ] Agent Observability & Error Logging UI
