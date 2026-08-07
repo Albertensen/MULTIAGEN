@@ -62,6 +62,16 @@
 		clearPersistedWorkspaces
 	} from '$lib/stores/workspace/workspaceStore';
 
+	import {
+		providers,
+		providerList,
+		setApiKey,
+		setProviderConfig,
+		toggleProvider,
+		resolveProviderFor
+	} from '$lib/stores/provider/providerStore';
+	import type { ProviderId } from '$lib/stores/agent/agentStore';
+
 	import { get } from 'svelte/store';
 
 	let log: string[] = [];
@@ -214,6 +224,68 @@
 			fbLog = [...fbLog, `[fb] ERROR: ${String(e)}`];
 			fbStatus = 'error';
 		}
+	};
+
+	// ===== Dynamic Provider Selector (Fase 3, item 13) =====
+	let provLog: string[] = [];
+	let provStatus = 'idle';
+	let provKeyInput: Record<string, string> = {};
+
+	const loadProviders = async () => {
+		try {
+			const r = await fetch('/api/v1/agents/providers');
+			const data = await r.json();
+			// providers readonly — set per-provider via setProviderConfig
+			const loaded = data.providers || {};
+			for (const pid of Object.keys(loaded)) {
+				setProviderConfig(pid as ProviderId, {
+					apiKey: loaded[pid].apiKey === '***' ? '' : loaded[pid].apiKey,
+					model: loaded[pid].model,
+					enabled: loaded[pid].enabled
+				});
+			}
+			provLog = [...provLog, `[prov] loaded ${Object.keys(loaded).length} provider`];
+			provStatus = 'loaded';
+		} catch (e) {
+			provLog = [...provLog, `[prov] ERROR load: ${String(e)}`];
+			provStatus = 'error';
+		}
+	};
+
+	const setLeaderProvider = async (pid: string, model: string) => {
+		// set provider + model utk Leader (a1)
+		const cfg = get(providers)[pid as ProviderId];
+		if (!cfg) return;
+		updateAgent('a1', { provider: pid as ProviderId, model: model || cfg.model });
+		provLog = [...provLog, `[prov] Leader a1 -> ${pid} (${model || cfg.model})`];
+		// sync ke backend
+		try {
+			await fetch('/api/v1/agents/providers', {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ providers: { [pid]: { model: model || cfg.model, enabled: true } } })
+			});
+			provLog = [...provLog, `[prov] backend synced ${pid}`];
+		} catch (e) {
+			provLog = [...provLog, `[prov] backend sync ERROR: ${String(e)}`];
+		}
+	};
+
+	const saveApiKey = async (pid: string) => {
+		const key = (provKeyInput[pid] || '').trim();
+		if (!key) return;
+		setApiKey(pid as ProviderId, key);
+		try {
+			await fetch('/api/v1/agents/providers', {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ providers: { [pid]: { apiKey: key, enabled: true } } })
+			});
+			provLog = [...provLog, `[prov] apiKey ${pid} saved (${key.length} chars)`];
+		} catch (e) {
+			provLog = [...provLog, `[prov] apiKey ERROR: ${String(e)}`];
+		}
+		provKeyInput[pid] = '';
 	};
 
 	// ===== Generate agent response via Ollama (Fase 3, item 3) =====
@@ -474,6 +546,30 @@
 >
 	Leader a1 (Hermes) → delegate ke planner+critic
 </button>
+
+<hr />
+<h2>Dynamic Provider Selector for Leader (Fase 3 item 13)</h2>
+<p><strong>status:</strong> {provStatus} — Leader a1 provider: {$agents['a1']?.provider ?? 'ollama'}</p>
+<button on:click={loadProviders}>load provider config</button>
+<ul>
+	{#each $providerList as p (p.id)}
+		<li>
+			<strong>{p.label}</strong> [{p.id}] — {p.model} — {p.enabled ? 'ON' : 'OFF'}
+			{#if p.id !== 'ollama'}
+				<input value={provKeyInput[p.id] ?? ''} placeholder="API key" type="password"
+					on:input={(e) => (provKeyInput[p.id] = e.currentTarget.value)} />
+				<button on:click={() => saveApiKey(p.id)}>save key</button>
+			{/if}
+			<button on:click={() => setLeaderProvider(p.id, p.model)}>jadikan Leader</button>
+			<button on:click={() => toggleProvider(p.id, !p.enabled)}>toggle</button>
+		</li>
+	{/each}
+</ul>
+<ul>
+	{#each provLog as l, i (i)}
+		<li>{l}</li>
+	{/each}
+</ul>
 
 <hr />
 <h2>Worker-to-Leader Feedback Loop (Fase 3 item 10)</h2>

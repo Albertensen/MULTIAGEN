@@ -13,11 +13,14 @@ import { derived, get, readonly, writable } from 'svelte/store';
 
 const STORAGE_KEY = 'multiagent.agents.v1';
 
+export type ProviderId = 'ollama' | 'openai' | 'anthropic' | 'deepseek' | 'gemini';
+
 export type Agent = {
 	id: string;
 	name: string;
 	systemPrompt: string; // peran
-	model: string; // 'gemma4:e4b' | 'hermes3:latest' | ...
+	model: string; // 'gemma4:e4b' | 'hermes3:latest' | 'gpt-4o' | ...
+	provider: ProviderId; // Fase 3 item 13: penyedia LLM dinamis
 	active: boolean; // sedang bicara/ditugaskan
 };
 

@@ -17,7 +17,7 @@
 ## 🔄 BOOT SEQUENCE (BACA JIKA SESI BARU / LUPA KONTEKS)
 1. `SECONDBRAIN/HERMES_SYSTEM_CORE.md` (Env, terminal, fix PIL/SQLite)
 2. `PROJECT_MULTIAGENT/HERMES_RUNBOOK.md` (Kill zombie 8080/8088 & uvicorn)
-3. `PROJECT_MULTIAGENT/PROJECT_ROADMAP.md` (Fase 0-2 [x], Fase 3 [1-12 x, 13-15 token-opt], Fase 4 [16-17 discord-bot])
+3. `PROJECT_MULTIAGENT/PROJECT_ROADMAP.md` (Fase 0-2 [x], Fase 3 [1-13 x, 14-15 token-opt], Fase 4 [16-17 discord-bot])
 4. `PROJECT_MULTIAGENT/SESSION_LOGS/` (Log sesi terbaru)
 
 ---

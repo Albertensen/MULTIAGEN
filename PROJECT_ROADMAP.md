@@ -34,7 +34,7 @@
 - [x] Item 12: Sandboxed Workspace File Storage — **DONE 2026-08-07: workspace_files.py (upload/list/read/delete per ws, traversal guard), isolasi A≠B verified, 13/13 pytest passed**
 
 ### 🚀 FASE 3 (OPTIMASI HEMAT TOKEN)
-- [ ] Item 13: Dynamic Provider Selector for Leader (Bisa pilih API Cloud: OpenAI, Anthropic, DeepSeek, Gemini)
+- [x] Item 13: Dynamic Provider Selector for Leader — **DONE 2026-08-07: providerStore.ts (5 provider + API key) + backend /agents/providers (mask ***), E2E verified (a1 → deepseek, sync), 15/15 pytest**
 - [ ] Item 14: Isolated Sub-task Payload & Context Pruning (Memangkas context history untuk worker lokal)
 - [ ] Item 15: Token Savings & Cost Audit Dashboard Widget
 

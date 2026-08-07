@@ -28,6 +28,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from open_webui.env import ENABLE_DEV_AGENTS_API
+from open_webui.models.config import Config
 from open_webui.models.users import Users
 from open_webui.utils.auth import get_verified_user, get_admin_user
 from open_webui.utils.chat import generate_chat_completion
@@ -140,6 +141,55 @@ async def delete_agent(
         "type": "agent_deleted",
         "payload": {"agent_id": agent_id}
     })
+
+
+# ----------------------------------------------------------------------
+# Dynamic Provider Selector (Fase 3, item 13): config provider LLM utk Leader
+# ----------------------------------------------------------------------
+PROVIDER_KEYS = "multiagent.providers"
+
+# default: Ollama lokal aktif; cloud (OpenAI/Anthropic/DeepSeek/Gemini) kosong
+DEFAULT_PROVIDERS = {
+    "ollama": {"label": "Ollama (Lokal)", "baseUrl": "http://127.0.0.1:11434/v1", "model": "gemma4:e4b", "apiKey": "", "enabled": True},
+    "openai": {"label": "OpenAI (Cloud)", "baseUrl": "https://api.openai.com/v1", "model": "gpt-4o-mini", "apiKey": "", "enabled": False},
+    "anthropic": {"label": "Anthropic (Cloud)", "baseUrl": "https://api.anthropic.com/v1", "model": "claude-3-5-haiku-latest", "apiKey": "", "enabled": False},
+    "deepseek": {"label": "DeepSeek (Cloud)", "baseUrl": "https://api.deepseek.com/v1", "model": "deepseek-chat", "apiKey": "", "enabled": False},
+    "gemini": {"label": "Gemini (Cloud)", "baseUrl": "https://generativelanguage.googleapis.com/v1beta", "model": "gemini-2.0-flash", "apiKey": "", "enabled": False},
+}
+
+
+@router.get("/providers")
+async def get_providers(request: Request) -> Dict[str, Any]:
+    if not ENABLE_DEV_AGENTS_API:
+        raise HTTPException(status_code=403, detail="Dev API disabled")
+    stored = await Config.get(PROVIDER_KEYS, {})
+    # merge: default + stored (jangan bocorkan apiKey penuh — mask utk read)
+    merged: Dict[str, Any] = {}
+    for pid, cfg in DEFAULT_PROVIDERS.items():
+        s = (stored or {}).get(pid, {})
+        merged[pid] = {**cfg, **s}
+        if merged[pid].get("apiKey"):
+            merged[pid]["apiKey"] = "***"
+    return {"providers": merged, "stored": bool(stored)}
+
+
+@router.put("/providers")
+async def update_providers(request: Request, payload: Dict[str, Any]) -> Dict[str, Any]:
+    if not ENABLE_DEV_AGENTS_API:
+        raise HTTPException(status_code=403, detail="Dev API disabled")
+    # hanya simpan key yang dikenal; apiKey "***" diabaikan (tidak menimpa)
+    incoming = payload.get("providers", payload)
+    clean: Dict[str, Any] = {}
+    for pid, cfg in DEFAULT_PROVIDERS.items():
+        if pid not in incoming:
+            continue
+        old = (await Config.get(PROVIDER_KEYS, {}) or {}).get(pid, {})
+        new_cfg = {**cfg, **incoming[pid]}
+        if new_cfg.get("apiKey") == "***":
+            new_cfg["apiKey"] = old.get("apiKey", cfg.get("apiKey", ""))
+        clean[pid] = new_cfg
+    await Config.upsert({PROVIDER_KEYS: clean})
+    return {"ok": True, "providers": clean}
 
 
 # ----------------------------------------------------------------------

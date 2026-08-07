@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase3) — Item 13 Dynamic Provider Selector for Leader: providerStore.ts (5 provider: ollama/openai/anthropic/deepseek/gemini, API key + baseUrl + model, persist localStorage); Agent.provider field; backend GET/PUT /api/v1/agents/providers (Config store `multiagent.providers`, apiKey mask `***` saat read); harness /utest (load config, jadikan Leader, save key); E2E verified (a1 -> deepseek, backend sync) + 15/15 pytest
+
 ## [2026-08-07] feat(phase3) — Item 12 Sandboxed Workspace File Storage: backend/open_webui/routers/workspace_files.py (upload/list/read/delete per workspace di storage/workspaces/{ws_id}/, path-traversal guard `_SAFE` regex + realpath prefix check); register di main.py `/api/v1/workspaces`; test 4 baru (upload/list, read/delete, isolasi A≠B, traversal) → 13/13 passed
 
 ## [2026-08-07] feat(phase3) — Item 11 Orchestration Dry-Run & Backend API Testing: backend/tests/test_orchestration_uat.py (9 test: health, CRUD agents, generate LLM, generate leader plan [CALL:], WS broadcaster); fix 3 bug backend di agents.py (get_db async-generator `async for`, `await set.add()`, `await set.discard()`); semua 9 passed

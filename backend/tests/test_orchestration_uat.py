@@ -133,6 +133,30 @@ def test_generate_leader_plan_calls_workers(client):
 
 
 # ----------------------------------------------------------------------
+# Dynamic Provider Selector (Fase 3, item 13)
+# ----------------------------------------------------------------------
+def test_providers_get_defaults(client):
+    r = client.get(f"{BASE}/api/v1/agents/providers")
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert len(d["providers"]) == 5  # ollama, openai, anthropic, deepseek, gemini
+    assert d["providers"]["ollama"]["enabled"] is True
+    assert d["providers"]["ollama"]["model"]  # default model lokal
+
+
+def test_providers_put_and_mask(client):
+    r = client.put(
+        f"{BASE}/api/v1/agents/providers",
+        json={"providers": {"openai": {"apiKey": "sk-abc123", "enabled": True}}},
+    )
+    assert r.status_code == 200, r.text
+    assert r.json()["ok"] is True
+    # re-GET: apiKey di-mask
+    r2 = client.get(f"{BASE}/api/v1/agents/providers")
+    assert r2.json()["providers"]["openai"]["apiKey"] == "***"
+
+
+# ----------------------------------------------------------------------
 # Sandboxed Workspace File Storage (Fase 3, item 12)
 # ----------------------------------------------------------------------
 WS_API = f"{BASE}/api/v1/workspaces"
