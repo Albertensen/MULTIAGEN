@@ -7,6 +7,7 @@
 	import MainChat from './MainChat.svelte';
 	import FileManagerPanel from './FileManagerPanel.svelte';
 	import LeaderBuilderPanel from './LeaderBuilderPanel.svelte';
+	import LeaderChatPanel from './LeaderChatPanel.svelte';
 	import AgentRosterPanel from './AgentRosterPanel.svelte';
 
 	// seed idempotent — hanya tambah agen kalau belum ada
@@ -34,7 +35,7 @@
 		{#if $activeChannel === 'create-leader'}
 			<LeaderBuilderPanel />
 		{:else if $activeChannel.startsWith('leader:')}
-			<LeaderBuilderPanel />
+			<LeaderChatPanel />
 		{:else if $activeChannel.startsWith('dir:')}
 			<FileManagerPanel />
 		{:else}

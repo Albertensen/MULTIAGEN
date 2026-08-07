@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase4) — LeaderChatPanel: komponen ruang meeting # 🧠 [leader] (header nama leader + "— Brainstorming & Planning", dummy pembuka dari leader, chat history, textarea input + tombol ➤, typing indicator, pantau orchestration:delegation); routing +page: leader:* → LeaderChatPanel (bukan LeaderBuilderPanel lagi); E2E verified: klik # 🧠 Hermes → chat room + dummy msg, kirim → user msg + 📢 delegasi live
+
 ## [2026-08-07] feat(phase4) — Dry-run delegation fallback: generateAgentResponse fetch pakai AbortSignal.timeout(6000) (fix hang selamanya saat backend/Ollama mati); delegateTask fallback planText dummy ([CALL: Planner/Critic/Hermes]) saat generate gagal → alur worker-started/done + token savings tetap bisa diverifikasi tanpa LLM eksternal; emit orchestration:dry-run; E2E dry-run verified: user @Hermes Corgi plan → 3 micro-task assign+done, widget Token Savings 16.8k / 91% / $0.0025
 
 ## [2026-08-07] feat(phase4) — Global leader directive injection: konstanta GLOBAL_LEADER_DIRECTIVE (CRITICAL ARCHITECTURAL RULE — worker = Local LLM Ollama, wajib pecah micro-task, tunggu output step 1 sebelum step 2); saveConfig gabung master plan user + directive → finalSystemPrompt (systemPrompt utama leader); E2E verified: save Architect → prompt 563 char berisi directive
