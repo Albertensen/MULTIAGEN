@@ -60,6 +60,8 @@
 - [x] 4-Tier Channel Hierarchy (Management, Leaders, Streams, Directories) — **DONE 2026-08-07: 4 kategori terpisah 🛠️ MANAGEMENT / 👑 ACTIVE LEADERS / ⚡ TASK STREAMS / 📁 DIRECTORIES, strict separation, E2E verified**
 - [x] Dynamic Center Panel & Auto-Routing — **DONE 2026-08-07: routing activeChannel → create-leader/leader:<id>/stream:<id>/dir:*; header tengah & panel dinamis (stream-Hermes, nama leader); auto-route ke leader:<id> setelah save, E2E verified**
 - [x] Auto-Generate Leader Channels — **DONE 2026-08-07: save create-leader → 3 channel otomatis (# 🧠 [leader], # ⚡ stream-[leader], # 📂 dir-[leader]) + roster leader, E2E verified (Commander)**
+- [x] Leader Builder Form Prep — **DONE 2026-08-07: dropdown LLM + opsi "Hermes (Native Integration) 🌟" (default) + Ollama/OpenAI/Anthropic/Gemini; API Key input conditional — hidden utk hermes+ollama, muncul utk cloud, E2E verified**
+- [x] Global System Directive Injection — **DONE 2026-08-07: GLOBAL_LEADER_DIRECTIVE (CRITICAL ARCHITECTURAL RULE) disuntikkan ke Master Plan tiap leader baru → micro-delegation utk Local Workers (Ollama), E2E verified (Architect)**
 
 ## 🔒 FASE 5: SECURITY, AUTH & TENANT ISOLATION
 - [ ] Item 24: Secure API Key Storage & Encryption — **AES-256 di backend database untuk menyimpan API Key Provider LLM Cloud**
