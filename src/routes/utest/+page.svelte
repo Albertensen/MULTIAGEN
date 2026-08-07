@@ -494,8 +494,8 @@
 		</li>
 	{/each}
 </ul>
-<label>sample output:</label>
-<input bind:value={guardSample} size="50" />
+<label for="guard-sample">sample output:</label>
+<input id="guard-sample" bind:value={guardSample} size="50" />
 <button on:click={runStructuralGuard}>structural guard (sample)</button>
 <button on:click={runStructuralGuardBad}>structural guard (bad sample)</button>
 <button on:click={runCriticReview}>critic review (a3 → a1)</button>
