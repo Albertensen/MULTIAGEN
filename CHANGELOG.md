@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] fix(orchestration) — Feedback loop: emit orchestration:leader-plan + addMessage(assistant) segera setelah LLM Leader selesai (sebelum parse [CALL:]), jeda 600ms UX, baru eksekusi worker; MainChat listener leader-plan → render `msg leader` di stream; E2E verified: plan Hermes (3:45:30) tampil sebelum assign Planner (3:45:31)
+
 ## [2026-08-07] feat(phase4) — LeaderChatPanel: komponen ruang meeting # 🧠 [leader] (header nama leader + "— Brainstorming & Planning", dummy pembuka dari leader, chat history, textarea input + tombol ➤, typing indicator, pantau orchestration:delegation); routing +page: leader:* → LeaderChatPanel (bukan LeaderBuilderPanel lagi); E2E verified: klik # 🧠 Hermes → chat room + dummy msg, kirim → user msg + 📢 delegasi live
 
 ## [2026-08-07] feat(phase4) — Dry-run delegation fallback: generateAgentResponse fetch pakai AbortSignal.timeout(6000) (fix hang selamanya saat backend/Ollama mati); delegateTask fallback planText dummy ([CALL: Planner/Critic/Hermes]) saat generate gagal → alur worker-started/done + token savings tetap bisa diverifikasi tanpa LLM eksternal; emit orchestration:dry-run; E2E dry-run verified: user @Hermes Corgi plan → 3 micro-task assign+done, widget Token Savings 16.8k / 91% / $0.0025

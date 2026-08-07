@@ -20,7 +20,7 @@
 
 	type ChatMsg = {
 		id: number;
-		kind: 'assign' | 'done' | 'feedback' | 'error' | 'system' | 'user';
+		kind: 'assign' | 'done' | 'feedback' | 'error' | 'system' | 'user' | 'leader';
 		author: string;
 		text: string;
 		ts: number;
@@ -70,6 +70,10 @@
 	on('orchestration:delegation', (p) => {
 		const workerNames = (p.workerIds as string[]).map(agentName).join(', ');
 		push('system', 'System', `📢 Delegasi ke ${workerNames} (task: ${String(p.task ?? '').slice(0, 80)})`);
+	});
+	on('orchestration:leader-plan', (p) => {
+		// rencana mentah Leader tampil dulu sebelum worker dieksekusi
+		push('leader', agentName(p.leaderId as string), String(p.plan ?? ''));
 	});
 	on('orchestration:mention', (p) => {
 		// user/leader mention @agent → agent on-duty

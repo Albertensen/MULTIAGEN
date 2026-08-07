@@ -674,6 +674,13 @@ export const delegateTask = async (opts: {
 		emit('orchestration:dry-run', { chatId, leaderId, plan: planText.slice(0, 120) });
 	}
 
+	// Feedback loop: tampilkan rencana mentah Leader ke UI stream SEBELUM
+	// worker dieksekusi — user bisa lihat breakdown [CALL:] dulu.
+	emit('orchestration:leader-plan', { chatId, leaderId, plan: planText });
+	addMessage(chatId, leaderId, { role: 'assistant', content: planText });
+	// jeda singkat (UX): biar pesan rencana ter-render dulu, baru parse CALL
+	await new Promise((res) => setTimeout(res, 600));
+
 	// 2) Parse [CALL:] dari plan Leader — tentukan worker yang dipanggil
 	const called = parseCalls(planText)
 		.map((t) => resolveAgentId(t))
