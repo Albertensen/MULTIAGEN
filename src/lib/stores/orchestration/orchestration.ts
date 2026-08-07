@@ -1,5 +1,5 @@
 import { derived, get, readonly, writable } from 'svelte/store';
-import { agentList, assignAgent } from '../agent/agentStore';
+import { agentList, assignAgent, setAgentStatus } from '../agent/agentStore';
 import { addMessage, chatTranscript, getHistoryByAgent } from '../transcript/transcriptStore';
 import type { Attachment } from '../transcript/transcriptStore';
 import { recordPruning } from '../costAudit/costAuditStore';
@@ -84,22 +84,37 @@ export const parseMentions = (text: string): string[] => {
 	return [...new Set(found)]; // dedup
 };
 
-// trigger intervensi agen: user/leader ketik `@bot_id` → agent di-assign & dipanggil
-export const triggerMention = (opts: {
+// trigger intervensi agen: user/leader ketik `@bot_id` → agent on-duty
+// + prompt dikirim ke Worker asli (Ollama) via delegateTask
+export const triggerMention = async (opts: {
 	chatId: string;
 	text: string;
 	task?: string;
-}): { mentioned: string[] } => {
+}): Promise<{ mentioned: string[] }> => {
 	const { chatId, text } = opts;
 	const mentioned = parseMentions(text);
+	const task = opts.task ?? text;
 	for (const agentId of mentioned) {
 		assignAgent(chatId, agentId); // agent on-duty
+		setAgentStatus(agentId, 'thinking');
 		emit('orchestration:mention', {
 			chatId,
 			agentId,
 			text: text.slice(0, 200),
-			task: opts.task ?? text.slice(0, 200)
+			task: task.slice(0, 200)
 		});
+		// wire ke LLM asli: delegate ke agent tsb (leader = dirinya, worker = semua agent lain)
+		try {
+			const agents = get(agentList);
+			const leader = agents.find((a) => a.id === agentId);
+			const workerIds = agents.filter((a) => a.id !== agentId).map((a) => a.id);
+			if (leader) {
+				await delegateTask({ chatId, leaderId: agentId, task, workerIds });
+			}
+		} catch (e) {
+			setAgentStatus(agentId, 'idle');
+			emit('orchestration:delegation-error', { chatId, leaderId: agentId, error: String(e) });
+		}
 	}
 	return { mentioned };
 };
@@ -665,6 +680,8 @@ export const delegateTask = async (opts: {
 		const worker = agents.find((a) => a.id === workerId);
 		if (!worker || workerId === leaderId) continue;
 
+		setAgentStatus(workerId, 'thinking');
+
 		const workerHistory = getHistoryByAgent(chatId, workerId).map((m) => ({
 			role: m.role,
 			content: m.content
@@ -748,6 +765,7 @@ export const delegateTask = async (opts: {
 
 		plan.results[workerId] = workerText;
 		upsertDelegation(plan);
+		setAgentStatus(workerId, 'online');
 		emit('orchestration:worker-done', { chatId, leaderId, workerId, text: workerText });
 	}
 

@@ -1,7 +1,6 @@
 <script lang="ts">
 	// AgentRosterPanel.svelte — Discord-style Right Sidebar: online agents & status (Fase 4)
-	import { agentList, setAgentStatus } from '$lib/stores/agent/agentStore';
-	import type { AgentStatus } from '$lib/stores/agent/agentStore';
+	import { agentList } from '$lib/stores/agent/agentStore';
 	import { workspaceList, activeWorkspaceId } from '$lib/stores/workspace/workspaceStore';
 
 	// agent roster di workspace aktif (fallback: semua agen)
@@ -53,13 +52,6 @@
 			</li>
 		{/each}
 	</ul>
-	<div class="rp-actions">
-		{#each ['online', 'idle', 'busy', 'thinking'] as s (s)}
-			<button class="mini" on:click={() => $agentList.forEach((a) => setAgentStatus(a.id, s as AgentStatus))}>
-				set all: {s}
-			</button>
-		{/each}
-	</div>
 </aside>
 
 <style>

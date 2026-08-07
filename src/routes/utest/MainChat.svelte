@@ -37,13 +37,13 @@
 		msgs = [...msgs, { id: ++seq, kind, author, text, ts: Date.now(), ping }];
 	};
 
-	// kirim pesan user: render + trigger mention @agent
-	const send = () => {
+	// kirim pesan user: render + trigger mention → delegateTask (LLM asli)
+	const send = async () => {
 		const text = draft.trim();
 		if (!text) return;
 		push('user', 'User', text);
 		draft = '';
-		triggerMention({ chatId: 'chat-demo-1', text });
+		await triggerMention({ chatId: 'chat-demo-1', text });
 	};
 
 	const logErr = (e: string) => {
@@ -154,6 +154,8 @@
 	.main-chat {
 		display: flex;
 		flex-direction: column;
+		flex: 1;
+		min-width: 0;
 		height: 100%;
 		background: #313338;
 		color: #dbdee1;
