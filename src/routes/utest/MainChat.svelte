@@ -102,6 +102,12 @@
 </script>
 
 <div class="main-chat">
+	<header class="chat-header">
+		<span class="ch-hash">#</span>
+		<span class="ch-name">general</span>
+		<span class="ch-topic">— orkestrasi agent lokal</span>
+	</header>
+
 	<div class="chat-scroll">
 		{#if msgs.length === 0}
 			<p class="empty">Belum ada aktivitas. Coba trigger delegasi di bawah! 👇</p>
@@ -159,8 +165,26 @@
 		height: 100%;
 		background: #313338;
 		color: #dbdee1;
-		border-radius: 8px;
 		overflow: hidden;
+	}
+	.chat-header {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 12px 16px;
+		border-bottom: 1px solid #26272b;
+		font-size: 15px;
+		font-weight: 700;
+		color: #f2f3f5;
+		flex-shrink: 0;
+	}
+	.ch-hash {
+		color: #80848e;
+	}
+	.ch-topic {
+		font-weight: 400;
+		font-size: 13px;
+		color: #949ba4;
 	}
 	.chat-scroll {
 		flex: 1;
@@ -331,12 +355,17 @@
 		}
 	}
 	.chat-input {
-		margin: 0 12px 12px;
-		padding: 10px 12px;
+		margin: 0 16px 16px;
+		padding: 12px 14px;
 		border: none;
-		border-radius: 8px;
+		border-radius: 10px;
 		background: #383a40;
 		color: #dbdee1;
-		font-size: 13px;
+		font-size: 15px;
+		font-weight: 500;
+		outline: none;
+	}
+	.chat-input::placeholder {
+		color: #6d6f78;
 	}
 </style>

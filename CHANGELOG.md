@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] style(phase4) — True Discord aesthetic + restore cost audit: LeftSidebar → 2 panel (Server Bar 72px #1E1F22 ikon bulat + Channel Sidebar 240px #2B2D31 dgn # general/# task-stream/# agent-logs + user profile bawah: avatar/mic/settings); MainChat header bar "# general — orkestrasi agent lokal" (border-bottom) + input rounded-lg tebal; AgentRosterPanel → panel "⚡ Token Savings" (Total Tokens Saved, Pruning Ratio %, Cost Saved $, progress bar) di atas roster; E2E verified: server bar 72px, channel 240px, header render, token panel reactive, layout 4-kolom utuh
+
 ## [2026-08-07] fix(phase4) — Hotfix: layout + real LLM wiring: MainChat.svelte flex:1 (chat melebar 804px/1264, proporsional), triggerMention() async → delegateTask() (prompt user dikirim ke Ollama asli, bukan cuma "Siap gas!"), setAgentStatus thinking→online di worker loop orchestration.ts, tombol debug "set all" dihapus dari AgentRosterPanel; E2E verified: @Planner tuliskan hello world → hasil generate real "Hello worl...", status dot thinking live
 
 ## [2026-08-07] feat(phase4) — Final: code rendering, ping UX, observability UI: MainChat.svelte — code block ```lang → hljs syntax highlight (custom regex renderer), **bold**, avatar inisial dgn ping shake animation (delegation-done → .msg-avatar.ping), error log drawer ⚠️ toggle (raw error dari orchestration:delegation-error, max 50, auto-open); E2E verified: ```js → <pre><code class="hljs"> dgn hljs-attribute/operator/number span, drawer buka-tutup tanpa rusak layout 3-kolom

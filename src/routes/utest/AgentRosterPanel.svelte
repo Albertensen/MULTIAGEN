@@ -1,7 +1,9 @@
 <script lang="ts">
 	// AgentRosterPanel.svelte — Discord-style Right Sidebar: online agents & status (Fase 4)
 	import { agentList } from '$lib/stores/agent/agentStore';
+	import type { AgentStatus } from '$lib/stores/agent/agentStore';
 	import { workspaceList, activeWorkspaceId } from '$lib/stores/workspace/workspaceStore';
+	import { costAudit } from '$lib/stores/costAudit/costAuditStore';
 
 	// agent roster di workspace aktif (fallback: semua agen)
 	const rosterAgents = () => {
@@ -34,6 +36,26 @@
 </script>
 
 <aside class="roster-panel">
+	<!-- Token Savings / Server Stats (Item 15) -->
+	<div class="ts-panel">
+		<strong class="ts-title">⚡ Token Savings</strong>
+		<div class="ts-row">
+			<span>Total Tokens Saved</span>
+			<span class="ts-val">{($costAudit.totalTokensSaved / 1000).toFixed(1)}k</span>
+		</div>
+		<div class="ts-row">
+			<span>Pruning Ratio</span>
+			<span class="ts-val ts-ratio">{$costAudit.lastPruneRatioPct}%</span>
+		</div>
+		<div class="ts-row">
+			<span>Cost Saved</span>
+			<span class="ts-val ts-cost">${$costAudit.totalCostSavedUsd.toFixed(4)}</span>
+		</div>
+		<div class="ts-bar">
+			<div class="ts-bar-fill" style="width:{Math.min(100, $costAudit.lastPruneRatioPct)}%"></div>
+		</div>
+	</div>
+
 	<div class="rp-header">
 		<strong>👥 Agent Roster</strong>
 		<span class="rp-count">{rosterAgents().length} on-duty</span>
@@ -66,8 +88,49 @@
 		background: #1e1f22;
 		color: #dbdee1;
 		border-left: 1px solid #2b2d31;
-		overflow-y: auto;
-		box-sizing: border-box;
+	}
+	/* token savings panel */
+	.ts-panel {
+		background: #2b2d31;
+		border-radius: 8px;
+		padding: 10px 12px;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+	.ts-title {
+		color: #f0b232;
+		font-size: 12px;
+		margin-bottom: 2px;
+	}
+	.ts-row {
+		display: flex;
+		justify-content: space-between;
+		font-size: 12px;
+		color: #949ba4;
+	}
+	.ts-val {
+		color: #dbdee1;
+		font-weight: 700;
+	}
+	.ts-ratio {
+		color: #23a55a;
+	}
+	.ts-cost {
+		color: #f0b232;
+	}
+	.ts-bar {
+		height: 6px;
+		background: #313338;
+		border-radius: 3px;
+		overflow: hidden;
+		margin-top: 2px;
+	}
+	.ts-bar-fill {
+		height: 100%;
+		background: #23a55a;
+		border-radius: 3px;
+		transition: width 0.4s;
 	}
 	.rp-header {
 		display: flex;
