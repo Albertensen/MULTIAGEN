@@ -66,7 +66,7 @@ broadcaster = EventBroadcaster()
 # Helper: get DB session
 # ----------------------------------------------------------------------
 async def get_db() -> AsyncSession:
-    async with get_async_session() as session:
+    async for session in get_async_session():
         yield session
 
 
@@ -173,12 +173,12 @@ async def generate_agent_response(request: Request, form_data: dict):
 @router.websocket("/ws/agents")
 async def websocket_endpoint(ws: WebSocket):
     await ws.accept()
-    await broadcaster._subscribers.add(ws)
+    broadcaster._subscribers.add(ws)
     try:
         while True:
             await ws.receive_text()
     except WebSocketDisconnect:
-        await broadcaster._subscribers.discard(ws)
+        broadcaster._subscribers.discard(ws)
     except Exception as e:
         log.error(f"WebSocket error: {e}")
-        await broadcaster._subscribers.discard(ws)
+        broadcaster._subscribers.discard(ws)

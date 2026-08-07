@@ -30,7 +30,7 @@
 - [x] Item 8: Multi-Tenant & Custom Team Workspaces — **DONE 2026-08-07: workspaceStore.ts (tenant owner/member, Virtual Team roster, isolasi namespace ws:<id>:<chat>), E2E verified di /utest (2 tenant Dev/Content Team, add member tenant-c)**
 - [x] Item 9: Anti-Hallucination Guardrails & Critic Agent — **DONE 2026-08-07: structuralGuard() deterministik + criticReview() LLM (PASSED/ISSUES) + generateWithGuardrail(), E2E verified di /utest (bad sample FAIL, critic a3→a1 FAIL, generate+guardrail PASS)**
 - [x] Item 10: Worker-to-Leader Feedback Loop — **DONE 2026-08-07: requestLeaderFeedback() + auto-detect [CALL: leader] di delegateTask (1 round tanya-jawab), E2E verified di /utest (a2 minta approval → a1 jawab)**
-- [ ] Item 11: Orchestration Dry-Run & Backend API Testing
+- [x] Item 11: Orchestration Dry-Run & Backend API Testing — **DONE 2026-08-07: backend/tests/test_orchestration_uat.py 9/9 passed (CRUD, generate LLM, leader plan [CALL:], WS broadcast); fix get_db async-for + set.add/discard await**
 - [ ] Item 12: Sandboxed Workspace File Storage
 
 ---
