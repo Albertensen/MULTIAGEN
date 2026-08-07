@@ -40,6 +40,23 @@
 		clearBus
 	} from '$lib/stores/orchestration/orchestration';
 
+	import {
+		workspaces,
+		workspaceList,
+		activeWorkspace,
+		activeWorkspaceId,
+		activeTenantId,
+		createWorkspace,
+		updateWorkspace,
+		removeWorkspace,
+		addAgentToWorkspace,
+		removeAgentFromWorkspace,
+		addMemberToWorkspace,
+		removeMemberFromWorkspace,
+		workspaceChatId,
+		clearPersistedWorkspaces
+	} from '$lib/stores/workspace/workspaceStore';
+
 	import { get } from 'svelte/store';
 
 	let log: string[] = [];
@@ -89,6 +106,46 @@
 	calls.subscribe((c) => (callCount = c.length));
 	let busCount = 0;
 	busHistory.subscribe((b) => (busCount = b.length));
+
+	// ===== Workspace (Fase 3, item 8) =====
+	let wsLog: string[] = [];
+	let wsName = '';
+	let wsDesc = '';
+	let wsTeam: string[] = [];
+	let wsMemberAdd = '';
+
+	const createWs = () => {
+		if (!wsName.trim()) return;
+		const ws = createWorkspace({ name: wsName.trim(), description: wsDesc, agentIds: wsTeam });
+		wsLog = [...wsLog, `[ws] created ${ws.name} (${ws.id}) team=[${ws.agentIds.join(',')}]`];
+		wsName = '';
+		wsDesc = '';
+		wsTeam = [];
+		activeWorkspaceId.set(ws.id);
+	};
+
+	const demoWorkspaces = () => {
+		// buat 2 workspace tenant berbeda utk bukti isolasi
+		const ws1 = createWorkspace({
+			name: 'Dev Team',
+			description: 'Workspace tenant A',
+			agentIds: ['a1', 'a2'],
+			ownerId: 'tenant-a'
+		});
+		const ws2 = createWorkspace({
+			name: 'Content Team',
+			description: 'Workspace tenant B',
+			agentIds: ['a1', 'a3'],
+			ownerId: 'tenant-b'
+		});
+		wsLog = [
+			...wsLog,
+			`[ws] demo: ${ws1.name} (${ws1.ownerId}) + ${ws2.name} (${ws2.ownerId})`,
+			`[ws] isolasi: chat1 ws1 -> ${workspaceChatId(ws1.id, 'chat-1')}`,
+			`[ws] isolasi: chat1 ws2 -> ${workspaceChatId(ws2.id, 'chat-1')}`
+		];
+		activeWorkspaceId.set(ws1.id);
+	};
 
 	// ===== Generate agent response via Ollama (Fase 3, item 3) =====
 	let genStatus = 'idle'; // idle | running | done | error
@@ -348,6 +405,41 @@
 >
 	Leader a1 (Hermes) → delegate ke planner+critic
 </button>
+
+<hr />
+<h2>Multi-Tenant Workspaces & Virtual Team (Fase 3 item 8)</h2>
+<p><strong>tenant aktif:</strong> {$activeTenantId} — <strong>workspace aktif:</strong> {$activeWorkspaceId ?? 'null'}
+	({$activeWorkspace ? $activeWorkspace.name : 'none'})</p>
+<p><strong>daftar workspace ({$workspaceList.length}):</strong></p>
+<ul>
+	{#each $workspaceList as ws (ws.id)}
+		<li>
+			<strong>{ws.name}</strong> (owner: {ws.ownerId}) — {ws.description}
+			<br />
+			<small>team: {ws.agentIds.join(', ') || 'empty'} | members: {ws.members.map((mm) => `${mm.userId}(${mm.role})`).join(', ')}</small>
+			<br />
+			<button on:click={() => activeWorkspaceId.set(ws.id)}>buka</button>
+			<button on:click={() => addAgentToWorkspace(ws.id, 'a2')}>+ a2</button>
+			<button on:click={() => removeAgentFromWorkspace(ws.id, 'a2')}>- a2</button>
+			<button on:click={() => addMemberToWorkspace(ws.id, 'tenant-c')}>+ member c</button>
+			<button on:click={() => removeWorkspace(ws.id)}>hapus</button>
+		</li>
+	{/each}
+</ul>
+<p><strong>buat workspace baru:</strong></p>
+<input bind:value={wsName} placeholder="nama workspace" />
+<input bind:value={wsDesc} placeholder="deskripsi" />
+<label><input type="checkbox" bind:group={wsTeam} value="a1" /> a1</label>
+<label><input type="checkbox" bind:group={wsTeam} value="a2" /> a2</label>
+<label><input type="checkbox" bind:group={wsTeam} value="a3" /> a3</label>
+<button on:click={createWs}>create</button>
+<button on:click={demoWorkspaces}>demo 2 tenant (isolasi)</button>
+<button on:click={() => clearPersistedWorkspaces()}>clear workspaces</button>
+<ul>
+	{#each wsLog as l, i (i)}
+		<li>{l}</li>
+	{/each}
+</ul>
 
 <hr />
 <h2>Inter-Agent File Sharing (Fase 3 item 4)</h2>
