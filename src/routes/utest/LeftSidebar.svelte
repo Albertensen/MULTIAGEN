@@ -29,7 +29,7 @@
 		const ws = $workspaceList.find((w) => w.id === $activeWorkspaceId);
 		if (!ws) return $agentList.slice(0, 1);
 		const ids = Object.entries(ws.roster ?? {})
-			.filter(([, r]) => r === 'leader')
+			.filter(([id, r]) => r === 'leader' && id && $agentList.some((a) => a.id === id))
 			.map(([id]) => id);
 		const found = ids.map((id) => $agentList.find((a) => a.id === id)).filter((a): a is NonNullable<typeof a> => !!a);
 		return found.length > 0 ? found : $agentList.slice(0, 1);
@@ -51,7 +51,7 @@
 <div class="ls-root">
 	<!-- SERVER BAR (paling kiri, w-16 / #1E1F22) -->
 	<nav class="server-bar">
-		{#each $workspaceList as ws (ws.id)}
+		{#each [...new Map($workspaceList.map((w) => [w.id, w])).values()] as ws (ws.id)}
 			<div class="server-wrap">
 				<button
 					class="server-icon {$activeWorkspaceId === ws.id ? 'active' : ''}"

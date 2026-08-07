@@ -1,26 +1,53 @@
 <script lang="ts">
 	// LeaderBuilderPanel.svelte — #🧠 leader-builder: form setup Leader Agent (UI only, belum wire backend)
 	import { providerList } from '$lib/stores/provider/providerStore';
+	import { addAgent } from '$lib/stores/agent/agentStore';
+	import { activeChannel, activeLeaderId, activeWorkspaceId, workspaceList, setRosterRole } from '$lib/stores/workspace/workspaceStore';
+	import { agentList } from '$lib/stores/agent/agentStore';
 
 	let name = 'Hermes';
 	let systemPrompt = `Kamu adalah Leader arsitek. Rencanakan eksekusi, panggil worker via [CALL: agent], lalu sintesis hasil final.`;
 	let provider = 'ollama';
 	let apiKey = '';
+	let saved = false;
 
 	const providers = $providerList.map((p) => p.id);
 	// tambah provider cloud lain (OpenAI, Anthropic, Gemini) utk opsi dropdown
 	const extraProviders = ['openai', 'anthropic', 'gemini', 'mistral'];
 
+	// nama panel dinamis: create-leader → "create-leader", leader:<id> → nama leader
+	$: panelName = $activeChannel === 'create-leader'
+		? 'create-leader'
+		: $activeChannel.startsWith('leader:')
+			? ($agentList.find((a) => a.id === $activeChannel.slice(7))?.name ?? $activeChannel.slice(7))
+			: 'leader-builder';
+
 	const saveConfig = () => {
-		// UI-only: placeholder — wire ke backend save API nanti
-		console.log('[leader-builder] save', { name, provider, apiKey: apiKey ? '***' : '' });
+		const leaderName = name.trim() || 'Leader';
+		const id = `a${Date.now().toString(36)}`;
+		// buat agent leader baru
+		addAgent({
+			id,
+			name: leaderName,
+			systemPrompt,
+			model: provider === 'ollama' ? 'gemma4:e4b' : 'gpt-4o',
+		});
+		// daftarkan sebagai leader di workspace aktif (fallback: tak ada ws -> leader tetap tampil via fallback agent pertama)
+		const wsId = $activeWorkspaceId;
+		if (wsId && $workspaceList.some((w) => w.id === wsId)) {
+			setRosterRole(wsId, id, 'leader');
+		}
+		// auto-routing ke ruang leader baru
+		activeChannel.set(`leader:${id}`);
+		activeLeaderId.set(id);
+		saved = true;
 	};
 </script>
 
 <div class="lb-panel">
 	<header class="lb-header">
 		<span class="lb-hash">🧠</span>
-		<span class="lb-name">leader-builder</span>
+		<span class="lb-name">{panelName}</span>
 		<span class="lb-topic">— setup Leader Agent</span>
 	</header>
 

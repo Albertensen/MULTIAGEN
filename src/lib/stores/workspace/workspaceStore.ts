@@ -68,7 +68,7 @@ export const activeTenantId = writable<string>('local');
 export const activeWorkspaceId = writable<string | null>(null);
 // channel routing (UX Overhaul): 'task-stream' | 'leader-builder'
 // hierarkis (Swarm Planning): 'create-leader' | `leader:<id>` | `stream:<id>`
-export const activeChannel = writable<string>('stream:default');
+export const activeChannel = writable<string>('stream:a1');
 export const activeLeaderId = writable<string | null>(null);
 
 // workspace yang sedang dibuka (reactive)
