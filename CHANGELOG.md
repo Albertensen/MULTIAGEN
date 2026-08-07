@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] fix(ux) — Persistent leader chat & streaming visibility: chatStore.ts BARU (leaderChatHistory per leader + pushLeaderMsg, persist localStorage multiagent.leaderchat.v1); LeaderChatPanel baca/render/simpan history store (anti-amnesia pindah channel), dummy pembuka via onMount; fix crash `$leaderChatHistory(arg)` (syntax auto-subscribe invalid) → .subscribe() manual; orchestration emit orchestration:leader-thinking (early, sebelum generate) + MainChat render bubble "🧠 [Leader] sedang merumuskan Master Plan..." dihapus saat leader-plan; E2E verified: pindah channel history tetap, bubble thinking + typing worker tampil
+
 ## [2026-08-07] fix(orchestration) — Feedback loop: emit orchestration:leader-plan + addMessage(assistant) segera setelah LLM Leader selesai (sebelum parse [CALL:]), jeda 600ms UX, baru eksekusi worker; MainChat listener leader-plan → render `msg leader` di stream; E2E verified: plan Hermes (3:45:30) tampil sebelum assign Planner (3:45:31)
 
 ## [2026-08-07] feat(phase4) — LeaderChatPanel: komponen ruang meeting # 🧠 [leader] (header nama leader + "— Brainstorming & Planning", dummy pembuka dari leader, chat history, textarea input + tombol ➤, typing indicator, pantau orchestration:delegation); routing +page: leader:* → LeaderChatPanel (bukan LeaderBuilderPanel lagi); E2E verified: klik # 🧠 Hermes → chat room + dummy msg, kirim → user msg + 📢 delegasi live

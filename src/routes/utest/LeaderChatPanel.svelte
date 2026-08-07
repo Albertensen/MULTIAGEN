@@ -1,30 +1,36 @@
 <script lang="ts">
 	// LeaderChatPanel.svelte — Ruang Meeting bersama Leader (# 🧠 [leader])
+	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 	import { agentList } from '$lib/stores/agent/agentStore';
 	import { activeChannel, activeLeaderId } from '$lib/stores/workspace/workspaceStore';
 	import { triggerMention } from '$lib/stores/orchestration/orchestration';
 	import { on } from '$lib/stores/orchestration/orchestration';
-	import { get } from 'svelte/store';
+	import { leaderChatHistory, pushLeaderMsg } from '$lib/stores/chatStore';
 
 	$: leaderId = $activeLeaderId ?? ($activeChannel.startsWith('leader:') ? $activeChannel.slice(7) : null);
 	$: leader = $agentList.find((a) => a.id === leaderId) ?? null;
 	$: leaderName = leader?.name ?? 'Leader';
 
 	type ChatMsg = { id: number; kind: 'user' | 'leader' | 'system'; author: string; text: string; ts: number };
+	// history persist per leader (store global — tidak hilang saat pindah channel)
 	let msgs: ChatMsg[] = [];
-	let seq = 0;
+	$: unsubHistory = leaderChatHistory(leaderId ?? '__none__').subscribe((h) => (msgs = h));
 	let draft = '';
 	let typing = false;
 
-	// dummy pembuka dari Leader
-	$: if (leaderName && msgs.length === 0) {
-		msgs = [{ id: ++seq, kind: 'leader', author: leaderName, text: `Halo, saya ${leaderName}. Apa master plan yang ingin kita eksekusi hari ini?`, ts: Date.now() }];
-	}
+	// dummy pembuka dari Leader — sekali via onMount (hindari loop reactive)
+	onMount(() => {
+		if (leaderId && get(leaderChatHistory(leaderId)).length === 0) {
+			pushLeaderMsg(leaderId, { kind: 'leader', author: leaderName, text: `Halo, saya ${leaderName}. Apa master plan yang ingin kita eksekusi hari ini?` });
+		}
+	});
 
 	const agentName = (id: string) => get(agentList).find((x) => x.id === id)?.name ?? id;
 
 	const push = (kind: ChatMsg['kind'], author: string, text: string) => {
-		msgs = [...msgs, { id: ++seq, kind, author, text, ts: Date.now() }];
+		if (!leaderId) return;
+		pushLeaderMsg(leaderId, { kind, author, text });
 	};
 
 	const send = async () => {
@@ -44,6 +50,12 @@
 	on('orchestration:delegation', (p) => {
 		if (p.leaderId === leaderId) {
 			push('system', 'System', `📢 ${agentName(String(p.leaderId))} mendelegasikan ke ${(p.workerIds as string[]).map(agentName).join(', ')}`);
+		}
+	});
+	// balasan Leader (rencana) ikut masuk history ruang meeting
+	on('orchestration:leader-plan', (p) => {
+		if (p.leaderId === leaderId) {
+			push('leader', agentName(String(p.leaderId)), String(p.plan ?? ''));
 		}
 	});
 </script>

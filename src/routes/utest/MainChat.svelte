@@ -29,6 +29,7 @@
 
 	let msgs: ChatMsg[] = [];
 	let typing = new Set<string>(); // agent id yang sedang "mengetik"
+	let leaderThinking = new Set<string>(); // leader yang sedang merumuskan plan
 	let seq = 0;
 	let draft = '';
 	let showErrors = false; // drawer observability
@@ -74,6 +75,13 @@
 	on('orchestration:leader-plan', (p) => {
 		// rencana mentah Leader tampil dulu sebelum worker dieksekusi
 		push('leader', agentName(p.leaderId as string), String(p.plan ?? ''));
+		leaderThinking.delete(p.leaderId as string);
+		leaderThinking = new Set(leaderThinking);
+	});
+	on('orchestration:leader-thinking', (p) => {
+		// bubble "sedang merumuskan Master Plan" saat leader memproses
+		leaderThinking.add(p.leaderId as string);
+		leaderThinking = new Set(leaderThinking);
 	});
 	on('orchestration:mention', (p) => {
 		// user/leader mention @agent → agent on-duty
@@ -137,6 +145,9 @@
 	<div class="typing-row">
 		{#each [...typing] as tid (tid)}
 			<span class="typing-chip">{agentName(tid)} is typing... 💬</span>
+		{/each}
+		{#each [...leaderThinking] as lid (lid)}
+			<span class="typing-chip">🧠 {agentName(lid)} sedang merumuskan Master Plan...</span>
 		{/each}
 	</div>
 

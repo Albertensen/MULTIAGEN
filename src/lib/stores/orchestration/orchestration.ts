@@ -643,6 +643,8 @@ export const delegateTask = async (opts: {
 	};
 	upsertDelegation(plan);
 	emit('orchestration:delegation', { chatId, leaderId, task, workerIds });
+	// early emit: leader mulai merumuskan plan — UI stream tampilkan thinking bubble
+	emit('orchestration:leader-thinking', { chatId, leaderId });
 
 	const leaderHistory = getHistoryByAgent(chatId, leaderId).map((m) => ({
 		role: m.role,
