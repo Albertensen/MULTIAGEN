@@ -35,6 +35,13 @@
 		return found.length > 0 ? found : $agentList.slice(0, 1);
 	};
 
+	// nama workspace aktif — fallback NaN-safe: jangan pernah render "NaN"/"No Server"
+	$: activeWsName = (() => {
+		const n = $workspaceList.find((w) => w.id === $activeWorkspaceId)?.name;
+		if (!n || /^nan$/i.test(String(n).trim())) return 'My Workspace';
+		return n;
+	})();
+
 	const go = (ch: string, leaderId: string | null = null) => {
 		activeChannel.set(ch);
 		if (leaderId) activeLeaderId.set(leaderId);
@@ -62,18 +69,24 @@
 	<!-- CHANNEL SIDEBAR (w-60 / #2B2D31) -->
 	<aside class="channel-sidebar">
 		<header class="ws-header">
-			<strong>{$workspaceList.find((w) => w.id === $activeWorkspaceId)?.name ?? 'No Server'}</strong>
+			<strong>{activeWsName}</strong>
 			<button class="collapse-btn" on:click={() => (collapsed = !collapsed)} title="Collapse">
 				{collapsed ? '»' : '«'}
 			</button>
 		</header>
 
 		{#if !collapsed}
+			<!-- KATEGORI A: MANAGEMENT (statis) -->
 			<div class="chan-group">
-				<span class="chan-group-label">👑 LEADER MANAGEMENT</span>
+				<span class="chan-group-label">🛠️ MANAGEMENT</span>
 				<button class="chan-item {$activeChannel === 'create-leader' ? 'active' : ''}" on:click={() => go('create-leader')}>
 					<span class="hash"># 🛠️</span> create-leader
 				</button>
+			</div>
+
+			<!-- KATEGORI B: ACTIVE LEADERS (dinamis per leader) -->
+			<div class="chan-group">
+				<span class="chan-group-label">👑 ACTIVE LEADERS</span>
 				{#each leaders() as l (l.id)}
 					<button class="chan-item {$activeChannel === `leader:${l.id}` ? 'active' : ''}" on:click={() => go(`leader:${l.id}`, l.id)}>
 						<span class="hash"># 🧠</span> {l.name}
@@ -81,6 +94,7 @@
 				{/each}
 			</div>
 
+			<!-- KATEGORI C: TASK STREAMS (dinamis per leader) -->
 			<div class="chan-group">
 				<span class="chan-group-label">⚡ TASK STREAMS</span>
 				{#each leaders() as l (l.id)}
