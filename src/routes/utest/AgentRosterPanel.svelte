@@ -27,12 +27,7 @@
 		}
 	};
 
-	// role lookup: leader = 1 per workspace (fallback: agent pertama)
-	const getRole = (agentId: string): string => {
-		const ws = $workspaceList.find((w) => w.id === $activeWorkspaceId);
-		if (!ws) return agentId === $agentList[0]?.id ? 'leader' : 'worker';
-		return ws.roster?.[agentId] === 'leader' ? 'leader' : 'worker';
-	};
+	// role lookup tidak dipakai lagi — semua agent = ⚙️ WORKER (local bots)
 </script>
 
 <aside class="roster-panel">
@@ -57,7 +52,7 @@
 	</div>
 
 	<div class="rp-header">
-		<strong>👥 Agent Roster</strong>
+		<strong>🤖 Local Bots</strong>
 		<span class="rp-count">{rosterAgents().length} on-duty</span>
 	</div>
 	<ul class="rp-list">
@@ -70,11 +65,7 @@
 					<span class="rp-sub">{agent.status} · {agent.provider ?? 'ollama'}</span>
 				</span>
 				<span class="rp-role">
-					{#if getRole(agent.id) === 'leader'}
-						<span class="rp-role-badge leader">👑 LEADER</span>
-					{:else}
-						<span class="rp-role-badge worker">⚙️ WORKER</span>
-					{/if}
+					<span class="rp-role-badge worker">⚙️ WORKER</span>
 				</span>
 			</li>
 		{/each}
