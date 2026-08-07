@@ -43,9 +43,9 @@
 ## 🎨 FASE 4: DISCORD-LIKE UI IMPLEMENTATION
 - [x] Item 16: Discord-style Bot Mention System — **DONE 2026-08-07: parseMentions() + triggerMention() (@bot_id → assign+emit), E2E @planner→a2 verified**
 - [x] Item 17: Workspace/Channel Custom Roster — **DONE 2026-08-07: Workspace.roster + setRosterRole() (1 leader rule, demote otomatis), E2E verified a1:leader→a2:leader demote a1**
-- [ ] Clean up `/utest` harness
-- [ ] Left Sidebar (Servers / Workspace Categories)
-- [ ] Right Sidebar (Online Agents Panel & Status)
+- [x] Clean up `/utest` harness — **DONE 2026-08-07: komponen dipisah (LeftSidebar.svelte, AgentRosterPanel.svelte), layout 3-kolom flex**
+- [x] Left Sidebar (Servers / Workspace Categories) — **DONE 2026-08-07: Discord-style workspace nav (list, active indicator, add form, collapse), E2E verified**
+- [x] Right Sidebar (Online Agents Panel & Status) — **DONE 2026-08-07: roster scoped workspace aktif, status Online/Idle/Busy/Thinking real-time, role 👑Leader/⚙Worker, E2E verified**
 - [ ] Main Chat (Threads, Avatars, File/Code attachments rendering)
 - [ ] Real-time UX (Typing indicators, Buzz/Ping trigger)
 - [ ] Agent Observability & Error Logging UI

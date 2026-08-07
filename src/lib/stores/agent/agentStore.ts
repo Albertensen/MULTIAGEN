@@ -15,13 +15,16 @@ const STORAGE_KEY = 'multiagent.agents.v1';
 
 export type ProviderId = 'ollama' | 'openai' | 'anthropic' | 'deepseek' | 'gemini';
 
+export type AgentStatus = 'online' | 'idle' | 'busy' | 'thinking';
+
 export type Agent = {
 	id: string;
 	name: string;
 	systemPrompt: string; // peran
-	model: string; // 'gemma4:e4b' | 'hermes3:latest' | 'gpt-4o' | ...
+	model: string; // 'gemma4:e4b' | 'hermes3:latest' | ...
 	provider: ProviderId; // Fase 3 item 13: penyedia LLM dinamis
 	active: boolean; // sedang bicara/ditugaskan
+	status: AgentStatus; // Fase 4: Online/Idle/Busy/Thinking
 };
 
 // hydrate dari localStorage — jalankan SEBELUM store dipakai
@@ -68,11 +71,15 @@ export const activeAgent = derived(
 
 // ==================== aksi ====================
 
-export const addAgent = (a: Omit<Agent, 'active'>) =>
-	agentsStore.update((m) => ({ ...m, [a.id]: { ...a, active: false } }));
+export const addAgent = (a: Omit<Agent, 'active' | 'status'>) =>
+	agentsStore.update((m) => ({ ...m, [a.id]: { ...a, active: false, status: 'online' } }));
 
 export const updateAgent = (id: string, patch: Partial<Omit<Agent, 'id'>>) =>
 	agentsStore.update((m) => (m[id] ? { ...m, [id]: { ...m[id], ...patch } } : m));
+
+// Fase 4: status real-time agen (Online/Idle/Busy/Thinking)
+export const setAgentStatus = (id: string, status: Agent['status']) =>
+	agentsStore.update((m) => (m[id] ? { ...m, [id]: { ...m[id], status } } : m));
 
 export const removeAgent = (id: string) =>
 	agentsStore.update((m) => {

@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase4) — /utest cleanup + Left/Right Sidebar: komponen terpisah LeftSidebar.svelte (Discord-style workspace nav: list, active indicator, add form, collapse) & AgentRosterPanel.svelte (online agents: status dot Online/Idle/Busy/Thinking, role 👑Leader/⚙Worker, scoped ke workspace aktif, set status); Agent.status field + setAgentStatus() di agentStore; layout 3-kolom flex di /utest; E2E verified: sidebar switch auto, roster 1 on-duty scoped, status thinking real-time, role Leader
+
 ## [2026-08-07] feat(phase4) — Item 16 & 17 Discord-style Bot Mention & Custom Roster: parseMentions() + triggerMention() di orchestration.ts (@bot_id/@agent_name → assign + emit orchestrator); Workspace.roster (agentId->role) + setRosterRole() (rule 1 leader, demote otomatis) + addAgentToWorkspace default role; harness /utest (input @mention + roster panel per workspace); E2E verified: @planner→a2, Dev Team a1:leader+a2:worker, promote a2 demote a1
 
 ## [2026-08-07] feat(phase3) — Item 15 Token Savings & Cost Audit Widget: costAuditStore.ts (recordPruning: before/after token, savedCostUsd @$0.15/1M cloud vs Ollama gratis, pruneRatioPct, akumulasi totals); hook di delegateTask tiap worker; widget /utest (Total Tokens Saved, Cost Saved $, Pruning Ratio, entry list, reset); E2E verified: math exact (54630→3619 chars = 12753 tok = $0.001913), 2 entry delegasi tercatat (a2/a3 ollama)

@@ -78,6 +78,10 @@
 	import type { ProviderId } from '$lib/stores/agent/agentStore';
 	import { costAudit, resetAudit } from '$lib/stores/costAudit/costAuditStore';
 
+	import LeftSidebar from './LeftSidebar.svelte';
+	import AgentRosterPanel from './AgentRosterPanel.svelte';
+	import { activeWorkspaceId as setActiveWs } from '$lib/stores/workspace/workspaceStore';
+
 	import { get } from 'svelte/store';
 
 	let log: string[] = [];
@@ -483,6 +487,15 @@
 	};
 </script>
 
+<svelte:head><title>Agent Store Harness</title></svelte:head>
+
+<div class="f4-layout">
+	<LeftSidebar
+		onSwitch={(id) => setActiveWs.set(id)}
+		onAdd={(id) => setActiveWs.set(id)}
+	/>
+
+	<div class="f4-main">
 <h1>Agent Store Harness</h1>
 
 <p>
@@ -782,3 +795,20 @@
 <button on:click={shareImage}>a1 -> a3: kirim image (diagram.png)</button>
 
 <pre>{JSON.stringify(summary)}</pre>
+	</div>
+
+	<AgentRosterPanel />
+</div>
+
+<style>
+	.f4-layout {
+		display: flex;
+		height: 100vh;
+		overflow: hidden;
+	}
+	.f4-main {
+		flex: 1;
+		overflow-y: auto;
+		padding: 16px;
+	}
+</style>
