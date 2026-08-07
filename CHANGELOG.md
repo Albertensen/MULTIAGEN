@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase4) — Global leader directive injection: konstanta GLOBAL_LEADER_DIRECTIVE (CRITICAL ARCHITECTURAL RULE — worker = Local LLM Ollama, wajib pecah micro-task, tunggu output step 1 sebelum step 2); saveConfig gabung master plan user + directive → finalSystemPrompt (systemPrompt utama leader); E2E verified: save Architect → prompt 563 char berisi directive
+
 ## [2026-08-07] feat(phase4) — Hermes native integration prep: dropdown provider → 5 opsi (Hermes Native 🌟 default / Ollama Local / OpenAI / Anthropic Claude / Google Gemini Cloud); API Key input conditional — hidden utk hermes+ollama, muncul utk cloud (type password); model mapping hermes-native; E2E verified: 5 opsi, default hermes key hidden, pilih openai → key muncul
 
 ## [2026-08-07] fix(phase4) — NaN, dynamic header & leader auto-create: LeaderBuilderPanel saveConfig → addAgent (id digenerate dulu, addAgent return void), setRosterRole leader (1-leader enforce, auto-demote), auto-route activeChannel → leader:<id>; sidebar leaders() filter id valid (anti "undefined" roster); dedup ikon workspace via Map; default activeChannel stream:a1 (header stream-Hermes bukan stream-default); panel header dinamis (create-leader / nama leader); E2E verified: save Commander → 3 channel otomatis (# 🧠 Commander, # ⚡ stream-commander, # 📂 dir-commander) + auto-route ke ruang leader

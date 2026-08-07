@@ -22,6 +22,10 @@
 	// native/lokal tidak butuh API key — sembunyikan input
 	$: needsApiKey = !['hermes', 'ollama'].includes(provider);
 
+	// aturan mutlak global — semua Leader wajib pecah tugas mikro utk worker lokal
+	const GLOBAL_LEADER_DIRECTIVE =
+		'CRITICAL ARCHITECTURAL RULE: As a Leader, you must acknowledge that your execution workers are Local LLMs (Ollama) with limited context windows and lower reasoning capacities compared to Cloud LLMs. You MUST break down every large project into extremely small, single-dimensional, and highly specific micro-tasks before delegating. Do not give a local worker a complex multi-step prompt. Wait for their output on step 1 before proceeding to step 2.';
+
 	// nama panel dinamis: create-leader → "create-leader", leader:<id> → nama leader
 	$: panelName = $activeChannel === 'create-leader'
 		? 'create-leader'
@@ -32,11 +36,13 @@
 	const saveConfig = () => {
 		const leaderName = name.trim() || 'Leader';
 		const id = `a${Date.now().toString(36)}`;
+		// gabung master plan user + directive global → system prompt final
+		const finalSystemPrompt = `${systemPrompt.trim()}\n\n---\n${GLOBAL_LEADER_DIRECTIVE}`;
 		// buat agent leader baru
 		addAgent({
 			id,
 			name: leaderName,
-			systemPrompt,
+			systemPrompt: finalSystemPrompt,
 			model: provider === 'ollama' ? 'gemma4:e4b' : provider === 'hermes' ? 'hermes-native' : 'gpt-4o',
 		});
 		// daftarkan sebagai leader di workspace aktif (fallback: tak ada ws -> leader tetap tampil via fallback agent pertama)
