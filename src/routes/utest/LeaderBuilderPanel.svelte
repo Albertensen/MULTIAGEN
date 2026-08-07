@@ -1,19 +1,26 @@
 <script lang="ts">
 	// LeaderBuilderPanel.svelte — #🧠 leader-builder: form setup Leader Agent (UI only, belum wire backend)
-	import { providerList } from '$lib/stores/provider/providerStore';
 	import { addAgent } from '$lib/stores/agent/agentStore';
 	import { activeChannel, activeLeaderId, activeWorkspaceId, workspaceList, setRosterRole } from '$lib/stores/workspace/workspaceStore';
 	import { agentList } from '$lib/stores/agent/agentStore';
 
 	let name = 'Hermes';
 	let systemPrompt = `Kamu adalah Leader arsitek. Rencanakan eksekusi, panggil worker via [CALL: agent], lalu sintesis hasil final.`;
-	let provider = 'ollama';
+	let provider = 'hermes';
 	let apiKey = '';
 	let saved = false;
 
-	const providers = $providerList.map((p) => p.id);
-	// tambah provider cloud lain (OpenAI, Anthropic, Gemini) utk opsi dropdown
-	const extraProviders = ['openai', 'anthropic', 'gemini', 'mistral'];
+	// daftar provider: Hermes native default, lalu lokal & cloud
+	const providerOptions = [
+		{ value: 'hermes', label: 'Hermes (Native Integration) 🌟' },
+		{ value: 'ollama', label: 'Ollama (Local)' },
+		{ value: 'openai', label: 'OpenAI (Cloud)' },
+		{ value: 'anthropic', label: 'Anthropic Claude (Cloud)' },
+		{ value: 'gemini', label: 'Google Gemini (Cloud)' }
+	];
+
+	// native/lokal tidak butuh API key — sembunyikan input
+	$: needsApiKey = !['hermes', 'ollama'].includes(provider);
 
 	// nama panel dinamis: create-leader → "create-leader", leader:<id> → nama leader
 	$: panelName = $activeChannel === 'create-leader'
@@ -30,7 +37,7 @@
 			id,
 			name: leaderName,
 			systemPrompt,
-			model: provider === 'ollama' ? 'gemma4:e4b' : 'gpt-4o',
+			model: provider === 'ollama' ? 'gemma4:e4b' : provider === 'hermes' ? 'hermes-native' : 'gpt-4o',
 		});
 		// daftarkan sebagai leader di workspace aktif (fallback: tak ada ws -> leader tetap tampil via fallback agent pertama)
 		const wsId = $activeWorkspaceId;
@@ -64,13 +71,15 @@
 
 			<label class="lb-label" for="lb-provider">Provider LLM</label>
 			<select id="lb-provider" class="lb-select" bind:value={provider}>
-				{#each [...new Set([...providers, ...extraProviders])] as p (p)}
-					<option value={p}>{p}</option>
+				{#each providerOptions as p (p.value)}
+					<option value={p.value}>{p.label}</option>
 				{/each}
 			</select>
 
-			<label class="lb-label" for="lb-key">API Key</label>
-			<input id="lb-key" class="lb-input" type="password" bind:value={apiKey} placeholder="sk-..." />
+			{#if needsApiKey}
+				<label class="lb-label" for="lb-key">API Key</label>
+				<input id="lb-key" class="lb-input" type="password" bind:value={apiKey} placeholder="sk-..." />
+			{/if}
 
 			<button class="lb-save" on:click={saveConfig}>💾 Save Configuration</button>
 		</div>
