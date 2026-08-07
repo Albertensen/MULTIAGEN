@@ -262,6 +262,153 @@ export const clearBus = () => {
 
 // ==================== Leader-Worker Delegation (Fase 3, item 7) ====================
 
+// ==================== Guardrails & Critic Agent (Fase 3, item 9) ====================
+
+export type Critique = {
+	agentId: string; // agent yang dikritik
+	criticId: string; // kritikus (default: agent berperan critic)
+	text: string;
+	passed: boolean; // lulus guardrail?
+	issues: string[]; // daftar masalah yang ditemukan
+	ts: number;
+};
+
+const critiqueLog = writable<Critique[]>([]);
+export const critiques = readonly(critiqueLog);
+
+// ---- Structural guardrails (deterministik, tanpa LLM) ----
+// Mendeteksi pola output yang mencurigakan / indikasi hallucination.
+
+const HALLUCINATION_PATTERNS: { re: RegExp; issue: string }[] = [
+	{ re: /\[CALL:\s*[^\]]+\]/g, issue: 'output mengandung [CALL:] tak terselesaikan (delegasi menggantung)' },
+	{ re: /\[error\]/g, issue: 'output mengandung penanda error backend' },
+	{ re: /\[trigger\]/g, issue: 'output mengandung token trigger sistem' },
+	{ re: /undefined|NaN|null(?!\s*[)}])/g, issue: 'output mengandung nilai tak terdefinisi' },
+	{ re: /lorem ipsum|TODO|FIXME|placeholder/gi, issue: 'output mengandung teks placeholder/template' }
+];
+
+// ---- deterministik: periksa struktur output ----
+export const structuralGuard = (text: string): string[] => {
+	const issues: string[] = [];
+	for (const { re, issue } of HALLUCINATION_PATTERNS) {
+		if (re.test(text)) issues.push(issue);
+	}
+	if (text.length < 20) issues.push('output terlalu pendek (<20 char) — kemungkinan generasi gagal');
+	if (text.length > 4000) issues.push('output terlalu panjang (>4000 char) — potensi repetisi/loop');
+	return issues;
+};
+
+// ---- semantic: minta Critic agent (LLM) menilai output ----
+export const criticReview = async (opts: {
+	chatId: string;
+	agentId: string; // agent yang menghasilkan output
+	text: string; // output yang dinilai
+	task?: string; // konteks tugas (opsional)
+}): Promise<Critique> => {
+	const { chatId, agentId, text } = opts;
+	const agents = get(agentList);
+	// cari agent berperan critic (systemPrompt mengandung 'critic' / id 'critic')
+	const critic =
+		agents.find(
+			(a) =>
+				(a.id.toLowerCase().includes('critic') ||
+					a.name.toLowerCase().includes('critic') ||
+					(a.systemPrompt || '').toLowerCase().includes('critic')) &&
+				a.id !== agentId
+		) ?? agents.find((a) => a.id !== agentId); // fallback: agent lain
+
+	const structural = structuralGuard(text);
+	const critique: Critique = {
+		agentId,
+		criticId: critic?.id ?? 'system',
+		text,
+		passed: structural.length === 0,
+		issues: [...structural],
+		ts: Date.now()
+	};
+
+	// jalankan review LLM hanya bila ada critic agent & output layak dinilai
+	if (critic && text.length > 20) {
+		const prompt = `Review output berikut dari agent ${agentId} untuk masalah: (1) hallucination / fakta tak berdasar, (2) kontradiksi internal, (3) instruksi tak terselesaikan, (4) kualitas buruk. Jawab format:\nPASSED: true/false\nISSUES: daftar singkat (kosongkan jika tidak ada)\n\nOutput:\n${text.slice(0, 2000)}`;
+		try {
+			const review = await generateAgentResponse({
+				chatId,
+				agentId: critic.id,
+				model: critic.model,
+				systemPrompt: critic.systemPrompt,
+				history: [{ role: 'user', content: prompt }]
+			});
+			const passed = !/PASSED:\s*false/i.test(review);
+			const issuesMatch = review.match(/ISSUES:\s*(.*)/i);
+			const llmIssues = issuesMatch
+				? issuesMatch[1]
+						.split(/[,\n]/)
+						.map((s) => s.trim())
+						.filter(Boolean)
+				: [];
+			critique.passed = passed && structural.length === 0;
+			critique.issues = [...structural, ...llmIssues];
+		} catch (e) {
+			critique.issues.push(`[critic error] ${String(e)}`);
+		}
+	}
+
+	critiqueLog.update((l) => [...l.slice(-49), critique]);
+	emit('orchestration:critique', {
+		chatId,
+		agentId,
+		criticId: critique.criticId,
+		passed: critique.passed,
+		issues: critique.issues
+	});
+	return critique;
+};
+
+// ---- wrapper: generate + guardrail + critic otomatis ----
+// Menghasilkan output agent, jalankan structural guard, lalu critic review
+// bila output lulus structural. Mengembalikan output + status guardrail.
+export const generateWithGuardrail = async (opts: {
+	chatId: string;
+	agentId: string;
+	model: string;
+	systemPrompt?: string;
+	history: { role: string; content: string }[];
+	task?: string; // konteks tugas utk critic
+}): Promise<{ text: string; critique: Critique | null }> => {
+	const text = await generateAgentResponse(opts);
+
+	// structural guard dulu (deterministik, cepat)
+	const structural = structuralGuard(text);
+	if (structural.length > 0) {
+		const critique: Critique = {
+			agentId: opts.agentId,
+			criticId: 'system',
+			text,
+			passed: false,
+			issues: structural,
+			ts: Date.now()
+		};
+		critiqueLog.update((l) => [...l.slice(-49), critique]);
+		emit('orchestration:critique', {
+			chatId: opts.chatId,
+			agentId: opts.agentId,
+			criticId: 'system',
+			passed: false,
+			issues: structural
+		});
+		return { text, critique };
+	}
+
+	// lulus structural -> critic LLM review
+	const critique = await criticReview({
+		chatId: opts.chatId,
+		agentId: opts.agentId,
+		text,
+		task: opts.task
+	});
+	return { text, critique };
+};
+
 export type DelegationPlan = {
 	leaderId: string;
 	task: string;

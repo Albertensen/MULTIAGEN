@@ -36,6 +36,10 @@
 		getAttachmentsByAgent,
 		delegateTask,
 		delegations,
+		structuralGuard,
+		criticReview,
+		generateWithGuardrail,
+		critiques,
 		on,
 		clearBus
 	} from '$lib/stores/orchestration/orchestration';
@@ -145,6 +149,44 @@
 			`[ws] isolasi: chat1 ws2 -> ${workspaceChatId(ws2.id, 'chat-1')}`
 		];
 		activeWorkspaceId.set(ws1.id);
+	};
+
+	// ===== Guardrails & Critic (Fase 3, item 9) =====
+	let guardLog: string[] = [];
+	let guardSample = 'Analisis singkat: sistem perlu auth sebelum API dipanggil.';
+	let guardBadSample = 'Hasil: [CALL: planner] undefined TODO lorem ipsum';
+
+	const runStructuralGuard = () => {
+		const issues = structuralGuard(guardSample);
+		guardLog = [...guardLog, `[guard] structural "${guardSample.slice(0, 40)}..." -> ${issues.length ? 'FAIL: ' + issues.join('; ') : 'PASS'}`];
+	};
+
+	const runStructuralGuardBad = () => {
+		const issues = structuralGuard(guardBadSample);
+		guardLog = [...guardLog, `[guard] structural "${guardBadSample.slice(0, 40)}..." -> ${issues.length ? 'FAIL: ' + issues.join('; ') : 'PASS'}`];
+	};
+
+	const runCriticReview = async () => {
+		guardLog = [...guardLog, '[guard] critic review dimulai (a3 menilai output a1)...'];
+		const c = await criticReview({
+			chatId: CHAT,
+			agentId: 'a1',
+			text: 'Saya menganalisis kebutuhan sistem. Rekomendasi: gunakan FastAPI + auth JWT. Arsitektur modular dengan 3 layer.',
+			task: 'analisis arsitektur'
+		});
+		guardLog = [...guardLog, `[guard] critic a1 -> ${c.criticId}: ${c.passed ? 'PASS' : 'FAIL'} issues=[${c.issues.join(', ')}]`];
+	};
+
+	const runGenerateWithGuardrail = async () => {
+		guardLog = [...guardLog, '[guard] generateWithGuardrail (a1 generate, a3 critic)...'];
+		const r = await generateWithGuardrail({
+			chatId: CHAT,
+			agentId: 'a1',
+			model: 'gemma4:e4b',
+			systemPrompt: 'assistant utama',
+			history: [{ role: 'user', content: 'Jelaskan singkat 2 langkah deploy FastAPI.' }]
+		});
+		guardLog = [...guardLog, `[guard] generate a1 -> ${r.critique ? (r.critique.passed ? 'PASS' : 'FAIL: ' + r.critique.issues.join('; ')) : 'no-critique'} | ${r.text.slice(0, 80)}...`];
 	};
 
 	// ===== Generate agent response via Ollama (Fase 3, item 3) =====
@@ -437,6 +479,29 @@
 <button on:click={() => clearPersistedWorkspaces()}>clear workspaces</button>
 <ul>
 	{#each wsLog as l, i (i)}
+		<li>{l}</li>
+	{/each}
+</ul>
+
+<hr />
+<h2>Guardrails & Critic Agent (Fase 3 item 9)</h2>
+<p><strong>kritik tersimpan ({$critiques.length}):</strong></p>
+<ul>
+	{#each $critiques.slice(-5).reverse() as c (c.ts + c.agentId)}
+		<li>
+			<strong>{c.agentId}</strong> → critic {c.criticId}: {c.passed ? '✅ PASS' : '⛔ FAIL'}
+			{#if c.issues.length > 0}<small> issues: {c.issues.join('; ')}</small>{/if}
+		</li>
+	{/each}
+</ul>
+<label>sample output:</label>
+<input bind:value={guardSample} size="50" />
+<button on:click={runStructuralGuard}>structural guard (sample)</button>
+<button on:click={runStructuralGuardBad}>structural guard (bad sample)</button>
+<button on:click={runCriticReview}>critic review (a3 → a1)</button>
+<button on:click={runGenerateWithGuardrail}>generate + guardrail (a1, critic a3)</button>
+<ul>
+	{#each guardLog as l, i (i)}
 		<li>{l}</li>
 	{/each}
 </ul>

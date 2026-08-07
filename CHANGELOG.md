@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase3) — Item 9 Anti-Hallucination Guardrails & Critic Agent: structuralGuard() deterministik (deteksi [CALL:] menggantung, [error], [trigger], undefined/NaN, placeholder, panjang output) + criticReview() (LLM critic menilai output via PASSED/ISSUES) + generateWithGuardrail() (generate → structural → critic); store critiques + event orchestration:critique; harness /utest (structural good/bad sample, critic review a3→a1, generate+guardrail)
+
 ## [2026-08-07] feat(phase3) — Item 8 Multi-Tenant & Custom Team Workspaces: workspaceStore.ts (CRUD workspace, owner/member tenant, Virtual Team roster per workspace via agentIds, isolasi data via namespace workspaceChatId `ws:<wsId>:<chatId>`, persist localStorage); harness /utest (create workspace, demo 2 tenant isolasi, add/remove agent & member); backend groups API (users/groups CRUD) siap utk sync opsional
 
 ## [2026-08-07] feat(phase3) — Item 7 Hierarchical Task Delegation: delegateTask() + delegations store di orchestration.ts (Leader analisis prompt -> plan + [CALL: worker] -> eksekusi worker sequential -> agregasi hasil -> feedback loop ke Leader utk sintesis final); harness /utest Leader-Worker (a1 Leader delegate ke planner+critic); fix import ENABLE_DEV_AGENTS_API (env.py) + get_async_session (internal.db) + preload MODELS di /generate
