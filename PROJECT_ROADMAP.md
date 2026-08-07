@@ -54,7 +54,7 @@
 - [x] Item 20: Channel Routing & Dynamic Center Panel — **DONE 2026-08-07: activeChannel store, klik #🧠 leader-builder / #⚡ task-stream → swap panel tengah (MainChat ⇄ LeaderBuilderPanel), E2E verified**
 - [x] Item 21: Local Bots Roster & Role Badges — **DONE 2026-08-07: panel kanan "🤖 Local Bots", badge 🤖 Local (Ollama) + role badge 👑 LEADER / ⚙️ WORKER, E2E verified**
 - [x] Workspace UI Fix (Sidebar Cleanup) — **DONE 2026-08-07: hapus form ADD SERVER inline, tombol + pakai prompt() "Development Team", ikon bulat inisial "DT", header nama workspace dinamis (fix "Server NaN"), seed workspace idempoten aktif pertama**
-- [ ] Item 22: Create Leader UI & Configuration Panel — **Panel `# leader-builder` untuk meracik Leader: form pemilihan LLM Provider, opsi Preset Setting, dan input API Key** (sebagian UI form sudah ada, perlu wiring ke backend save API)
+- [x] Item 22: Create Leader UI & Configuration Panel — **DONE 2026-08-07: form "🛠️ Create / Setup Leader Agent" di # create-leader (Input Nama, Textarea Master Plan, Dropdown LLM Provider, API Key password, Save Configuration), routing hierarkis channel create-leader / 🧠 [leader] / ⚡ stream-[leader], E2E verified**
 - [ ] Item 23: Native Hermes Dashboard Integration — **Opsi memilih 'Hermes' sebagai Leader, pengalaman komunikasi interaktif persis native dashboard Hermes di dalam workspace untuk merumuskan tugas sebelum didelegasikan ke worker**
 
 ## 🔒 FASE 5: SECURITY, AUTH & TENANT ISOLATION
@@ -65,3 +65,9 @@
 - [ ] Item 28: Prompt Injection Guardrails — **Validasi dan sanitasi input user sebelum dikirim ke Leader Agent**
 - [ ] Item 29: Cost Control & Rate Limiting — **Membatasi jumlah request API berbayar per Workspace untuk mencegah tagihan bengkak**
 - [ ] Item 30: File Upload Sanitization — **Pembatasan ekstensi file pada workspace_files untuk mencegah eksekusi script berbahaya**
+
+## 🤝 FASE 6: CROSS-LEADER COLLABORATION & SWARM INTELLIGENCE
+- [ ] Item 31: Cross-Leader "War Rooms" — **Kolaborasi antar Leader 🤝 dalam satu ruang terpisah untuk proyek lintas-bidang**
+- [ ] Item 32: Inter-Leader Brainstorming — **Sesi brainstorming multi-Leader: ide saling direspon, disaring, lalu didelegasikan ke worker**
+- [ ] Item 33: Shared Worker Pools — **Pool worker bersama yang bisa dipanggil leader mana pun (bukan terikat satu leader)**
+- [ ] Item 34: Conflict Resolution Guardrails — **Aturan penyelesaian konflik saat 2+ leader mengklaim worker/task yang sama (prioritas, queue, arbiter)**

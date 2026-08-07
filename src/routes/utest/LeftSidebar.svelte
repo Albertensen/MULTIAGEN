@@ -1,23 +1,36 @@
 <script lang="ts">
-	// LeftSidebar.svelte — true Discord clone: Server Bar (kiri) + Channel Sidebar
-	import { workspaceList, activeWorkspaceId, createWorkspace } from '$lib/stores/workspace/workspaceStore';
-	import { activeChannel } from '$lib/stores/workspace/workspaceStore';
+	// LeftSidebar.svelte — true Discord clone: Server Bar + Channel Sidebar hierarkis
+	import { workspaceList, activeWorkspaceId, activeChannel, activeLeaderId, createWorkspace } from '$lib/stores/workspace/workspaceStore';
+	import { agentList } from '$lib/stores/agent/agentStore';
 
 	export let onSwitch: (id: string) => void = () => {};
-	export let onAdd: (name: string) => void = () => {};
+	export let onAdd: (id: string) => void = () => {};
 
 	let collapsed = false;
 
 	// tambah workspace via prompt bawaan (bukan form inline)
 	const addWs = () => {
-		const name = window.prompt('Nama workspace baru?', 'Development Team');
+		const name = window.prompt('Nama Workspace baru:', 'Development Team');
 		if (!name?.trim()) return;
-		const ws = createWorkspace({ name: name.trim(), agentIds: [] });
+		const ws = createWorkspace({ name: name.trim(), agentIds: ['a1', 'a2', 'a3'] });
 		onAdd(ws.id);
 	};
 
-	const channels = ['leader-builder', 'task-stream'] as const;
-	const channelEmoji: Record<string, string> = { 'leader-builder': '🧠', 'task-stream': '⚡' };
+	// leader agen = agent dengan role 'leader' di workspace aktif (fallback: agent pertama)
+	const leaders = () => {
+		const ws = $workspaceList.find((w) => w.id === $activeWorkspaceId);
+		if (!ws) return $agentList.slice(0, 1);
+		const ids = Object.entries(ws.roster ?? {})
+			.filter(([, r]) => r === 'leader')
+			.map(([id]) => id);
+		const found = ids.map((id) => $agentList.find((a) => a.id === id)).filter((a): a is NonNullable<typeof a> => !!a);
+		return found.length > 0 ? found : $agentList.slice(0, 1);
+	};
+
+	const go = (ch: string, leaderId: string | null = null) => {
+		activeChannel.set(ch);
+		if (leaderId) activeLeaderId.set(leaderId);
+	};
 </script>
 
 <div class="ls-root">
@@ -32,7 +45,7 @@
 				{ws.name.slice(0, 2).toUpperCase()}
 			</button>
 		{/each}
-		<button class="server-icon add" title="Tambah server" on:click={() => addWs()}>+</button>
+		<button class="server-icon add" title="Tambah workspace" on:click={addWs}>+</button>
 	</nav>
 
 	<!-- CHANNEL SIDEBAR (w-60 / #2B2D31) -->
@@ -46,13 +59,22 @@
 
 		{#if !collapsed}
 			<div class="chan-group">
-				<span class="chan-group-label">TEXT CHANNELS</span>
-				{#each channels as ch (ch)}
-					<button
-						class="chan-item {$activeChannel === ch ? 'active' : ''}"
-						on:click={() => activeChannel.set(ch)}
-					>
-						<span class="hash">{channelEmoji[ch]}</span> {ch.replace('-', ' ')}
+				<span class="chan-group-label">👑 LEADER MANAGEMENT</span>
+				<button class="chan-item {$activeChannel === 'create-leader' ? 'active' : ''}" on:click={() => go('create-leader')}>
+					<span class="hash">🛠️</span> create-leader
+				</button>
+				{#each leaders() as l (l.id)}
+					<button class="chan-item {$activeChannel === `leader:${l.id}` ? 'active' : ''}" on:click={() => go(`leader:${l.id}`, l.id)}>
+						<span class="hash">🧠</span> {l.name}
+					</button>
+				{/each}
+			</div>
+
+			<div class="chan-group">
+				<span class="chan-group-label">⚡ TASK STREAMS</span>
+				{#each leaders() as l (l.id)}
+					<button class="chan-item {$activeChannel === `stream:${l.id}` ? 'active' : ''}" on:click={() => go(`stream:${l.id}`, l.id)}>
+						<span class="hash">⚡</span> stream-{l.name.toLowerCase().replace(/\s+/g, '-')}
 					</button>
 				{/each}
 			</div>

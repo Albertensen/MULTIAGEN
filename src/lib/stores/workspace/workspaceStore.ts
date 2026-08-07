@@ -67,7 +67,9 @@ export const workspaceList = derived(workspacesStore, (m) => Object.values(m));
 export const activeTenantId = writable<string>('local');
 export const activeWorkspaceId = writable<string | null>(null);
 // channel routing (UX Overhaul): 'task-stream' | 'leader-builder'
-export const activeChannel = writable<'task-stream' | 'leader-builder'>('task-stream');
+// hierarkis (Swarm Planning): 'create-leader' | `leader:<id>` | `stream:<id>`
+export const activeChannel = writable<string>('stream:default');
+export const activeLeaderId = writable<string | null>(null);
 
 // workspace yang sedang dibuka (reactive)
 export const activeWorkspace = derived(

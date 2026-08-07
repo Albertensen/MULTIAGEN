@@ -30,7 +30,9 @@
 <div class="f4-layout">
 	<LeftSidebar onSwitch={(id) => activeWorkspaceId.set(id)} onAdd={(id) => activeWorkspaceId.set(id)} />
 	<div class="f4-main">
-		{#if $activeChannel === 'leader-builder'}
+		{#if $activeChannel === 'create-leader'}
+			<LeaderBuilderPanel />
+		{:else if $activeChannel.startsWith('leader:')}
 			<LeaderBuilderPanel />
 		{:else}
 			<MainChat />
