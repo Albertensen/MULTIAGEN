@@ -28,6 +28,8 @@
 		busHistory,
 		calls,
 		parseCalls,
+		parseMentions,
+		triggerMention,
 		resolveAgentId,
 		processMessage,
 		watchTranscript,
@@ -58,6 +60,7 @@
 		removeWorkspace,
 		addAgentToWorkspace,
 		removeAgentFromWorkspace,
+		setRosterRole,
 		addMemberToWorkspace,
 		removeMemberFromWorkspace,
 		workspaceChatId,
@@ -289,6 +292,27 @@
 			provLog = [...provLog, `[prov] apiKey ERROR: ${String(e)}`];
 		}
 		provKeyInput[pid] = '';
+	};
+
+	// ===== Discord-style Bot Mention & Custom Roster (Fase 4, item 16-17) =====
+	let mentionInput = '@planner tolong review rencana';
+	let mentionLog: string[] = [];
+	let mentionStatus = 'idle';
+
+	const runMention = () => {
+		const text = mentionInput;
+		const found = parseMentions(text);
+		if (found.length === 0) {
+			mentionStatus = 'tidak ada agent dikenali';
+			mentionLog = [...mentionLog, `[mention] no agent recognized in: ${text}`];
+			return;
+		}
+		const res = triggerMention({ chatId: CHAT, text, task: text });
+		mentionLog = [
+			...mentionLog,
+			`[mention] "${text}" → ${res.mentioned.join(', ')} (di-assign & emit orchestrator)`
+		];
+		mentionStatus = `triggered: ${res.mentioned.join(', ')}`;
 	};
 
 	// ===== Isolated Sub-task Payload & Context Pruning (Fase 3, item 14) =====
@@ -633,6 +657,29 @@
 <ul>
 	{#each provLog as l, i (i)}
 		<li>{l}</li>
+	{/each}
+</ul>
+
+<hr />
+<h2>Discord-style Bot Mention & Custom Roster (Fase 4 item 16-17)</h2>
+<p><strong>status:</strong> {mentionStatus}</p>
+<input bind:value={mentionInput} placeholder='ketik @planner atau @critic...' size="40" />
+<button on:click={() => runMention()}>trigger mention</button>
+<ul>
+	{#each mentionLog as l, i (i)}
+		<li>{l}</li>
+	{/each}
+</ul>
+<h3>Roster per workspace</h3>
+<ul>
+	{#each $workspaceList as ws (ws.id)}
+		<li>
+			<strong>{ws.name}</strong> — {ws.agentIds.map((id) => `${id}:${ws.roster?.[id] ?? '?'}`).join(', ')}
+			{#each ws.agentIds as aid (aid)}
+				<button on:click={() => setRosterRole(ws.id, aid, 'leader')}>leader: {aid}</button>
+				<button on:click={() => setRosterRole(ws.id, aid, 'worker')}>worker: {aid}</button>
+			{/each}
+		</li>
 	{/each}
 </ul>
 

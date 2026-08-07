@@ -67,6 +67,43 @@ export const resolveAgentId = (target: string): string | null => {
 	return hit ? hit.id : null;
 };
 
+// ==================== Discord-style Bot Mention (Fase 4, item 16) ====================
+
+// `@bot_id` / `@agent_name` di chat input — Discord-style trigger
+const MENTION_RE = /@([a-zA-Z0-9_\-]+)/g;
+
+// parse semua mention `@...` → id agent yang dikenali (case-insensitive)
+export const parseMentions = (text: string): string[] => {
+	const found: string[] = [];
+	MENTION_RE.lastIndex = 0;
+	let m: RegExpExecArray | null;
+	while ((m = MENTION_RE.exec(text)) !== null) {
+		const id = resolveAgentId(m[1]);
+		if (id) found.push(id);
+	}
+	return [...new Set(found)]; // dedup
+};
+
+// trigger intervensi agen: user/leader ketik `@bot_id` → agent di-assign & dipanggil
+export const triggerMention = (opts: {
+	chatId: string;
+	text: string;
+	task?: string;
+}): { mentioned: string[] } => {
+	const { chatId, text } = opts;
+	const mentioned = parseMentions(text);
+	for (const agentId of mentioned) {
+		assignAgent(chatId, agentId); // agent on-duty
+		emit('orchestration:mention', {
+			chatId,
+			agentId,
+			text: text.slice(0, 200),
+			task: opts.task ?? text.slice(0, 200)
+		});
+	}
+	return { mentioned };
+};
+
 // ==================== Orchestrator ====================
 
 export type CallEvent = {

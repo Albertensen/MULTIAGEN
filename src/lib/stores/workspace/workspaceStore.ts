@@ -25,6 +25,8 @@ export type Workspace = {
 	ownerId: string; // tenant owner
 	// agent roster: id agen (dari agentStore) yang jadi tim workspace ini
 	agentIds: string[];
+	// Fase 4 item 17: roster peran — 1 Cloud Leader + beberapa Local Worker
+	roster: Record<string, 'leader' | 'worker'>; // agentId -> role
 	members: WorkspaceMember[];
 	createdAt: number;
 	updatedAt: number;
@@ -95,6 +97,8 @@ export const createWorkspace = (input: {
 		description: input.description ?? '',
 		ownerId: input.ownerId ?? get(activeTenantId),
 		agentIds: input.agentIds ?? [],
+		// Fase 4 item 17: default roster — agent pertama = leader, sisanya worker
+		roster: Object.fromEntries((input.agentIds ?? []).map((id, i) => [id, i === 0 ? 'leader' : 'worker'])),
 		members: [
 			{
 				userId: input.ownerId ?? get(activeTenantId),
@@ -135,10 +139,32 @@ export const addAgentToWorkspace = (workspaceId: string, agentId: string) =>
 		if (!m[workspaceId]) return m;
 		const ws = m[workspaceId];
 		if (ws.agentIds.includes(agentId)) return m;
+		const hasLeader = ws.agentIds.some((id) => ws.roster?.[id] === 'leader');
 		return {
 			...m,
-			[workspaceId]: { ...ws, agentIds: [...ws.agentIds, agentId], updatedAt: Date.now() }
+			[workspaceId]: {
+				...ws,
+				agentIds: [...ws.agentIds, agentId],
+				// agent baru default worker; leader hanya jika belum ada
+				roster: { ...(ws.roster ?? {}), [agentId]: hasLeader ? 'worker' : 'leader' },
+				updatedAt: Date.now()
+			}
 		};
+	});
+
+// Fase 4 item 17: tetapkan peran roster (1 leader + N worker) per workspace
+export const setRosterRole = (workspaceId: string, agentId: string, role: 'leader' | 'worker') =>
+	workspacesStore.update((m) => {
+		if (!m[workspaceId]) return m;
+		const ws = m[workspaceId];
+		// hanya 1 leader: menetapkan leader baru → demote leader lama ke worker
+		let roster = { ...(ws.roster ?? {}), [agentId]: role };
+		if (role === 'leader') {
+			for (const id of Object.keys(roster)) {
+				if (id !== agentId && roster[id] === 'leader') roster[id] = 'worker';
+			}
+		}
+		return { ...m, [workspaceId]: { ...ws, roster, updatedAt: Date.now() } };
 	});
 
 export const removeAgentFromWorkspace = (workspaceId: string, agentId: string) =>

@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase4) — Item 16 & 17 Discord-style Bot Mention & Custom Roster: parseMentions() + triggerMention() di orchestration.ts (@bot_id/@agent_name → assign + emit orchestrator); Workspace.roster (agentId->role) + setRosterRole() (rule 1 leader, demote otomatis) + addAgentToWorkspace default role; harness /utest (input @mention + roster panel per workspace); E2E verified: @planner→a2, Dev Team a1:leader+a2:worker, promote a2 demote a1
+
 ## [2026-08-07] feat(phase3) — Item 15 Token Savings & Cost Audit Widget: costAuditStore.ts (recordPruning: before/after token, savedCostUsd @$0.15/1M cloud vs Ollama gratis, pruneRatioPct, akumulasi totals); hook di delegateTask tiap worker; widget /utest (Total Tokens Saved, Cost Saved $, Pruning Ratio, entry list, reset); E2E verified: math exact (54630→3619 chars = 12753 tok = $0.001913), 2 entry delegasi tercatat (a2/a3 ollama)
 
 ## [2026-08-07] feat(phase3) — Item 14 Isolated Sub-task Payload & Context Pruning: pruneContext() (tail N pesan + keyword file/kode/error) + buildIsolatedPayload() (instruksi sub-tugas steril + potongan relevan, stats savedPct) + estimateTokens() di orchestration.ts; delegateTask kirim payload.messages ke worker (bukan history penuh) + event worker-payload; harness /utest uji pruning; E2E verified HEMAT 93% (54.6K→3.6K chars, 40→8 msgs)

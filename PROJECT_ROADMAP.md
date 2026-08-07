@@ -41,8 +41,8 @@
 ---
 
 ## 🎨 FASE 4: DISCORD-LIKE UI IMPLEMENTATION
-- [ ] Item 16: Discord-style Bot Mention System (@bot_id trigger for local agents)
-- [ ] Item 17: Workspace/Channel Custom Roster (Assign 1 Cloud Leader + Multiple Local Worker Bots per workspace)
+- [x] Item 16: Discord-style Bot Mention System — **DONE 2026-08-07: parseMentions() + triggerMention() (@bot_id → assign+emit), E2E @planner→a2 verified**
+- [x] Item 17: Workspace/Channel Custom Roster — **DONE 2026-08-07: Workspace.roster + setRosterRole() (1 leader rule, demote otomatis), E2E verified a1:leader→a2:leader demote a1**
 - [ ] Clean up `/utest` harness
 - [ ] Left Sidebar (Servers / Workspace Categories)
 - [ ] Right Sidebar (Online Agents Panel & Status)
