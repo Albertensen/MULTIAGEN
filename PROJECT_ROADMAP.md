@@ -26,8 +26,8 @@
 - [x] Item 4: Inter-Agent File Sharing (Payload attachments)
 - [x] Item 5: Backend FastAPI `/api/v1/agents/*` CRUD + WebSocket Broadcaster
 - [x] Item 6: Svelte Store WS integration & `/utest` UI live stream
-- [ ] Item 7: Hierarchical Task Delegation (Leader-Worker autonomous plan) — **IN-PROGRESS**
-- [ ] Item 8: Multi-Tenant & Custom Team Workspaces
+- [x] Item 7: Hierarchical Task Delegation (Leader-Worker autonomous plan) — **DONE 2026-08-07: delegateTask() di orchestration.ts, E2E verified di /utest (a1 Leader → planner+critic → agregasi → feedback final)**
+- [x] Item 8: Multi-Tenant & Custom Team Workspaces — **DONE 2026-08-07: workspaceStore.ts (tenant owner/member, Virtual Team roster, isolasi namespace ws:<id>:<chat>), E2E verified di /utest (2 tenant Dev/Content Team, add member tenant-c)**
 - [ ] Item 9: Anti-Hallucination Guardrails & Critic Agent
 - [ ] Item 10: Worker-to-Leader Feedback Loop
 - [ ] Item 11: Orchestration Dry-Run & Backend API Testing
