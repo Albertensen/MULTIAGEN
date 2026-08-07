@@ -2088,6 +2088,9 @@
     "imports": [
       "_index2.js",
       "_index.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.3f0Al74A.css"
     ]
   },
   "src/routes/watch/+page.svelte": {
