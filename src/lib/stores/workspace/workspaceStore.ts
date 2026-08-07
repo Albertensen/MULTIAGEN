@@ -66,6 +66,8 @@ export const workspaceList = derived(workspacesStore, (m) => Object.values(m));
 // owner aktif (tenant) — default 'local' (single-user dev); multi-user nanti
 export const activeTenantId = writable<string>('local');
 export const activeWorkspaceId = writable<string | null>(null);
+// channel routing (UX Overhaul): 'task-stream' | 'leader-builder'
+export const activeChannel = writable<'task-stream' | 'leader-builder'>('task-stream');
 
 // workspace yang sedang dibuka (reactive)
 export const activeWorkspace = derived(

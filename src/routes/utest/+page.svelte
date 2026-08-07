@@ -1,9 +1,10 @@
 <script lang="ts">
 	// utest — Fase 4 Discord-like layout: Left Sidebar | Main Chat | Right Sidebar
 	import { agentList, addAgent } from '$lib/stores/agent/agentStore';
-	import { activeWorkspaceId } from '$lib/stores/workspace/workspaceStore';
+	import { activeWorkspaceId, activeChannel } from '$lib/stores/workspace/workspaceStore';
 	import LeftSidebar from './LeftSidebar.svelte';
 	import MainChat from './MainChat.svelte';
+	import LeaderBuilderPanel from './LeaderBuilderPanel.svelte';
 	import AgentRosterPanel from './AgentRosterPanel.svelte';
 
 	// seed idempotent — hanya tambah agen kalau belum ada
@@ -18,7 +19,13 @@
 
 <div class="f4-layout">
 	<LeftSidebar onSwitch={(id) => activeWorkspaceId.set(id)} onAdd={(id) => activeWorkspaceId.set(id)} />
-	<MainChat />
+	<div class="f4-main">
+		{#if $activeChannel === 'leader-builder'}
+			<LeaderBuilderPanel />
+		{:else}
+			<MainChat />
+		{/if}
+	</div>
 	<AgentRosterPanel />
 </div>
 
@@ -27,5 +34,10 @@
 		display: flex;
 		height: 100vh;
 		overflow: hidden;
+	}
+	.f4-main {
+		flex: 1;
+		min-width: 0;
+		display: flex;
 	}
 </style>

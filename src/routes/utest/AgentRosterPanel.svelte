@@ -27,11 +27,11 @@
 		}
 	};
 
-	// role lookup: leader = 1 per workspace, sisanya worker
+	// role lookup: leader = 1 per workspace (fallback: agent pertama)
 	const getRole = (agentId: string): string => {
 		const ws = $workspaceList.find((w) => w.id === $activeWorkspaceId);
-		if (!ws) return '—';
-		return ws.roster?.[agentId] === 'leader' ? '👑 Leader' : '⚙ Worker';
+		if (!ws) return agentId === $agentList[0]?.id ? 'leader' : 'worker';
+		return ws.roster?.[agentId] === 'leader' ? 'leader' : 'worker';
 	};
 </script>
 
@@ -66,10 +66,15 @@
 				<span class="rp-dot" style={`background:${statusDot(agent.status)}`}></span>
 				<span class="rp-info">
 					<span class="rp-name">{agent.name}</span>
+					<span class="rp-badge">🤖 Local (Ollama)</span>
 					<span class="rp-sub">{agent.status} · {agent.provider ?? 'ollama'}</span>
 				</span>
 				<span class="rp-role">
-					{getRole(agent.id)}
+					{#if getRole(agent.id) === 'leader'}
+						<span class="rp-role-badge leader">👑 LEADER</span>
+					{:else}
+						<span class="rp-role-badge worker">⚙️ WORKER</span>
+					{/if}
 				</span>
 			</li>
 		{/each}
@@ -181,9 +186,36 @@
 		font-size: 11px;
 		color: #949ba4;
 	}
+	.rp-badge {
+		font-size: 10px;
+		font-weight: 700;
+		color: #23a55a;
+		background: rgba(35, 165, 90, 0.12);
+		border-radius: 4px;
+		padding: 1px 5px;
+		align-self: flex-start;
+		margin-top: 2px;
+	}
+	.rp-role-badge {
+		font-size: 10px;
+		font-weight: 800;
+		border-radius: 4px;
+		padding: 2px 6px;
+		white-space: nowrap;
+	}
+	.rp-role-badge.leader {
+		color: #f0b232;
+		background: rgba(240, 178, 50, 0.15);
+	}
+	.rp-role-badge.worker {
+		color: #5865f2;
+		background: rgba(88, 101, 242, 0.15);
+	}
 	.rp-role {
 		font-size: 11px;
 		white-space: nowrap;
+		display: flex;
+		align-items: center;
 	}
 	.rp-actions {
 		display: flex;

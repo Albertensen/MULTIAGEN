@@ -1,6 +1,7 @@
 <script lang="ts">
 	// LeftSidebar.svelte — true Discord clone: Server Bar (kiri) + Channel Sidebar
 	import { workspaceList, activeWorkspaceId, createWorkspace } from '$lib/stores/workspace/workspaceStore';
+	import { activeChannel } from '$lib/stores/workspace/workspaceStore';
 
 	export let onSwitch: (id: string) => void = () => {};
 	export let onAdd: (name: string) => void = () => {};
@@ -15,7 +16,8 @@
 		onAdd(ws.id);
 	};
 
-	const channels = ['general', 'task-stream', 'agent-logs'];
+	const channels = ['leader-builder', 'task-stream'] as const;
+	const channelEmoji: Record<string, string> = { 'leader-builder': '🧠', 'task-stream': '⚡' };
 </script>
 
 <div class="ls-root">
@@ -46,8 +48,11 @@
 			<div class="chan-group">
 				<span class="chan-group-label">TEXT CHANNELS</span>
 				{#each channels as ch (ch)}
-					<button class="chan-item {ch === 'general' ? 'active' : ''}">
-						<span class="hash">#</span> {ch}
+					<button
+						class="chan-item {$activeChannel === ch ? 'active' : ''}"
+						on:click={() => activeChannel.set(ch)}
+					>
+						<span class="hash">{channelEmoji[ch]}</span> {ch.replace('-', ' ')}
 					</button>
 				{/each}
 			</div>
