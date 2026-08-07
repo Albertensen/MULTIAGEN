@@ -57,6 +57,9 @@
 - [x] Item 22: Create Leader UI & Configuration Panel — **DONE 2026-08-07: form "🛠️ Create / Setup Leader Agent" di # create-leader (Input Nama, Textarea Master Plan, Dropdown LLM Provider, API Key password, Save Configuration), routing hierarkis channel create-leader / 🧠 [leader] / ⚡ stream-[leader], E2E verified**
 - [ ] Item 23: Native Hermes Dashboard Integration — **Opsi memilih 'Hermes' sebagai Leader, pengalaman komunikasi interaktif persis native dashboard Hermes di dalam workspace untuk merumuskan tugas sebelum didelegasikan ke worker**
 - [ ] Item 35: Workspace Directory UI — **Panel manajer file dengan struktur Global dan Isolated per-Leader (📁 DIRECTORIES: # 📂 global-shared + # 📂 dir-[leader])**
+- [x] 4-Tier Channel Hierarchy (Management, Leaders, Streams, Directories) — **DONE 2026-08-07: 4 kategori terpisah 🛠️ MANAGEMENT / 👑 ACTIVE LEADERS / ⚡ TASK STREAMS / 📁 DIRECTORIES, strict separation, E2E verified**
+- [x] Dynamic Center Panel & Auto-Routing — **DONE 2026-08-07: routing activeChannel → create-leader/leader:<id>/stream:<id>/dir:*; header tengah & panel dinamis (stream-Hermes, nama leader); auto-route ke leader:<id> setelah save, E2E verified**
+- [x] Auto-Generate Leader Channels — **DONE 2026-08-07: save create-leader → 3 channel otomatis (# 🧠 [leader], # ⚡ stream-[leader], # 📂 dir-[leader]) + roster leader, E2E verified (Commander)**
 
 ## 🔒 FASE 5: SECURITY, AUTH & TENANT ISOLATION
 - [ ] Item 24: Secure API Key Storage & Encryption — **AES-256 di backend database untuk menyimpan API Key Provider LLM Cloud**
