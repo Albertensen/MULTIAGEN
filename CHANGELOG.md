@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase3) — Item 10 Worker-to-Leader Feedback Loop: requestLeaderFeedback() di orchestration.ts (worker [CALL: leader] -> pertanyaan ke transkrip Leader -> jawaban Leader -> balik ke worker utk lanjut flow); auto-detect mention Leader di output worker dalam delegateTask -> 1 round tanya-jawab -> worker generate ulang; LeaderFeedback[] di DelegationPlan + event worker-feedback/leader-response; harness /utest (tombol minta approval a2->a1 + riwayat feedback delegasi)
+
 ## [2026-08-07] feat(phase3) — Item 9 Anti-Hallucination Guardrails & Critic Agent: structuralGuard() deterministik (deteksi [CALL:] menggantung, [error], [trigger], undefined/NaN, placeholder, panjang output) + criticReview() (LLM critic menilai output via PASSED/ISSUES) + generateWithGuardrail() (generate → structural → critic); store critiques + event orchestration:critique; harness /utest (structural good/bad sample, critic review a3→a1, generate+guardrail)
 
 ## [2026-08-07] feat(phase3) — Item 8 Multi-Tenant & Custom Team Workspaces: workspaceStore.ts (CRUD workspace, owner/member tenant, Virtual Team roster per workspace via agentIds, isolasi data via namespace workspaceChatId `ws:<wsId>:<chatId>`, persist localStorage); harness /utest (create workspace, demo 2 tenant isolasi, add/remove agent & member); backend groups API (users/groups CRUD) siap utk sync opsional

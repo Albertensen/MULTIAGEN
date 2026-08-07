@@ -409,6 +409,65 @@ export const generateWithGuardrail = async (opts: {
 	return { text, critique };
 };
 
+// Item 10: feedback loop Worker -> Leader (minta klarifikasi / blocker / approval)
+export type LeaderFeedback = {
+	workerId: string;
+	question: string; // permintaan worker (dari output [CALL: leader])
+	leaderResponse: string; // jawaban Leader
+	ts: number;
+};
+
+// Item 10: Worker -> Leader feedback loop (minta klarifikasi / blocker / approval).
+// Worker output yang mengandung [CALL: <leader>] otomatis mengirim pertanyaan ke
+// Leader; jawaban Leader ditambahkan ke transkrip worker utk melanjutkan flow.
+export const requestLeaderFeedback = async (opts: {
+	chatId: string;
+	leaderId: string;
+	workerId: string;
+	question: string;
+}): Promise<string> => {
+	const { chatId, leaderId, workerId, question } = opts;
+	const agents = get(agentList);
+	const leader = agents.find((a) => a.id === leaderId);
+	if (!leader) {
+		emit('orchestration:feedback-error', { chatId, leaderId, workerId, error: 'Leader not found' });
+		return `[error] Leader ${leaderId} tidak ditemukan`;
+	}
+
+	// pertanyaan worker -> transkrip Leader (role user = minta jawaban)
+	addMessage(chatId, leaderId, {
+		role: 'user',
+		content: `[feedback dari worker ${workerId}] ${question}`
+	});
+	emit('orchestration:worker-feedback', { chatId, leaderId, workerId, question });
+
+	const leaderHistory = getHistoryByAgent(chatId, leaderId).map((m) => ({
+		role: m.role,
+		content: m.content
+	}));
+
+	let leaderAnswer: string;
+	try {
+		leaderAnswer = await generateAgentResponse({
+			chatId,
+			agentId: leaderId,
+			model: leader.model,
+			systemPrompt: leader.systemPrompt,
+			history: leaderHistory
+		});
+	} catch (e) {
+		leaderAnswer = `[error] Leader gagal menjawab: ${String(e)}`;
+	}
+
+	// jawaban Leader -> transkrip worker (role user = lanjutkan kerja)
+	addMessage(chatId, workerId, {
+		role: 'user',
+		content: `[jawaban Leader] ${leaderAnswer}`
+	});
+	emit('orchestration:leader-response', { chatId, leaderId, workerId, answer: leaderAnswer });
+	return leaderAnswer;
+};
+
 export type DelegationPlan = {
 	leaderId: string;
 	task: string;
@@ -417,6 +476,7 @@ export type DelegationPlan = {
 	results: Record<string, string>;
 	status: 'planning' | 'running' | 'done' | 'error';
 	finalText?: string; // sintesis Leader setelah feedback
+	feedback?: LeaderFeedback[]; // Item 10: riwayat tanya-jawab worker->leader
 };
 
 const delegationLog = writable<DelegationPlan[]>([]);
@@ -517,6 +577,45 @@ export const delegateTask = async (opts: {
 		} catch (e) {
 			workerText = `[error] ${String(e)}`;
 		}
+
+		// Item 10: worker bisa meminta klarifikasi/approval ke Leader via [CALL: leader].
+		// Deteksi mention Leader -> Leader jawab -> worker generate ulang (1 round).
+		const leaderMentioned = parseCalls(workerText).some(
+			(t) => resolveAgentId(t) === leaderId
+		);
+		if (leaderMentioned) {
+			const question = workerText.slice(0, 500);
+			const fb: LeaderFeedback = {
+				workerId,
+				question,
+				leaderResponse: '',
+				ts: Date.now()
+			};
+			plan.feedback = [...(plan.feedback ?? []), fb];
+			upsertDelegation(plan);
+
+			const leaderAnswer = await requestLeaderFeedback({ chatId, leaderId, workerId, question });
+			fb.leaderResponse = leaderAnswer;
+			upsertDelegation(plan);
+
+			// worker lanjut generate dengan jawaban Leader di history
+			const workerHistory2 = getHistoryByAgent(chatId, workerId).map((m) => ({
+				role: m.role,
+				content: m.content
+			}));
+			try {
+				workerText = await generateAgentResponse({
+					chatId,
+					agentId: workerId,
+					model: worker.model,
+					systemPrompt: worker.systemPrompt,
+					history: workerHistory2
+				});
+			} catch (e) {
+				workerText = `[error] ${String(e)}`;
+			}
+		}
+
 		plan.results[workerId] = workerText;
 		upsertDelegation(plan);
 		emit('orchestration:worker-done', { chatId, leaderId, workerId, text: workerText });

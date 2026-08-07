@@ -36,6 +36,7 @@
 		getAttachmentsByAgent,
 		delegateTask,
 		delegations,
+		requestLeaderFeedback,
 		structuralGuard,
 		criticReview,
 		generateWithGuardrail,
@@ -187,6 +188,32 @@
 			history: [{ role: 'user', content: 'Jelaskan singkat 2 langkah deploy FastAPI.' }]
 		});
 		guardLog = [...guardLog, `[guard] generate a1 -> ${r.critique ? (r.critique.passed ? 'PASS' : 'FAIL: ' + r.critique.issues.join('; ')) : 'no-critique'} | ${r.text.slice(0, 80)}...`];
+	};
+
+	// ===== Feedback loop Worker->Leader (Fase 3, item 10) =====
+	let fbStatus = 'idle';
+	let fbLog: string[] = [];
+	let fbQuestion = '';
+
+	const runFeedbackTest = async () => {
+		const q =
+			fbQuestion ||
+			'[CALL: Hermes] Butuh approval: apakah boleh lanjut pakai pendekatan API-only untuk rencana ini?';
+		fbStatus = 'running';
+		fbLog = [...fbLog, `[fb] worker a2 -> leader a1: ${q.slice(0, 80)}...`];
+		try {
+			const answer = await requestLeaderFeedback({
+				chatId: CHAT,
+				leaderId: 'a1',
+				workerId: 'a2',
+				question: q
+			});
+			fbLog = [...fbLog, `[fb] leader a1 jawab: ${answer.slice(0, 120)}...`];
+			fbStatus = 'done';
+		} catch (e) {
+			fbLog = [...fbLog, `[fb] ERROR: ${String(e)}`];
+			fbStatus = 'error';
+		}
 	};
 
 	// ===== Generate agent response via Ollama (Fase 3, item 3) =====
@@ -447,6 +474,34 @@
 >
 	Leader a1 (Hermes) → delegate ke planner+critic
 </button>
+
+<hr />
+<h2>Worker-to-Leader Feedback Loop (Fase 3 item 10)</h2>
+<p><strong>status:</strong> {fbStatus}</p>
+<input bind:value={fbQuestion} placeholder="pertanyaan worker (opsional, default approval)" />
+<button on:click={runFeedbackTest}>worker a2 -> [CALL: Hermes] minta approval</button>
+<ul>
+	{#each fbLog as l, i (i)}
+		<li>{l}</li>
+	{/each}
+</ul>
+{#if $delegations.length > 0}
+	<p><strong>feedback riwayat delegasi:</strong></p>
+	<ul>
+		{#each $delegations as d (d.leaderId + d.task + d.status)}
+			{#if d.feedback && d.feedback.length > 0}
+				<li>
+					Leader {d.leaderId} — {d.feedback.length} feedback:
+					<ul>
+						{#each d.feedback as f (f.ts)}
+							<li>{f.workerId}: {f.question.slice(0, 60)} → {f.leaderResponse.slice(0, 60)}</li>
+						{/each}
+					</ul>
+				</li>
+			{/if}
+		{/each}
+	</ul>
+{/if}
 
 <hr />
 <h2>Multi-Tenant Workspaces & Virtual Team (Fase 3 item 8)</h2>
