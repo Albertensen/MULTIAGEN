@@ -56,11 +56,12 @@
 - [x] Workspace UI Fix (Sidebar Cleanup) — **DONE 2026-08-07: hapus form ADD SERVER inline, tombol + pakai prompt() "Development Team", ikon bulat inisial "DT", header nama workspace dinamis (fix "Server NaN"), seed workspace idempoten aktif pertama**
 - [x] Item 22: Create Leader UI & Configuration Panel — **DONE 2026-08-07: form "🛠️ Create / Setup Leader Agent" di # create-leader (Input Nama, Textarea Master Plan, Dropdown LLM Provider, API Key password, Save Configuration), routing hierarkis channel create-leader / 🧠 [leader] / ⚡ stream-[leader], E2E verified**
 - [ ] Item 23: Native Hermes Dashboard Integration — **Opsi memilih 'Hermes' sebagai Leader, pengalaman komunikasi interaktif persis native dashboard Hermes di dalam workspace untuk merumuskan tugas sebelum didelegasikan ke worker**
+- [ ] Item 35: Workspace Directory UI — **Panel manajer file dengan struktur Global dan Isolated per-Leader (📁 DIRECTORIES: # 📂 global-shared + # 📂 dir-[leader])**
 
 ## 🔒 FASE 5: SECURITY, AUTH & TENANT ISOLATION
 - [ ] Item 24: Secure API Key Storage & Encryption — **AES-256 di backend database untuk menyimpan API Key Provider LLM Cloud**
 - [ ] Item 25: JWT Authentication & User Sessions — **Sistem login user dan perlindungan endpoint API berbasis token**
-- [ ] Item 26: Tenant Data Isolation — **Workspace A terisolasi total dari Workspace B pada level database dan file system**
+- [ ] Item 26: Tenant Data Isolation — **Workspace A terisolasi total dari Workspace B pada level database dan file system. Penegasan: mengisolasi akses file/RAG agar Leader A tidak bisa membaca folder direktori milik Leader B, kecuali folder global**
 - [ ] Item 27: WebSocket Authentication — **Mengamankan koneksi stream real-time WS agar tidak bisa dibajak**
 - [ ] Item 28: Prompt Injection Guardrails — **Validasi dan sanitasi input user sebelum dikirim ke Leader Agent**
 - [ ] Item 29: Cost Control & Rate Limiting — **Membatasi jumlah request API berbayar per Workspace untuk mencegah tagihan bengkak**

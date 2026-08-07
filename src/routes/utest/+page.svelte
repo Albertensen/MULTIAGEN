@@ -5,6 +5,7 @@
 	import { workspaceList, createWorkspace } from '$lib/stores/workspace/workspaceStore';
 	import LeftSidebar from './LeftSidebar.svelte';
 	import MainChat from './MainChat.svelte';
+	import FileManagerPanel from './FileManagerPanel.svelte';
 	import LeaderBuilderPanel from './LeaderBuilderPanel.svelte';
 	import AgentRosterPanel from './AgentRosterPanel.svelte';
 
@@ -34,6 +35,8 @@
 			<LeaderBuilderPanel />
 		{:else if $activeChannel.startsWith('leader:')}
 			<LeaderBuilderPanel />
+		{:else if $activeChannel.startsWith('dir:')}
+			<FileManagerPanel />
 		{:else}
 			<MainChat />
 		{/if}

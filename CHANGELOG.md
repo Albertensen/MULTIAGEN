@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase4) — Directory management UI & file isolation roadmap: kategori ke-4 📁 DIRECTORIES (text-xs uppercase) — # 📂 global-shared statis + # 📂 dir-[leader] dinamis per leader; FileManagerPanel.svelte BARU — skeleton drop zone "Drag & Drop Files Here" + daftar file kosong + badge scope GLOBAL/ISOLATED (reactive $activeLeaderId); routing dir:* → FileManagerPanel di +page; fix go() reset activeLeaderId (dir:global → GLOBAL, dir:hermes → ISOLATED); roadmap: Item 35 [ ] Workspace Directory UI, Item 26 penegasan isolasi file/RAG per-leader kecuali global; E2E verified: 2 channel direktori, swap scope GLOBAL⇄ISOLATED
+
 ## [2026-08-07] fix(phase4) — Strict 3-category sidebar & NaN fallback: pecah channel jadi 3 kategori terpisah — 🛠️ MANAGEMENT (hanya # create-leader), 👑 ACTIVE LEADERS (# 🧠 per leader), ⚡ TASK STREAMS (# ⚡ stream-[leader]); ws-header fallback NaN-safe — nama kosong/undefined/"NaN" → "My Workspace" (tak pernah render NaN); E2E verified: 3 group label terpisah, header "Development Team"
 
 ## [2026-08-07] fix(phase4) — Sidebar hierarchy & NaN fixes: chan-item padding-left 16px (indent sub-channel); prefix # di semua channel (# 🛠️ / # 🧠 / # ⚡); kategori text-xs uppercase redup; tombol × hapus workspace saat hover (dedup ganda); MainChat header dinamis ikut activeChannel (reactive, resolve nama agent: stream-Hermes); AgentRosterPanel fallback semua agent saat ws.agentIds kosong (fix "0 on-duty"); E2E verified: 3 channel hierarkis, header stream-Hermes, ws header "Development Team", 3 bots WORKER

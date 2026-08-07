@@ -44,7 +44,7 @@
 
 	const go = (ch: string, leaderId: string | null = null) => {
 		activeChannel.set(ch);
-		if (leaderId) activeLeaderId.set(leaderId);
+		activeLeaderId.set(leaderId);
 	};
 </script>
 
@@ -100,6 +100,19 @@
 				{#each leaders() as l (l.id)}
 					<button class="chan-item {$activeChannel === `stream:${l.id}` ? 'active' : ''}" on:click={() => go(`stream:${l.id}`, l.id)}>
 						<span class="hash"># ⚡</span> stream-{l.name.toLowerCase().replace(/\s+/g, '-')}
+					</button>
+				{/each}
+			</div>
+
+			<!-- KATEGORI D: DIRECTORIES (global + isolated per leader) -->
+			<div class="chan-group">
+				<span class="chan-group-label">📁 DIRECTORIES</span>
+				<button class="chan-item {$activeChannel === 'dir:global' ? 'active' : ''}" on:click={() => go('dir:global')}>
+					<span class="hash"># 📂</span> global-shared
+				</button>
+				{#each leaders() as l (l.id)}
+					<button class="chan-item {$activeChannel === `dir:${l.id}` ? 'active' : ''}" on:click={() => go(`dir:${l.id}`, l.id)}>
+						<span class="hash"># 📂</span> dir-{l.name.toLowerCase().replace(/\s+/g, '-')}
 					</button>
 				{/each}
 			</div>
