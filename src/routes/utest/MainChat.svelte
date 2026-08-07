@@ -2,13 +2,13 @@
 	// MainChat.svelte — Discord-style main chat (Fase 4 item 18-19)
 	// Render event orkestrasi (delegation/feedback/done) sebagai pesan casual
 	// + typing indicator real-time dari status thinking/busy.
-	import { on } from '$lib/stores/orchestration/orchestration';
+	import { on, triggerMention } from '$lib/stores/orchestration/orchestration';
 	import { agentList } from '$lib/stores/agent/agentStore';
 	import { get } from 'svelte/store';
 
 	type ChatMsg = {
 		id: number;
-		kind: 'assign' | 'done' | 'feedback' | 'error' | 'system';
+		kind: 'assign' | 'done' | 'feedback' | 'error' | 'system' | 'user';
 		author: string;
 		text: string;
 		ts: number;
@@ -17,9 +17,19 @@
 	let msgs: ChatMsg[] = [];
 	let typing = new Set<string>(); // agent id yang sedang "mengetik"
 	let seq = 0;
+	let draft = '';
 
 	const push = (kind: ChatMsg['kind'], author: string, text: string) => {
 		msgs = [...msgs, { id: ++seq, kind, author, text, ts: Date.now() }];
+	};
+
+	// kirim pesan user: render + trigger mention @agent
+	const send = () => {
+		const text = draft.trim();
+		if (!text) return;
+		push('user', 'User', text);
+		draft = '';
+		triggerMention({ chatId: 'chat-demo-1', text });
 	};
 
 	// ---- template casual (hardcode, hemat token LLM) ----
@@ -40,6 +50,10 @@
 	on('orchestration:delegation', (p) => {
 		const workerNames = (p.workerIds as string[]).map(agentName).join(', ');
 		push('system', 'System', `📢 Delegasi ke ${workerNames} (task: ${String(p.task ?? '').slice(0, 80)})`);
+	});
+	on('orchestration:mention', (p) => {
+		// user/leader mention @agent → agent on-duty
+		push('system', 'System', `📣 ${agentName(p.agentId as string)} dipanggil! Siap gas! 🔥`);
 	});
 	on('orchestration:worker-started', (p) => {
 		typing.add(p.workerId as string);
@@ -88,7 +102,17 @@
 		{/each}
 	</div>
 
-	<input class="chat-input" placeholder="Tulis pesan atau @mention agent..." disabled />
+	<input
+		class="chat-input"
+		placeholder="Tulis pesan atau @mention agent..."
+		bind:value={draft}
+		on:keydown={(e) => {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+				send();
+			}
+		}}
+	/>
 </div>
 
 <style>
@@ -160,6 +184,19 @@
 	}
 	.msg.error .msg-author {
 		color: #f23f43;
+	}
+	/* pesan User: rata kanan, warna beda (Discord-style) */
+	.msg.user {
+		flex-direction: row-reverse;
+	}
+	.msg.user .msg-body {
+		background: #5865f2;
+	}
+	.msg.user .msg-author {
+		color: #fff;
+	}
+	.msg.user .msg-avatar {
+		background: #23a55a;
 	}
 	.typing-row {
 		padding: 0 12px 6px;

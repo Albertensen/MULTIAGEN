@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] fix(phase4) — Wire main chat input + cleanup utest: +page.svelte ditulis ulang 823→38 baris (murni 3 kolom: LeftSidebar/MainChat/AgentRosterPanel, seed agents idempotent); MainChat.svelte: input aktif (Enter → send() → triggerMention), pesan User render rata-kanan warna #5865f2, listener orchestration:mention ("📣 {agent} dipanggil! Siap gas! 🔥"); E2E verified: ketik @critic + Enter → user msg + mention response, layar zero debug text
+
 ## [2026-08-07] feat(phase4) — Item 18 & 19 Casual Event-to-Chat Mapping & Typing Indicators: MainChat.svelte (render event orkestrasi → template casual: "Alright! 🚀 ... @{worker}! 😎", "Beres bosku! ✨ ...", "Wait, butuh pencerahan 🤔"; listener on() ke 6 event; typing indicator "{name} is typing... 💬" dari worker-started/worker-feedback; diintegrasi layout 3-kolom /utest); E2E verified: assign/done template render, typing chip live saat delegasi
 
 ## [2026-08-07] feat(phase4) — /utest cleanup + Left/Right Sidebar: komponen terpisah LeftSidebar.svelte (Discord-style workspace nav: list, active indicator, add form, collapse) & AgentRosterPanel.svelte (online agents: status dot Online/Idle/Busy/Thinking, role 👑Leader/⚙Worker, scoped ke workspace aktif, set status); Agent.status field + setAgentStatus() di agentStore; layout 3-kolom flex di /utest; E2E verified: sidebar switch auto, roster 1 on-duty scoped, status thinking real-time, role Leader
