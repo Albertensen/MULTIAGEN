@@ -34,6 +34,8 @@
 		generateAgentResponse,
 		sendMessageToAgent,
 		getAttachmentsByAgent,
+		delegateTask,
+		delegations,
 		on,
 		clearBus
 	} from '$lib/stores/orchestration/orchestration';
@@ -319,6 +321,32 @@
 </button>
 <button on:click={() => generateFor('a3', 'Review kualitas [CALL: planner]')}>
 	Critic -> generate & CALL planner
+</button>
+
+<hr />
+<h2>Leader-Worker Delegation (Fase 3 item 7)</h2>
+<p><strong>status delegasi:</strong></p>
+<ul>
+	{#each $delegations as d (d.leaderId + d.task + d.status)}
+		<li>
+			Leader <strong>{d.leaderId}</strong> → task: <em>{d.task.slice(0, 60)}</em>
+			[status: {d.status}] workers: {d.workerIds.join(', ')}
+			{#if Object.keys(d.results).length > 0}
+				<ul>
+					{#each Object.entries(d.results) as [wid, txt]}
+						<li>{wid}: {txt.slice(0, 80)}</li>
+					{/each}
+				</ul>
+			{/if}
+			{#if d.finalText}<p><strong>final:</strong> {d.finalText.slice(0, 200)}</p>{/if}
+		</li>
+	{/each}
+</ul>
+<button
+	on:click={() =>
+		delegateTask({ chatId: CHAT, leaderId: 'a1', task: 'Rencanakan & delegasikan analisis ke worker [CALL: planner] [CALL: critic]', workerIds: ['a2', 'a3'] })}
+>
+	Leader a1 (Hermes) → delegate ke planner+critic
 </button>
 
 <hr />

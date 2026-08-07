@@ -158,5 +158,9 @@
 	"engines": {
 		"node": ">=18.13.0 <=22.x.x",
 		"npm": ">=6.0.0"
+	},
+	"allowScripts": {
+		"esbuild@0.25.12": true,
+		"esbuild@0.21.5": true
 	}
 }

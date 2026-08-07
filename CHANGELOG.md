@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase3) — Item 7 Hierarchical Task Delegation: delegateTask() + delegations store di orchestration.ts (Leader analisis prompt -> plan + [CALL: worker] -> eksekusi worker sequential -> agregasi hasil -> feedback loop ke Leader utk sintesis final); harness /utest Leader-Worker (a1 Leader delegate ke planner+critic); fix import ENABLE_DEV_AGENTS_API (env.py) + get_async_session (internal.db) + preload MODELS di /generate
+
 ## [2026-08-07] feat(phase3): connect svelte orchestration store & /utest UI to websocket broadcaster: added wsStatus store, WebSocket listener in orchestration.ts, updated /utest UI to show connection status and live agent list, verified end-to-end with backend WebSocket endpoint.
 
 ## [2026-08-06] feat(phase3) — Inter-Agent File Sharing & Attachment Payload: tipe Attachment (script/json/image/text) + field attachments di TranscriptMessage; sendMessageToAgent() + getAttachmentsByAgent() di orchestration.ts (kirim file antar agen via bus, event agent:file-shared, auto-process [CALL:]); harness /utest 3 skenario (a1→a2 script, a2→a3 json, a1→a3 image) terverifikasi runtime + persist localStorage

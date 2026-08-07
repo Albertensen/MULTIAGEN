@@ -1,6 +1,6 @@
 import { derived, get, readonly, writable } from 'svelte/store';
 import { agentList, assignAgent } from '../agent/agentStore';
-import { addMessage, chatTranscript } from '../transcript/transcriptStore';
+import { addMessage, chatTranscript, getHistoryByAgent } from '../transcript/transcriptStore';
 import type { Attachment } from '../transcript/transcriptStore';
 
 // =====================================================================
@@ -258,4 +258,152 @@ export const clearBus = () => {
 	eventLog.set([]);
 	callLog.set([]);
 	seen.clear();
+};
+
+// ==================== Leader-Worker Delegation (Fase 3, item 7) ====================
+
+export type DelegationPlan = {
+	leaderId: string;
+	task: string;
+	workerIds: string[]; // worker yang dipanggil (urutan eksekusi)
+	// hasil agregat: workerId -> respons text
+	results: Record<string, string>;
+	status: 'planning' | 'running' | 'done' | 'error';
+	finalText?: string; // sintesis Leader setelah feedback
+};
+
+const delegationLog = writable<DelegationPlan[]>([]);
+export const delegations = readonly(delegationLog);
+
+// update delegasi aktif (create/finish)
+const upsertDelegation = (d: DelegationPlan) =>
+	delegationLog.update((l) => {
+		const idx = l.findIndex((x) => x.leaderId === d.leaderId && x.task === d.task);
+		if (idx === -1) return [...l, d];
+		const next = [...l];
+		next[idx] = d;
+		return next;
+	});
+
+// Analisis prompt user: Leader (LLM) menghasilkan plan + [CALL: worker],
+// lalu tiap worker dipanggil, respons dikumpulkan, feedback di-stream ke
+// Leader utk sintesis jawaban final. Event bus dipakai utk traceability.
+export const delegateTask = async (opts: {
+	chatId: string;
+	leaderId: string; // id agent Leader
+	task: string; // prompt user
+	workerIds: string[]; // daftar worker yang boleh dipanggil (urutan prioritas)
+}): Promise<DelegationPlan> => {
+	const { chatId, leaderId, task, workerIds } = opts;
+	const agents = get(agentList);
+	const leader = agents.find((a) => a.id === leaderId);
+	if (!leader) {
+		emit('orchestration:delegation-error', { chatId, leaderId, error: 'Leader not found' });
+		throw new Error('Leader not found');
+	}
+
+	// 1) Leader generate plan (LLM diminta menyebut worker via [CALL:])
+	const plan: DelegationPlan = {
+		leaderId,
+		task,
+		workerIds,
+		results: {},
+		status: 'planning'
+	};
+	upsertDelegation(plan);
+	emit('orchestration:delegation', { chatId, leaderId, task, workerIds });
+
+	const leaderHistory = getHistoryByAgent(chatId, leaderId).map((m) => ({
+		role: m.role,
+		content: m.content
+	}));
+	addMessage(chatId, leaderId, { role: 'user', content: task });
+
+	let planText: string;
+	try {
+		planText = await generateAgentResponse({
+			chatId,
+			agentId: leaderId,
+			model: leader.model,
+			systemPrompt: leader.systemPrompt,
+			history: leaderHistory
+		});
+	} catch (e) {
+		plan.status = 'error';
+		upsertDelegation(plan);
+		emit('orchestration:delegation-error', { chatId, leaderId, error: String(e) });
+		throw e;
+	}
+
+	// 2) Parse [CALL:] dari plan Leader — tentukan worker yang dipanggil
+	const called = parseCalls(planText)
+		.map((t) => resolveAgentId(t))
+		.filter((id): id is string => !!id);
+	const targets = called.length > 0 ? called : workerIds; // fallback: workerIds
+
+	plan.status = 'running';
+	plan.workerIds = targets;
+	upsertDelegation(plan);
+
+	// 3) Jalankan tiap worker SEQUENTIAL (UI stream jelas, hindari race)
+	for (const workerId of targets) {
+		const worker = agents.find((a) => a.id === workerId);
+		if (!worker || workerId === leaderId) continue;
+
+		const workerHistory = getHistoryByAgent(chatId, workerId).map((m) => ({
+			role: m.role,
+			content: m.content
+		}));
+		const prompt = `(dari ${leader.name}) ${planText}`;
+		addMessage(chatId, workerId, { role: 'user', content: prompt });
+		emit('orchestration:worker-started', { chatId, leaderId, workerId, task });
+
+		let workerText: string;
+		try {
+			workerText = await generateAgentResponse({
+				chatId,
+				agentId: workerId,
+				model: worker.model,
+				systemPrompt: worker.systemPrompt,
+				history: workerHistory
+			});
+		} catch (e) {
+			workerText = `[error] ${String(e)}`;
+		}
+		plan.results[workerId] = workerText;
+		upsertDelegation(plan);
+		emit('orchestration:worker-done', { chatId, leaderId, workerId, text: workerText });
+	}
+
+	// 4) Feedback loop: agregat respons worker -> Leader utk sintesis
+	const workerSummary = targets
+		.map((w) => `${w}: ${(plan.results[w] || '').slice(0, 500)}`)
+		.join('\n---\n');
+
+	const feedbackPrompt = `Ringkas hasil pekerjaan worker berikut menjadi jawaban final untuk user:\n${workerSummary}`;
+	addMessage(chatId, leaderId, { role: 'user', content: feedbackPrompt });
+	emit('orchestration:feedback', { chatId, leaderId, workerSummary });
+
+	const leaderHistory2 = getHistoryByAgent(chatId, leaderId).map((m) => ({
+		role: m.role,
+		content: m.content
+	}));
+	let finalText = '';
+	try {
+		finalText = await generateAgentResponse({
+			chatId,
+			agentId: leaderId,
+			model: leader.model,
+			systemPrompt: leader.systemPrompt,
+			history: leaderHistory2
+		});
+	} catch (e) {
+		finalText = `[error] feedback: ${String(e)}`;
+	}
+
+	plan.status = 'done';
+	plan.finalText = finalText;
+	upsertDelegation(plan);
+	emit('orchestration:delegation-done', { chatId, leaderId, task, finalText });
+	return plan;
 };

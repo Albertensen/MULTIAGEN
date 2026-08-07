@@ -27,9 +27,11 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from open_webui.config import ENABLE_DEV_AGENTS_API
+from open_webui.env import ENABLE_DEV_AGENTS_API
+from open_webui.models.users import Users
 from open_webui.utils.auth import get_verified_user, get_admin_user
-from open_webui.utils.db import get_async_session
+from open_webui.utils.chat import generate_chat_completion
+from open_webui.internal.db import get_async_session
 
 log = logging.getLogger(__name__)
 
@@ -138,6 +140,31 @@ async def delete_agent(
         "type": "agent_deleted",
         "payload": {"agent_id": agent_id}
     })
+
+
+# ----------------------------------------------------------------------
+# Generate endpoint (Fase 3, item 3/7): no-auth dev-only LLM generation
+# ----------------------------------------------------------------------
+@router.post("/generate")
+async def generate_agent_response(request: Request, form_data: dict):
+    if not ENABLE_DEV_AGENTS_API:
+        raise HTTPException(status_code=403, detail="Dev API disabled")
+    user = await Users.get_super_admin_user()
+    if user is None:
+        raise HTTPException(status_code=500, detail="No admin user found")
+    # generate_chat_completion assumes request.app.state.MODELS is loaded
+    # (route handler in main.py does this preload; direct calls must too).
+    if not request.app.state.MODELS:
+        from open_webui.utils.models import get_all_models
+
+        await get_all_models(request, user=user)
+    try:
+        return await generate_chat_completion(request=request, form_data=form_data, user=user)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log.error(f"agents/generate failed: {exc}")
+        raise HTTPException(status_code=500, detail=str(exc))
 
 
 # ----------------------------------------------------------------------
