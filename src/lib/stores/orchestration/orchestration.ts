@@ -227,7 +227,7 @@ export const generateAgentResponse = async (opts: GenerateOptions): Promise<stri
 		res = await fetch('/api/v1/agents/generate', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			signal: AbortSignal.timeout(6000),
+			signal: AbortSignal.timeout(180000),
 			body: JSON.stringify({ model: opts.model, messages, stream: false })
 		});
 	} catch (e) {
