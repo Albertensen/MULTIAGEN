@@ -29,7 +29,7 @@
 - [x] Item 7: Hierarchical Task Delegation (Leader-Worker autonomous plan) — **DONE 2026-08-07: delegateTask() di orchestration.ts, E2E verified di /utest (a1 Leader → planner+critic → agregasi → feedback final)**
 - [x] Item 8: Multi-Tenant & Custom Team Workspaces — **DONE 2026-08-07: workspaceStore.ts (tenant owner/member, Virtual Team roster, isolasi namespace ws:<id>:<chat>), E2E verified di /utest (2 tenant Dev/Content Team, add member tenant-c)**
 - [x] Item 9: Anti-Hallucination Guardrails & Critic Agent — **DONE 2026-08-07: structuralGuard() deterministik + criticReview() LLM (PASSED/ISSUES) + generateWithGuardrail(), E2E verified di /utest (bad sample FAIL, critic a3→a1 FAIL, generate+guardrail PASS)**
-- [ ] Item 10: Worker-to-Leader Feedback Loop
+- [x] Item 10: Worker-to-Leader Feedback Loop — **DONE 2026-08-07: requestLeaderFeedback() + auto-detect [CALL: leader] di delegateTask (1 round tanya-jawab), E2E verified di /utest (a2 minta approval → a1 jawab)**
 - [ ] Item 11: Orchestration Dry-Run & Backend API Testing
 - [ ] Item 12: Sandboxed Workspace File Storage
 
