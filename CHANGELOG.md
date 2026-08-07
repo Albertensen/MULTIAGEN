@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase3) — Item 12 Sandboxed Workspace File Storage: backend/open_webui/routers/workspace_files.py (upload/list/read/delete per workspace di storage/workspaces/{ws_id}/, path-traversal guard `_SAFE` regex + realpath prefix check); register di main.py `/api/v1/workspaces`; test 4 baru (upload/list, read/delete, isolasi A≠B, traversal) → 13/13 passed
+
 ## [2026-08-07] feat(phase3) — Item 11 Orchestration Dry-Run & Backend API Testing: backend/tests/test_orchestration_uat.py (9 test: health, CRUD agents, generate LLM, generate leader plan [CALL:], WS broadcaster); fix 3 bug backend di agents.py (get_db async-generator `async for`, `await set.add()`, `await set.discard()`); semua 9 passed
 
 ## [2026-08-07] feat(phase3) — Item 10 Worker-to-Leader Feedback Loop: requestLeaderFeedback() di orchestration.ts (worker [CALL: leader] -> pertanyaan ke transkrip Leader -> jawaban Leader -> balik ke worker utk lanjut flow); auto-detect mention Leader di output worker dalam delegateTask -> 1 round tanya-jawab -> worker generate ulang; LeaderFeedback[] di DelegationPlan + event worker-feedback/leader-response; harness /utest (tombol minta approval a2->a1 + riwayat feedback delegasi)

@@ -138,6 +138,7 @@ from open_webui.models.models import Models
 from open_webui.models.users import Users
 from open_webui.routers import (
     agents,
+    workspace_files,
     analytics,
     audio,
     auths,
@@ -786,6 +787,9 @@ app.mount('/ws', socket_app)
 app.include_router(ollama.router, prefix='/ollama', tags=['ollama'])
 app.include_router(openai.router, prefix='/openai', tags=['openai'])
 app.include_router(agents.router, prefix='/api/v1/agents', tags=['agents'])
+app.include_router(
+    workspace_files.router, prefix='/api/v1/workspaces', tags=['workspace_files']
+)
 
 
 app.include_router(pipelines.router, prefix='/api/v1/pipelines', tags=['pipelines'])

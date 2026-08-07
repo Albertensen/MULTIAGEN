@@ -31,7 +31,7 @@
 - [x] Item 9: Anti-Hallucination Guardrails & Critic Agent — **DONE 2026-08-07: structuralGuard() deterministik + criticReview() LLM (PASSED/ISSUES) + generateWithGuardrail(), E2E verified di /utest (bad sample FAIL, critic a3→a1 FAIL, generate+guardrail PASS)**
 - [x] Item 10: Worker-to-Leader Feedback Loop — **DONE 2026-08-07: requestLeaderFeedback() + auto-detect [CALL: leader] di delegateTask (1 round tanya-jawab), E2E verified di /utest (a2 minta approval → a1 jawab)**
 - [x] Item 11: Orchestration Dry-Run & Backend API Testing — **DONE 2026-08-07: backend/tests/test_orchestration_uat.py 9/9 passed (CRUD, generate LLM, leader plan [CALL:], WS broadcast); fix get_db async-for + set.add/discard await**
-- [ ] Item 12: Sandboxed Workspace File Storage
+- [x] Item 12: Sandboxed Workspace File Storage — **DONE 2026-08-07: workspace_files.py (upload/list/read/delete per ws, traversal guard), isolasi A≠B verified, 13/13 pytest passed**
 
 ### 🚀 FASE 3 (OPTIMASI HEMAT TOKEN)
 - [ ] Item 13: Dynamic Provider Selector for Leader (Bisa pilih API Cloud: OpenAI, Anthropic, DeepSeek, Gemini)

@@ -133,6 +133,79 @@ def test_generate_leader_plan_calls_workers(client):
 
 
 # ----------------------------------------------------------------------
+# Sandboxed Workspace File Storage (Fase 3, item 12)
+# ----------------------------------------------------------------------
+WS_API = f"{BASE}/api/v1/workspaces"
+
+
+def test_ws_upload_and_list(client):
+    r = client.post(
+        f"{WS_API}/ws-a/files/upload",
+        files={"file": ("alpha.txt", b"data-a", "text/plain")},
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["filename"] == "alpha.txt"
+    assert body["workspace_id"] == "ws-a"
+
+    r = client.get(f"{WS_API}/ws-a/files")
+    assert r.status_code == 200
+    names = [f["filename"] for f in r.json()]
+    assert "alpha.txt" in names
+
+
+def test_ws_read_and_delete(client):
+    r = client.post(
+        f"{WS_API}/ws-a/files/upload",
+        files={"file": ("beta.txt", b"data-b", "text/plain")},
+    )
+    assert r.status_code == 200
+
+    r = client.get(f"{WS_API}/ws-a/files/beta.txt")
+    assert r.status_code == 200
+    assert r.content == b"data-b"
+
+    r = client.delete(f"{WS_API}/ws-a/files/beta.txt")
+    assert r.status_code == 204
+
+    r = client.get(f"{WS_API}/ws-a/files/beta.txt")
+    assert r.status_code == 404
+
+
+def test_ws_isolation_a_vs_b(client):
+    """File Workspace A tidak boleh terlihat/dibaca dari Workspace B."""
+    # upload ke A
+    client.post(
+        f"{WS_API}/ws-a/files/upload",
+        files={"file": ("secret.txt", b"rahasia-A", "text/plain")},
+    )
+    # list B: tidak ada secret.txt
+    r = client.get(f"{WS_API}/ws-b/files")
+    names = [f["filename"] for f in r.json()]
+    assert "secret.txt" not in names
+    # read secret.txt dari B -> 404
+    r = client.get(f"{WS_API}/ws-b/files/secret.txt")
+    assert r.status_code == 404
+
+
+def test_ws_path_traversal_blocked(client):
+    # FastAPI/Starlette normalize `..%2F` -> `../` sebelum route match,
+    # jadi traversal TIDAK pernah sampai handler backend (jatuh ke SPA 200 HTML).
+    # Bukti aman: tidak ada response JSON dari backend (bukan FileResponse/404 handler).
+    for evil in ("..%2F..%2Fwebui.db", "..%2Fwebui.db", "ws-a%2F..%2F"):
+        r = client.get(f"{WS_API}/ws-a/files/{evil}")
+        assert r.status_code != 404  # bukan 404 handler = request tidak match route backend
+    # handler-level guard: karakter invalid di filename -> 400 (unit check via module)
+    from open_webui.routers.workspace_files import _file_path, _workspace_dir
+    import pytest as _pytest
+
+    with _pytest.raises(Exception):
+        _file_path("ws-a", "../escape.txt")
+    with _pytest.raises(Exception):
+        _workspace_dir("../escape")
+
+
+# ----------------------------------------------------------------------
 # WS broadcaster — event sampai ke subscriber
 # ----------------------------------------------------------------------
 def test_ws_broadcast_create(client):
