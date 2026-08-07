@@ -2,6 +2,7 @@
 	// utest — Fase 4 Discord-like layout: Left Sidebar | Main Chat | Right Sidebar
 	import { agentList, addAgent } from '$lib/stores/agent/agentStore';
 	import { activeWorkspaceId, activeChannel } from '$lib/stores/workspace/workspaceStore';
+	import { workspaceList, createWorkspace } from '$lib/stores/workspace/workspaceStore';
 	import LeftSidebar from './LeftSidebar.svelte';
 	import MainChat from './MainChat.svelte';
 	import LeaderBuilderPanel from './LeaderBuilderPanel.svelte';
@@ -12,6 +13,15 @@
 		addAgent({ id: 'a1', name: 'Hermes', systemPrompt: 'assistant utama', model: 'gemma4:e4b' });
 		addAgent({ id: 'a2', name: 'Planner', systemPrompt: 'perencana', model: 'hermes3:latest' });
 		addAgent({ id: 'a3', name: 'Critic', systemPrompt: 'penyunting', model: 'gemma4:e4b' });
+	}
+
+	// seed workspace idempoten — "Development Team" aktif pertama kali
+	$: if ($workspaceList.length === 0) {
+		const ws = createWorkspace({ name: 'Development Team', agentIds: ['a1', 'a2', 'a3'] });
+		activeWorkspaceId.set(ws.id);
+	} else if (!$activeWorkspaceId) {
+		// workspace sudah ada (persisted) tapi belum ada yg aktif — pilih pertama
+		activeWorkspaceId.set($workspaceList[0].id);
 	}
 </script>
 

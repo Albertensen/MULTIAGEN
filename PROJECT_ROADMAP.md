@@ -53,6 +53,7 @@
 - [x] Agent Observability & Error Logging UI — **DONE 2026-08-07: drawer ⚠️ toggle (raw error orchestration:delegation-error, max 50, auto-open), E2E verified buka-tutup**
 - [x] Item 20: Channel Routing & Dynamic Center Panel — **DONE 2026-08-07: activeChannel store, klik #🧠 leader-builder / #⚡ task-stream → swap panel tengah (MainChat ⇄ LeaderBuilderPanel), E2E verified**
 - [x] Item 21: Local Bots Roster & Role Badges — **DONE 2026-08-07: panel kanan "🤖 Local Bots", badge 🤖 Local (Ollama) + role badge 👑 LEADER / ⚙️ WORKER, E2E verified**
+- [x] Workspace UI Fix (Sidebar Cleanup) — **DONE 2026-08-07: hapus form ADD SERVER inline, tombol + pakai prompt() "Development Team", ikon bulat inisial "DT", header nama workspace dinamis (fix "Server NaN"), seed workspace idempoten aktif pertama**
 - [ ] Item 22: Create Leader UI & Configuration Panel — **Panel `# leader-builder` untuk meracik Leader: form pemilihan LLM Provider, opsi Preset Setting, dan input API Key** (sebagian UI form sudah ada, perlu wiring ke backend save API)
 - [ ] Item 23: Native Hermes Dashboard Integration — **Opsi memilih 'Hermes' sebagai Leader, pengalaman komunikasi interaktif persis native dashboard Hermes di dalam workspace untuk merumuskan tugas sebelum didelegasikan ke worker**
 

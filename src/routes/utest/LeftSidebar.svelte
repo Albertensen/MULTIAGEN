@@ -6,13 +6,13 @@
 	export let onSwitch: (id: string) => void = () => {};
 	export let onAdd: (name: string) => void = () => {};
 
-	let newWsName = '';
 	let collapsed = false;
 
+	// tambah workspace via prompt bawaan (bukan form inline)
 	const addWs = () => {
-		const name = newWsName.trim() || `Server ${workspaceList.length + 1}`;
-		const ws = createWorkspace({ name, agentIds: [] });
-		newWsName = '';
+		const name = window.prompt('Nama workspace baru?', 'Development Team');
+		if (!name?.trim()) return;
+		const ws = createWorkspace({ name: name.trim(), agentIds: [] });
 		onAdd(ws.id);
 	};
 
@@ -55,14 +55,6 @@
 						<span class="hash">{channelEmoji[ch]}</span> {ch.replace('-', ' ')}
 					</button>
 				{/each}
-			</div>
-
-			<div class="chan-group">
-				<span class="chan-group-label">ADD SERVER</span>
-				<form class="add-form" on:submit|preventDefault={addWs}>
-					<input class="add-input" placeholder="nama workspace baru..." bind:value={newWsName} />
-					<button class="add-btn" type="submit">+</button>
-				</form>
 			</div>
 		{/if}
 
@@ -183,30 +175,6 @@
 	.hash {
 		color: #80848e;
 		font-weight: 700;
-	}
-	.add-form {
-		display: flex;
-		gap: 4px;
-		margin-top: 6px;
-		padding: 0 4px;
-	}
-	.add-input {
-		flex: 1;
-		background: #1e1f22;
-		border: none;
-		border-radius: 4px;
-		color: #dbdee1;
-		padding: 6px 8px;
-		font-size: 12px;
-	}
-	.add-btn {
-		background: #23a55a;
-		border: none;
-		border-radius: 4px;
-		color: #fff;
-		width: 28px;
-		cursor: pointer;
-		font-weight: bold;
 	}
 	/* user profile — pojok kiri bawah */
 	.user-profile {
