@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase4) — Item 18 & 19 Casual Event-to-Chat Mapping & Typing Indicators: MainChat.svelte (render event orkestrasi → template casual: "Alright! 🚀 ... @{worker}! 😎", "Beres bosku! ✨ ...", "Wait, butuh pencerahan 🤔"; listener on() ke 6 event; typing indicator "{name} is typing... 💬" dari worker-started/worker-feedback; diintegrasi layout 3-kolom /utest); E2E verified: assign/done template render, typing chip live saat delegasi
+
 ## [2026-08-07] feat(phase4) — /utest cleanup + Left/Right Sidebar: komponen terpisah LeftSidebar.svelte (Discord-style workspace nav: list, active indicator, add form, collapse) & AgentRosterPanel.svelte (online agents: status dot Online/Idle/Busy/Thinking, role 👑Leader/⚙Worker, scoped ke workspace aktif, set status); Agent.status field + setAgentStatus() di agentStore; layout 3-kolom flex di /utest; E2E verified: sidebar switch auto, roster 1 on-duty scoped, status thinking real-time, role Leader
 
 ## [2026-08-07] feat(phase4) — Item 16 & 17 Discord-style Bot Mention & Custom Roster: parseMentions() + triggerMention() di orchestration.ts (@bot_id/@agent_name → assign + emit orchestrator); Workspace.roster (agentId->role) + setRosterRole() (rule 1 leader, demote otomatis) + addAgentToWorkspace default role; harness /utest (input @mention + roster panel per workspace); E2E verified: @planner→a2, Dev Team a1:leader+a2:worker, promote a2 demote a1

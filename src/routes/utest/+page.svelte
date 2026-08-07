@@ -80,6 +80,7 @@
 
 	import LeftSidebar from './LeftSidebar.svelte';
 	import AgentRosterPanel from './AgentRosterPanel.svelte';
+	import MainChat from './MainChat.svelte';
 	import { activeWorkspaceId as setActiveWs } from '$lib/stores/workspace/workspaceStore';
 
 	import { get } from 'svelte/store';
@@ -496,6 +497,8 @@
 	/>
 
 	<div class="f4-main">
+		<MainChat />
+		<hr />
 <h1>Agent Store Harness</h1>
 
 <p>
@@ -810,5 +813,12 @@
 		flex: 1;
 		overflow-y: auto;
 		padding: 16px;
+		display: flex;
+		flex-direction: column;
+	}
+	.f4-main :global(.main-chat) {
+		height: 420px;
+		min-height: 420px;
+		flex-shrink: 0;
 	}
 </style>

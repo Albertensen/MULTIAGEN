@@ -46,6 +46,8 @@
 - [x] Clean up `/utest` harness — **DONE 2026-08-07: komponen dipisah (LeftSidebar.svelte, AgentRosterPanel.svelte), layout 3-kolom flex**
 - [x] Left Sidebar (Servers / Workspace Categories) — **DONE 2026-08-07: Discord-style workspace nav (list, active indicator, add form, collapse), E2E verified**
 - [x] Right Sidebar (Online Agents Panel & Status) — **DONE 2026-08-07: roster scoped workspace aktif, status Online/Idle/Busy/Thinking real-time, role 👑Leader/⚙Worker, E2E verified**
+- [x] Item 18: Casual Event-to-Chat Mapping — **DONE 2026-08-07: MainChat.svelte (template "Alright! 🚀", "Beres bosku! ✨", "Wait 🤔"), listener 6 event orkestrasi, E2E verified**
+- [x] Item 19: Discord-style Message Replies & Typing Indicators — **DONE 2026-08-07: typing "{name} is typing... 💬" real-time dari worker-started/feedback, E2E verified live saat delegasi**
 - [ ] Main Chat (Threads, Avatars, File/Code attachments rendering)
 - [ ] Real-time UX (Typing indicators, Buzz/Ping trigger)
 - [ ] Agent Observability & Error Logging UI
