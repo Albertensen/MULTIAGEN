@@ -51,3 +51,16 @@
 - [x] Main Chat (Threads, Avatars, File/Code attachments rendering) — **DONE 2026-08-07: MainChat.svelte avatar inisial, code block ```lang → hljs highlight, E2E verified**
 - [x] Real-time UX (Typing indicators, Buzz/Ping trigger) — **DONE 2026-08-07: typing "{name} is typing... 💬" live + avatar ping shake (delegation-done → .msg-avatar.ping)**
 - [x] Agent Observability & Error Logging UI — **DONE 2026-08-07: drawer ⚠️ toggle (raw error orchestration:delegation-error, max 50, auto-open), E2E verified buka-tutup**
+- [x] Item 20: Channel Routing & Dynamic Center Panel — **DONE 2026-08-07: activeChannel store, klik #🧠 leader-builder / #⚡ task-stream → swap panel tengah (MainChat ⇄ LeaderBuilderPanel), E2E verified**
+- [x] Item 21: Local Bots Roster & Role Badges — **DONE 2026-08-07: panel kanan "🤖 Local Bots", badge 🤖 Local (Ollama) + role badge 👑 LEADER / ⚙️ WORKER, E2E verified**
+- [ ] Item 22: Create Leader UI & Configuration Panel — **Panel `# leader-builder` untuk meracik Leader: form pemilihan LLM Provider, opsi Preset Setting, dan input API Key** (sebagian UI form sudah ada, perlu wiring ke backend save API)
+- [ ] Item 23: Native Hermes Dashboard Integration — **Opsi memilih 'Hermes' sebagai Leader, pengalaman komunikasi interaktif persis native dashboard Hermes di dalam workspace untuk merumuskan tugas sebelum didelegasikan ke worker**
+
+## 🔒 FASE 5: SECURITY, AUTH & TENANT ISOLATION
+- [ ] Item 24: Secure API Key Storage & Encryption — **AES-256 di backend database untuk menyimpan API Key Provider LLM Cloud**
+- [ ] Item 25: JWT Authentication & User Sessions — **Sistem login user dan perlindungan endpoint API berbasis token**
+- [ ] Item 26: Tenant Data Isolation — **Workspace A terisolasi total dari Workspace B pada level database dan file system**
+- [ ] Item 27: WebSocket Authentication — **Mengamankan koneksi stream real-time WS agar tidak bisa dibajak**
+- [ ] Item 28: Prompt Injection Guardrails — **Validasi dan sanitasi input user sebelum dikirim ke Leader Agent**
+- [ ] Item 29: Cost Control & Rate Limiting — **Membatasi jumlah request API berbayar per Workspace untuk mencegah tagihan bengkak**
+- [ ] Item 30: File Upload Sanitization — **Pembatasan ekstensi file pada workspace_files untuk mencegah eksekusi script berbahaya**
