@@ -2,6 +2,7 @@ import { derived, get, readonly, writable } from 'svelte/store';
 import { agentList, assignAgent } from '../agent/agentStore';
 import { addMessage, chatTranscript, getHistoryByAgent } from '../transcript/transcriptStore';
 import type { Attachment } from '../transcript/transcriptStore';
+import { recordPruning } from '../costAudit/costAuditStore';
 
 // =====================================================================
 // orchestration.ts — Event Bus + parser [CALL: agent] (Fase 3, item 1)
@@ -638,6 +639,14 @@ export const delegateTask = async (opts: {
 			leaderName: leader.name,
 			planText,
 			history: workerHistory
+		});
+		// Item 15: catat pemakaian token & estimasi biaya dihemat
+		recordPruning({
+			agentId: workerId,
+			role: 'worker',
+			provider: worker.provider ?? 'ollama',
+			beforeChars: workerHistory.reduce((a, m) => a + m.content.length, 0),
+			afterChars: payload.messages.reduce((a, m) => a + m.content.length, 0)
 		});
 		const prompt = `(dari ${leader.name}) ${planText}`;
 		addMessage(chatId, workerId, { role: 'user', content: prompt });

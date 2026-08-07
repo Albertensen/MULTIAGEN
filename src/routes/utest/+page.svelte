@@ -73,6 +73,7 @@
 		resolveProviderFor
 	} from '$lib/stores/provider/providerStore';
 	import type { ProviderId } from '$lib/stores/agent/agentStore';
+	import { costAudit, resetAudit } from '$lib/stores/costAudit/costAuditStore';
 
 	import { get } from 'svelte/store';
 
@@ -587,6 +588,19 @@
 >
 	Leader a1 (Hermes) → delegate ke planner+critic
 </button>
+
+<hr />
+<h2>Token Savings & Cost Audit Widget (Fase 3 item 15)</h2>
+<p><strong>Total Tokens Saved:</strong> {$costAudit.totalTokensSaved.toLocaleString()} tok</p>
+<p><strong>Estimated Cost Saved ($):</strong> ${$costAudit.totalCostSavedUsd.toFixed(6)} (vs cloud @$0.15/1M tok)</p>
+<p><strong>Pruning Efficiency Ratio:</strong> {$costAudit.lastPruneRatioPct}%</p>
+<p><strong>Entries:</strong> {$costAudit.entries.length} delegasi tercatat</p>
+<button on:click={resetAudit}>reset audit</button>
+<ul>
+	{#each $costAudit.entries as e, i (i)}
+		<li>{e.agentId} ({e.provider}): saved {e.savedTokens.toLocaleString()} tok / ${e.savedCostUsd.toFixed(6)} ({e.pruneRatioPct}%)</li>
+	{/each}
+</ul>
 
 <hr />
 <h2>Isolated Payload & Context Pruning (Fase 3 item 14)</h2>

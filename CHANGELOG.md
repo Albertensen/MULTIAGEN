@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(phase3) — Item 15 Token Savings & Cost Audit Widget: costAuditStore.ts (recordPruning: before/after token, savedCostUsd @$0.15/1M cloud vs Ollama gratis, pruneRatioPct, akumulasi totals); hook di delegateTask tiap worker; widget /utest (Total Tokens Saved, Cost Saved $, Pruning Ratio, entry list, reset); E2E verified: math exact (54630→3619 chars = 12753 tok = $0.001913), 2 entry delegasi tercatat (a2/a3 ollama)
+
 ## [2026-08-07] feat(phase3) — Item 14 Isolated Sub-task Payload & Context Pruning: pruneContext() (tail N pesan + keyword file/kode/error) + buildIsolatedPayload() (instruksi sub-tugas steril + potongan relevan, stats savedPct) + estimateTokens() di orchestration.ts; delegateTask kirim payload.messages ke worker (bukan history penuh) + event worker-payload; harness /utest uji pruning; E2E verified HEMAT 93% (54.6K→3.6K chars, 40→8 msgs)
 
 ## [2026-08-07] feat(phase3) — Item 13 Dynamic Provider Selector for Leader: providerStore.ts (5 provider: ollama/openai/anthropic/deepseek/gemini, API key + baseUrl + model, persist localStorage); Agent.provider field; backend GET/PUT /api/v1/agents/providers (Config store `multiagent.providers`, apiKey mask `***` saat read); harness /utest (load config, jadikan Leader, save key); E2E verified (a1 -> deepseek, backend sync) + 15/15 pytest

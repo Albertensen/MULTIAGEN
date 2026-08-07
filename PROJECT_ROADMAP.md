@@ -36,7 +36,7 @@
 ### 🚀 FASE 3 (OPTIMASI HEMAT TOKEN)
 - [x] Item 13: Dynamic Provider Selector for Leader — **DONE 2026-08-07: providerStore.ts (5 provider + API key) + backend /agents/providers (mask ***), E2E verified (a1 → deepseek, sync), 15/15 pytest**
 - [x] Item 14: Isolated Sub-task Payload & Context Pruning — **DONE 2026-08-07: pruneContext() + buildIsolatedPayload() di delegateTask (worker terima instruksi steril saja), E2E HEMAT 93% (54.6K→3.6K chars)**
-- [ ] Item 15: Token Savings & Cost Audit Dashboard Widget
+- [x] Item 15: Token Savings & Cost Audit Dashboard Widget — **DONE 2026-08-07: costAuditStore.ts (token/cost saved, ratio) + widget /utest, hook di delegateTask, math verified 12753 tok=$0.001913**
 
 ---
 
