@@ -153,6 +153,7 @@ declare module '$env/static/private' {
 	export const PWD: string;
 	export const PYTHONIOENCODING: string;
 	export const PYTHONPATH: string;
+	export const PYTHONUNBUFFERED: string;
 	export const PYTHONUTF8: string;
 	export const SESSIONNAME: string;
 	export const SHELL: string;
@@ -393,6 +394,7 @@ declare module '$env/dynamic/private' {
 		PWD: string;
 		PYTHONIOENCODING: string;
 		PYTHONPATH: string;
+		PYTHONUNBUFFERED: string;
 		PYTHONUTF8: string;
 		SESSIONNAME: string;
 		SHELL: string;
