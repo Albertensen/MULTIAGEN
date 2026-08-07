@@ -2087,10 +2087,11 @@
     "isEntry": true,
     "imports": [
       "_index2.js",
-      "_index.js"
+      "_index.js",
+      "_html.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.3f0Al74A.css"
+      "_app/immutable/assets/_page.DlIteOgZ.css"
     ]
   },
   "src/routes/watch/+page.svelte": {
