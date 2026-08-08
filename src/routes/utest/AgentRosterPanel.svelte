@@ -6,14 +6,15 @@
 	import { costAudit } from '$lib/stores/costAudit/costAuditStore';
 
 	// agent roster di workspace aktif (fallback: semua agen / kalau ws.agentIds kosong)
+	// Fase 4 final: Leader (isLeader) selalu di urutan teratas
 	const rosterAgents = () => {
 		const ws = $workspaceList.find((w) => w.id === $activeWorkspaceId);
-		if (!ws) return $agentList;
-		const ids = ws.agentIds ?? [];
-		if (ids.length === 0) return $agentList;
-		return ids
-			.map((id) => $agentList.find((a) => a.id === id))
-			.filter((a): a is NonNullable<typeof a> => !!a);
+		const all = ws && (ws.agentIds ?? []).length > 0
+			? (ws.agentIds as string[])
+					.map((id) => $agentList.find((a) => a.id === id))
+					.filter((a): a is NonNullable<typeof a> => !!a)
+			: $agentList;
+		return [...all].sort((a, b) => (b.isLeader ? 1 : 0) - (a.isLeader ? 1 : 0));
 	};
 
 	const statusDot = (s: AgentStatus): string => {
@@ -67,7 +68,11 @@
 					<span class="rp-sub">{agent.status} · {agent.provider ?? 'ollama'}</span>
 				</span>
 				<span class="rp-role">
-					<span class="rp-role-badge worker">⚙️ WORKER</span>
+					{#if agent.isLeader}
+						<span class="rp-role-badge leader">👑 LEADER</span>
+					{:else}
+						<span class="rp-role-badge worker">⚙️ WORKER</span>
+					{/if}
 				</span>
 			</li>
 		{/each}

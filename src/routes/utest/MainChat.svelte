@@ -35,8 +35,35 @@
 	let showErrors = false; // drawer observability
 	let errLogs: string[] = [];
 
+	// Fase 4 final: stream log persistent per channel (tidak hilang saat pindah)
+	const STREAM_KEY = 'multiagent.streamlog.v1';
+	const streamKey = () => {
+		const ch = $activeChannel;
+		return ch.startsWith('stream:') || ch.startsWith('leader:') ? `stream:${ch.slice(7)}` : ch;
+	};
+	$: {
+		if (typeof localStorage !== 'undefined') {
+			const key = streamKey();
+			const raw = localStorage.getItem(STREAM_KEY);
+			let all: Record<string, ChatMsg[]> = {};
+			try { all = raw ? JSON.parse(raw) : {}; } catch { /* ignore */ }
+			msgs = all[key] ?? [];
+			seq = msgs.length ? msgs[msgs.length - 1].id : 0;
+		}
+	}
+	const persist = () => {
+		if (typeof localStorage === 'undefined') return;
+		const key = streamKey();
+		const raw = localStorage.getItem(STREAM_KEY);
+		let all: Record<string, ChatMsg[]> = {};
+		try { all = raw ? JSON.parse(raw) : {}; } catch { /* ignore */ }
+		all[key] = msgs.slice(-200);
+		localStorage.setItem(STREAM_KEY, JSON.stringify(all));
+	};
+
 	const push = (kind: ChatMsg['kind'], author: string, text: string, ping = false) => {
 		msgs = [...msgs, { id: ++seq, kind, author, text, ts: Date.now(), ping }];
+		persist();
 	};
 
 	// kirim pesan user: render + trigger mention → delegateTask (LLM asli)

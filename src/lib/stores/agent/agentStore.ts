@@ -25,6 +25,7 @@ export type Agent = {
 	provider: ProviderId; // Fase 3 item 13: penyedia LLM dinamis
 	active: boolean; // sedang bicara/ditugaskan
 	status: AgentStatus; // Fase 4: Online/Idle/Busy/Thinking
+	isLeader?: boolean; // Fase 4 final: agent = Leader (👑) vs worker (⚙️)
 };
 
 // hydrate dari localStorage — jalankan SEBELUM store dipakai

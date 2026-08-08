@@ -6,6 +6,7 @@
 	import { activeChannel, activeLeaderId } from '$lib/stores/workspace/workspaceStore';
 	import { triggerMention } from '$lib/stores/orchestration/orchestration';
 	import { on } from '$lib/stores/orchestration/orchestration';
+	import { setAgentStatus } from '$lib/stores/agent/agentStore';
 	import { leaderChatHistory, pushLeaderMsg } from '$lib/stores/chatStore';
 
 	$: leaderId = $activeLeaderId ?? ($activeChannel.startsWith('leader:') ? $activeChannel.slice(7) : null);
@@ -33,16 +34,33 @@
 		pushLeaderMsg(leaderId, { kind, author, text });
 	};
 
+	// tulis ke stream log (localStorage) — key stream:<leaderId>
+	const STREAM_KEY = 'multiagent.streamlog.v1';
+	const pushStream = (kind: ChatMsg['kind'], author: string, text: string) => {
+		if (!leaderId || typeof localStorage === 'undefined') return;
+		const key = `stream:${leaderId}`;
+		const raw = localStorage.getItem(STREAM_KEY);
+		let all: Record<string, ChatMsg[]> = {};
+		try { all = raw ? JSON.parse(raw) : {}; } catch { /* ignore */ }
+		const arr = all[key] ?? [];
+		arr.push({ id: arr.length + 1, kind, author, text, ts: Date.now() });
+		all[key] = arr.slice(-200);
+		localStorage.setItem(STREAM_KEY, JSON.stringify(all));
+	};
+
 	const send = async () => {
 		const text = draft.trim();
 		if (!text) return;
 		push('user', 'User', text);
 		draft = '';
 		typing = true;
+		// TUGAS 2b: Leader langsung jadi thinking di roster
+		if (leaderId) setAgentStatus(leaderId, 'thinking');
 		try {
 			await triggerMention({ chatId: 'chat-demo-1', text: `@${leaderName} ${text}` });
 		} finally {
 			typing = false;
+			if (leaderId) setAgentStatus(leaderId, 'online');
 		}
 	};
 
@@ -50,12 +68,29 @@
 	on('orchestration:delegation', (p) => {
 		if (p.leaderId === leaderId) {
 			push('system', 'System', `📢 ${agentName(String(p.leaderId))} mendelegasikan ke ${(p.workerIds as string[]).map(agentName).join(', ')}`);
+			pushStream('system', 'System', `📢 ${agentName(String(p.leaderId))} mendelegasikan ke ${(p.workerIds as string[]).map(agentName).join(', ')}`);
 		}
 	});
 	// balasan Leader (rencana) ikut masuk history ruang meeting
 	on('orchestration:leader-plan', (p) => {
 		if (p.leaderId === leaderId) {
 			push('leader', agentName(String(p.leaderId)), String(p.plan ?? ''));
+			pushStream('leader', agentName(String(p.leaderId)), String(p.plan ?? ''));
+		}
+	});
+	on('orchestration:worker-started', (p) => {
+		if (p.leaderId === leaderId) {
+			pushStream('assign', agentName(String(p.workerId)), `🚀 Menjalankan tugas...`);
+		}
+	});
+	on('orchestration:worker-done', (p) => {
+		if (p.leaderId === leaderId) {
+			pushStream('done', agentName(String(p.workerId)), `✅ Selesai — ${String(p.result ?? '').slice(0, 120)}`);
+		}
+	});
+	on('orchestration:leader-thinking', (p) => {
+		if (p.leaderId === leaderId) {
+			pushStream('system', 'System', `🧠 ${agentName(String(p.leaderId))} sedang merumuskan Master Plan...`);
 		}
 	});
 </script>
