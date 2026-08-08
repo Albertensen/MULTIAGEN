@@ -622,6 +622,10 @@ const upsertDelegation = (d: DelegationPlan) =>
 
 // Analisis prompt user: Leader (LLM) menghasilkan plan + [CALL: worker],
 // lalu tiap worker dipanggil, respons dikumpulkan, feedback di-stream ke
+// ==================== GLOBAL LEADER DIRECTIVE (Fase 5) ====================
+export const GLOBAL_LEADER_DIRECTIVE = `DOMAIN: Aplikasi Modular Monolith (E-commerce, Forum, PC Builder Configurator).
+ATURAN STRICT: Kamu (Leader) HANYA mengerjakan arsitektur tinggi (Skema DB, Logika Auth, Algoritma Routing, Kompatibilitas PC). DILARANG KERAS menulis CSS panjang, data dummy, atau boilerplate CRUD. Delegasikan tugas eksekusi tersebut menggunakan tag [CALL: <NamaWorker>].`;
+
 // Leader utk sintesis jawaban final. Event bus dipakai utk traceability.
 export const delegateTask = async (opts: {
 	chatId: string;
@@ -662,12 +666,12 @@ export const delegateTask = async (opts: {
 			chatId,
 			agentId: leaderId,
 			model: leader.model,
-			systemPrompt: leader.systemPrompt,
+			systemPrompt: `${GLOBAL_LEADER_DIRECTIVE}\n\n${leader.systemPrompt}`,
 			history: leaderHistory
 		});
 	} catch (e) {
 		// generate plan gagal (backend 404/no-LLM) — fallback dry-run: lanjut alur UI
-		planText = `[CALL: Planner]\n[CALL: Critic]\n[CALL: Programmer]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
+		planText = `[CALL: DataFormatter]\n[CALL: CssScaffolder]\n[CALL: CrudGenerator]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
 		emit('orchestration:dry-run', { chatId, leaderId, plan: planText.slice(0, 120), error: String(e) });
 	}
 
@@ -675,7 +679,7 @@ export const delegateTask = async (opts: {
 	// tetap lanjut delegasi dgn plan dummy spy alur UI (worker-started/done,
 	// token savings) bisa diverifikasi tanpa LLM eksternal.
 	if (!planText || planText.startsWith('[error]')) {
-		planText = `[CALL: Planner]\n[CALL: Critic]\n[CALL: Programmer]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
+		planText = `[CALL: DataFormatter]\n[CALL: CssScaffolder]\n[CALL: CrudGenerator]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
 		emit('orchestration:dry-run', { chatId, leaderId, plan: planText.slice(0, 120) });
 	}
 
@@ -744,8 +748,8 @@ export const delegateTask = async (opts: {
 			});
 		} catch (e) {
 			// fallback dry-run: dummy hasil biar alur UI + artifact tetap testable tanpa LLM
-			workerText = worker.id === 'a4'
-				? "```html\n<!doctype html><html><head><title>Hasil Programmer</title></head><body><h1>Rancangan HTML</h1><form><input name='email'><button>Kirim</button></form></body></html>\n```"
+			workerText = worker.id === 'w3'
+				? "```html\n<!doctype html><html><head><title>Hasil CssScaffolder</title></head><body><h1>Rancangan HTML</h1><form><input name='email'><button>Kirim</button></form></body></html>\n```"
 				: `[error] ${String(e)}`;
 		}
 
@@ -812,7 +816,7 @@ export const delegateTask = async (opts: {
 			chatId,
 			agentId: leaderId,
 			model: leader.model,
-			systemPrompt: leader.systemPrompt,
+			systemPrompt: `${GLOBAL_LEADER_DIRECTIVE}\n\n${leader.systemPrompt}`,
 			history: leaderHistory2
 		});
 	} catch (e) {
