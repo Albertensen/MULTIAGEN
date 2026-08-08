@@ -44,6 +44,7 @@ declare module '$env/static/private' {
 	export const ACLOCAL_PATH: string;
 	export const ALLUSERSPROFILE: string;
 	export const APPDATA: string;
+	export const BROWSER_INACTIVITY_TIMEOUT: string;
 	export const BUZZ_AGENT_MODEL: string;
 	export const BUZZ_AGENT_PROVIDER: string;
 	export const COLOR: string;
@@ -64,6 +65,7 @@ declare module '$env/static/private' {
 	export const HERMES_GIT_BASH_PATH: string;
 	export const HERMES_HOME: string;
 	export const HERMES_INTERACTIVE: string;
+	export const HERMES_QUIET: string;
 	export const HERMES_REAL_HOME: string;
 	export const HERMES_SERVE_HEADLESS: string;
 	export const HERMES_SESSION_CHAT_ID: string;
@@ -178,6 +180,8 @@ declare module '$env/static/private' {
 	export const TERMINAL_DOCKER_SHM_SIZE: string;
 	export const TERMINAL_DOCKER_VOLUMES: string;
 	export const TERMINAL_ENV: string;
+	export const TERMINAL_HOME_MODE: string;
+	export const TERMINAL_LIFETIME_SECONDS: string;
 	export const TERMINAL_MODAL_IMAGE: string;
 	export const TERMINAL_MODAL_MODE: string;
 	export const TERMINAL_PERSISTENT_SHELL: string;
@@ -284,6 +288,7 @@ declare module '$env/dynamic/private' {
 		ACLOCAL_PATH: string;
 		ALLUSERSPROFILE: string;
 		APPDATA: string;
+		BROWSER_INACTIVITY_TIMEOUT: string;
 		BUZZ_AGENT_MODEL: string;
 		BUZZ_AGENT_PROVIDER: string;
 		COLOR: string;
@@ -304,6 +309,7 @@ declare module '$env/dynamic/private' {
 		HERMES_GIT_BASH_PATH: string;
 		HERMES_HOME: string;
 		HERMES_INTERACTIVE: string;
+		HERMES_QUIET: string;
 		HERMES_REAL_HOME: string;
 		HERMES_SERVE_HEADLESS: string;
 		HERMES_SESSION_CHAT_ID: string;
@@ -418,6 +424,8 @@ declare module '$env/dynamic/private' {
 		TERMINAL_DOCKER_SHM_SIZE: string;
 		TERMINAL_DOCKER_VOLUMES: string;
 		TERMINAL_ENV: string;
+		TERMINAL_HOME_MODE: string;
+		TERMINAL_LIFETIME_SECONDS: string;
 		TERMINAL_MODAL_IMAGE: string;
 		TERMINAL_MODAL_MODE: string;
 		TERMINAL_PERSISTENT_SHELL: string;
