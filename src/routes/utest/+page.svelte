@@ -15,11 +15,12 @@
 		addAgent({ id: 'a1', name: 'Hermes', systemPrompt: 'assistant utama', model: 'gemma4:e4b', isLeader: true });
 		addAgent({ id: 'a2', name: 'Planner', systemPrompt: 'perencana', model: 'hermes3:latest' });
 		addAgent({ id: 'a3', name: 'Critic', systemPrompt: 'penyunting', model: 'gemma4:e4b' });
+		addAgent({ id: 'a4', name: 'Programmer', systemPrompt: 'pengkode', model: 'gemma4:e4b' });
 	}
 
 	// seed workspace idempoten — "Development Team" aktif pertama kali
 	$: if ($workspaceList.length === 0) {
-		const ws = createWorkspace({ name: 'Development Team', agentIds: ['a1', 'a2', 'a3'] });
+		const ws = createWorkspace({ name: 'Development Team', agentIds: ['a1', 'a2', 'a3', 'a4'] });
 		activeWorkspaceId.set(ws.id);
 	} else if (!$activeWorkspaceId) {
 		// workspace sudah ada (persisted) tapi belum ada yg aktif — pilih pertama

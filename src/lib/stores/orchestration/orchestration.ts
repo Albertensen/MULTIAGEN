@@ -672,7 +672,7 @@ export const delegateTask = async (opts: {
 	// tetap lanjut delegasi dgn plan dummy spy alur UI (worker-started/done,
 	// token savings) bisa diverifikasi tanpa LLM eksternal.
 	if (!planText || planText.startsWith('[error]')) {
-		planText = `[CALL: Planner]\n[CALL: Critic]\n[CALL: Hermes]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
+		planText = `[CALL: Planner]\n[CALL: Critic]\n[CALL: Programmer]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
 		emit('orchestration:dry-run', { chatId, leaderId, plan: planText.slice(0, 120) });
 	}
 
