@@ -624,9 +624,12 @@ const upsertDelegation = (d: DelegationPlan) =>
 // Analisis prompt user: Leader (LLM) menghasilkan plan + [CALL: worker],
 // lalu tiap worker dipanggil, respons dikumpulkan, feedback di-stream ke
 // ==================== GLOBAL LEADER DIRECTIVE (Fase 5) ====================
-export const GLOBAL_LEADER_DIRECTIVE = `DOMAIN: Aplikasi Modular Monolith (E-commerce, Forum, PC Builder Configurator).
-ATURAN STRICT: Kamu (Leader) HANYA mengerjakan arsitektur tinggi (Skema DB, Logika Auth, Algoritma Routing, Kompatibilitas PC). DILARANG KERAS menulis CSS panjang, data dummy, atau boilerplate CRUD. Delegasikan tugas eksekusi tersebut menggunakan tag [CALL: <NamaWorker>].
-Jika User hanya bertanya atau berdiskusi santai, jawablah layaknya asisten biasa tanpa memanggil worker. Jika User meminta pekerjaan kompleks (coding/data), panggil worker via [CALL: WorkerName] secara tersembunyi, lalu sapa User dengan ramah bahwa tugas sedang dikerjakan.`;
+export const GLOBAL_LEADER_DIRECTIVE = `Kamu adalah Hermes, AI Assistant sekaligus Lead Engineer.
+1. ATURAN MUTLAK: Selalu gunakan prinsip HEMAT TOKEN OUTPUT. Walaupun sedang berdiskusi, balaslah dengan SANGAT SINGKAT, padat, dan langsung ke inti. DILARANG KERAS berbasa-basi atau menulis paragraf panjang.
+2. Bersikaplah natural seperti manusia, tetapi dalam versi eksekutif yang irit bicara.
+3. Jika User menyapa/bertanya biasa, balas dengan kalimat pendek TANPA memanggil worker.
+4. JIKA User memberikan tugas kompleks, delegasikan ke spesialis lokal dengan menyisipkan tag [CALL: WorkerName].
+5. Sertakan konfirmasi super singkat bersama tag tersebut (misal: 'Siap, tim sedang merakitnya. [CALL: CssScaffolder]').`;
 
 // Leader utk sintesis jawaban final. Event bus dipakai utk traceability.
 export const delegateTask = async (opts: {
@@ -664,12 +667,14 @@ export const delegateTask = async (opts: {
 
 	let planText: string;
 	try {
+		// prompt format tegas: kalau task kompleks, Leader WAJIB sisipkan [CALL: WorkerName]
+		const planPrompt = `${task}\n\n[FORMAT WAJIB] Jika tugas ini kompleks (coding/data/desain), balas SANGAT SINGKAT (maks 1-2 kalimat) lalu sisipkan tag [CALL: NamaWorker] utk tiap spesialis yg dibutuhkan. Jika hanya obrolan biasa, jawab singkat tanpa tag.`;
 		planText = await generateAgentResponse({
 			chatId,
 			agentId: leaderId,
 			model: leader.model,
 			systemPrompt: `${GLOBAL_LEADER_DIRECTIVE}\n\n${leader.systemPrompt}`,
-			history: leaderHistory
+			history: [...leaderHistory, { role: 'user' as const, content: planPrompt }]
 		});
 	} catch (e) {
 		planText = '';
@@ -677,10 +682,9 @@ export const delegateTask = async (opts: {
 	}
 
 	// kegagalan koneksi LLM: JANGAN delegasi buta / generate [CALL:] palsu.
-	// Balas error rapi ke chat utama, biarkan stream bersih.
+	// Balas error statis ke chat utama, biarkan stream bersih.
 	if (!planText || planText.startsWith('[error]')) {
-		const errMsg =
-			'⚠️ Maaf, saya tidak dapat merespons. Koneksi ke otak LLM (Backend) terputus atau endpoint tidak ditemukan (404).';
+		const errMsg = '⚠️ Koneksi API terputus (Error 404).';
 		emit('orchestration:leader-plan', { chatId, leaderId, plan: errMsg });
 		addMessage(chatId, leaderId, { role: 'assistant', content: errMsg });
 		plan.status = 'error';

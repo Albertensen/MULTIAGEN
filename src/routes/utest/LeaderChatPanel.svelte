@@ -71,15 +71,21 @@
 			pushStream('system', 'System', `📢 ${agentName(String(p.leaderId))} mendelegasikan ke ${(p.workerIds as string[]).map(agentName).join(', ')}`);
 		}
 	});
-	// balasan Leader (rencana): kalau berisi [CALL:] → HANYA ke stream (log orkestrasi),
-	// ruang brainstorming tetap bersih; kalau ngobrol biasa → masuk history chat
+	// balasan Leader (rencana): teks mentah (dgn tag [CALL:]) HANYA ke stream;
+	// versi BERSIH (tag + blok delegasi dihapus) masuk ruang brainstorming (invisible delegation)
 	on('orchestration:leader-plan', (p) => {
 		if (p.leaderId === leaderId) {
 			const plan = String(p.plan ?? '');
 			pushStream('leader', agentName(String(p.leaderId)), plan);
-			if (!/\[CALL:/i.test(plan)) {
-				push('leader', agentName(String(p.leaderId)), plan);
-			}
+			// filter: buang [CALL: ...] dan blok penjelasan delegasi
+			const clean = plan
+				.replace(/\[CALL:[^\]]*\]/gi, '')
+				.replace(/^[\s#*\-]*CALL[:\s].*$/gim, '')
+				.replace(/^[\s#*\-]*Rencana[\s\S]*$/gim, '')
+				.replace(/^[\s#*\-]*Delegasikan?[\s\S]*$/gim, '')
+				.replace(/\n{3,}/g, '\n\n')
+				.trim();
+			if (clean) push('leader', agentName(String(p.leaderId)), clean);
 		}
 	});
 	// setelah worker selesai + artifact tersimpan → konfirmasi bersih ke ruang meeting
