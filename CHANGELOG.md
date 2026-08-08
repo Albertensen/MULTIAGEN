@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-07] feat(ux) — Clean brainstorming room & chat separation: leader-plan dengan [CALL:] → HANYA ke stream (ruang meeting bersih), ngobrol biasa → history; delegation-done → pesan konfirmasi bersih ke history; GLOBAL_LEADER_DIRECTIVE + aturan: jawab santai tanpa worker, panggil worker tersembunyi utk tugas kompleks + sapa ramah; E2E PASS: history = pembuka+user+delegasi+konfirmasi (tanpa [CALL:] mentah), stream tetap penuh rencana
+
 ## [2026-08-07] feat(architecture) — Fase 5: 6 micro-specialist worker (w1-w6: DataFormatter, DummySeeder, CssScaffolder, ErrorSummarizer, Copywriter, CrudGenerator) gantikan Planner/Critic/Programmer (cleanup agent lama di seed); GLOBAL_LEADER_DIRECTIVE (Modular Monolith: E-commerce/Forum/PC Builder; Leader hanya arsitektur tinggi, delegasi [CALL:]); dry-run fallback plan → worker baru; E2E PASS: roster 7 (Hermes 👑 + 6 ⚙️), delegasi [CALL: DataFormatter][CALL: CssScaffolder][CALL: CrudGenerator]
 
 ## [2026-08-07] feat(orchestration) — Visible master plan & dir auto-save: leader plan UTUH di-emit ke stream (leader-plan full text sebelum worker); Artifact Extractor baru (fileStore.ts + FileManagerPanel render) — blok ``` kode / sintesis panjang di-finalText → saveArtifact dir:<leaderId> (hasil-final.html / sintesis.md), fallback gabungan worker results kalau finalText error; generateAgentResponse 404 → throw (no-LLM detection) + delegateTask catch → dry-run plan; fix `$filesByDirStore(arg)` invalid → subscribe manual; E2E PASS: stream plan utuh, hasil-final.html 163 char muncul di # 📂 dir-hermes

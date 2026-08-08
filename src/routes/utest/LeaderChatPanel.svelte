@@ -71,11 +71,22 @@
 			pushStream('system', 'System', `📢 ${agentName(String(p.leaderId))} mendelegasikan ke ${(p.workerIds as string[]).map(agentName).join(', ')}`);
 		}
 	});
-	// balasan Leader (rencana) ikut masuk history ruang meeting
+	// balasan Leader (rencana): kalau berisi [CALL:] → HANYA ke stream (log orkestrasi),
+	// ruang brainstorming tetap bersih; kalau ngobrol biasa → masuk history chat
 	on('orchestration:leader-plan', (p) => {
 		if (p.leaderId === leaderId) {
-			push('leader', agentName(String(p.leaderId)), String(p.plan ?? ''));
-			pushStream('leader', agentName(String(p.leaderId)), String(p.plan ?? ''));
+			const plan = String(p.plan ?? '');
+			pushStream('leader', agentName(String(p.leaderId)), plan);
+			if (!/\[CALL:/i.test(plan)) {
+				push('leader', agentName(String(p.leaderId)), plan);
+			}
+		}
+	});
+	// setelah worker selesai + artifact tersimpan → konfirmasi bersih ke ruang meeting
+	on('orchestration:delegation-done', (p) => {
+		if (p.leaderId === leaderId) {
+			pushStream('system', 'System', `📄 Artifact disimpan — delegasi ${String(p.task ?? '').slice(0, 60)}`);
+			push('leader', agentName(String(p.leaderId)), `Tugas telah dipecah dan dieksekusi oleh tim. Hasil akhirnya telah saya simpan di direktori file. Ada hal lain yang ingin didiskusikan?`);
 		}
 	});
 	on('orchestration:worker-started', (p) => {

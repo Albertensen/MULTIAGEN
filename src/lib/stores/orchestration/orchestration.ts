@@ -624,7 +624,8 @@ const upsertDelegation = (d: DelegationPlan) =>
 // lalu tiap worker dipanggil, respons dikumpulkan, feedback di-stream ke
 // ==================== GLOBAL LEADER DIRECTIVE (Fase 5) ====================
 export const GLOBAL_LEADER_DIRECTIVE = `DOMAIN: Aplikasi Modular Monolith (E-commerce, Forum, PC Builder Configurator).
-ATURAN STRICT: Kamu (Leader) HANYA mengerjakan arsitektur tinggi (Skema DB, Logika Auth, Algoritma Routing, Kompatibilitas PC). DILARANG KERAS menulis CSS panjang, data dummy, atau boilerplate CRUD. Delegasikan tugas eksekusi tersebut menggunakan tag [CALL: <NamaWorker>].`;
+ATURAN STRICT: Kamu (Leader) HANYA mengerjakan arsitektur tinggi (Skema DB, Logika Auth, Algoritma Routing, Kompatibilitas PC). DILARANG KERAS menulis CSS panjang, data dummy, atau boilerplate CRUD. Delegasikan tugas eksekusi tersebut menggunakan tag [CALL: <NamaWorker>].
+Jika User hanya bertanya atau berdiskusi santai, jawablah layaknya asisten biasa tanpa memanggil worker. Jika User meminta pekerjaan kompleks (coding/data), panggil worker via [CALL: WorkerName] secara tersembunyi, lalu sapa User dengan ramah bahwa tugas sedang dikerjakan.`;
 
 // Leader utk sintesis jawaban final. Event bus dipakai utk traceability.
 export const delegateTask = async (opts: {
