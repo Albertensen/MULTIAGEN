@@ -2032,6 +2032,12 @@
       "_app/immutable/assets/_layout.mhJgTIY6.css"
     ]
   },
+  "src/routes/api/agents/generate/+server.ts": {
+    "file": "entries/endpoints/api/agents/generate/_server.ts.js",
+    "name": "entries/endpoints/api/agents/generate/_server.ts",
+    "src": "src/routes/api/agents/generate/+server.ts",
+    "isEntry": true
+  },
   "src/routes/auth/+page.svelte": {
     "file": "entries/pages/auth/_page.svelte.js",
     "name": "entries/pages/auth/_page.svelte",

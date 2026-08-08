@@ -43,6 +43,9 @@
 	"/(app)/admin/users/[tab]": [
 		"src/routes/+layout.js"
 	],
+	"/api/agents/generate": [
+		"src/routes/api/agents/generate/+server.ts"
+	],
 	"/auth": [
 		"src/routes/+layout.js"
 	],

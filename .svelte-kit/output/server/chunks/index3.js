@@ -1,4 +1,4 @@
-import { a as WEBUI_API_BASE_URL, v as getTimeRange, G as APP_NAME } from "./index4.js";
+import { a as WEBUI_API_BASE_URL, v as getTimeRange, F as APP_NAME } from "./index4.js";
 import { a as readonly, w as writable } from "./index.js";
 const emojiShortCodes = {
   "2049": "interrobang",
@@ -2855,10 +2855,10 @@ export {
   compactChatById as ae,
   getChatAccessGrants as af,
   updateChatAccessGrants as ag,
-  channelId as ah,
-  emojiShortCodes as ai,
-  artifactCode as aj,
-  deleteChatMessageById as ak,
+  emojiShortCodes as ah,
+  artifactCode as ai,
+  deleteChatMessageById as aj,
+  channelId as ak,
   getChatByShareId as al,
   chatId as b,
   config as c,

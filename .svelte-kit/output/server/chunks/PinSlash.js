@@ -3,7 +3,7 @@ import { f as fallback, h as attr_style, q as stringify, e as ensure_array_like,
 /* empty css                                          */
 import { D as Dropdown } from "./Dropdown.js";
 import { T as Tooltip } from "./Tooltip.js";
-import { s as settings, ai as emojiShortCodes } from "./index3.js";
+import { s as settings, ah as emojiShortCodes } from "./index3.js";
 const getSessionUser = async (token) => {
   let error = null;
   const res = await fetch(`${WEBUI_API_BASE_URL}/auths/`, {

@@ -1,6 +1,6 @@
-import { f as fallback, d as attr_class, g as clsx, j as slot, b as bind_props, m as getContext, a as attr, c as store_get, u as unsubscribe_stores, q as stringify, k as escape_html, h as attr_style, e as ensure_array_like, av as element } from "./index2.js";
+import { f as fallback, d as attr_class, g as clsx, j as slot, b as bind_props, m as getContext, a as attr, c as store_get, u as unsubscribe_stores, q as stringify, k as escape_html, h as attr_style, e as ensure_array_like, au as element } from "./index2.js";
 import { o as onDestroy, t as tick } from "./index-server.js";
-import { W as WEBUI_BASE_URL, M as renderVegaVisualization, N as unescapeHtml, O as initMermaid, P as renderMermaidDiagram, e as decodeString, Q as markedKatexExtension, R as markedExtension, S as replaceTokens, T as processResponseContent } from "./index4.js";
+import { W as WEBUI_BASE_URL, L as renderVegaVisualization, M as unescapeHtml, N as initMermaid, O as renderMermaidDiagram, e as decodeString, P as markedKatexExtension, Q as markedExtension, R as replaceTokens, S as processResponseContent } from "./index4.js";
 import { s as settings, c as config, B as channels, w as models, u as user } from "./index3.js";
 import { decode } from "html-entities";
 import fileSaver from "file-saver";
@@ -2700,7 +2700,7 @@ export {
   Clipboard as C,
   DocumentDuplicate as D,
   FullHeightIframe as F,
-  Image as I,
+  Info as I,
   LightBulb as L,
   Markdown as M,
   PanzoomContainer as P,
@@ -2711,7 +2711,7 @@ export {
   SVGPanZoom as b,
   ConsecutiveDetailsGroup as c,
   CodeBlock as d,
-  Info as e,
+  Image as e,
   injectCsp as i,
   safeImageUrl as s
 };

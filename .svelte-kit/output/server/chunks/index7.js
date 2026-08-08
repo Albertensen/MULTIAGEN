@@ -1,4 +1,4 @@
-import { W as WEBUI_BASE_URL, I as convertOpenApiToToolPayload } from "./index4.js";
+import { W as WEBUI_BASE_URL, H as convertOpenApiToToolPayload } from "./index4.js";
 const getOpenAIModelsDirect = async (url, key) => {
   let error = null;
   const res = await fetch(`${url}/models`, {

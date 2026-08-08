@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { s as settings, w as models, c as config, b as chatId, al as getChatByShareId, u as user, W as WEBUI_NAME } from "../../../../chunks/index3.js";
 import { h as createMessagesList, z as convertMessagesToHistory } from "../../../../chunks/index4.js";
 import { M as Messages } from "../../../../chunks/Messages.js";
-import { e as getUserSettings, d as getUserInfoById } from "../../../../chunks/UserStatusLinkPreview.js";
+import { e as getUserSettings, c as getUserInfoById } from "../../../../chunks/UserStatusLinkPreview.js";
 import { c as getModels } from "../../../../chunks/index7.js";
 import "../../../../chunks/Toaster.svelte_svelte_type_style_lang.js";
 import localizedFormat from "dayjs/plugin/localizedFormat.js";

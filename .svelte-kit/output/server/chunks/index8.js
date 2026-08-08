@@ -1,4 +1,4 @@
-import { a as WEBUI_API_BASE_URL, U as splitStream } from "./index4.js";
+import { a as WEBUI_API_BASE_URL, T as splitStream } from "./index4.js";
 const uploadFile = async (token, file, metadata, process, stream = true) => {
   const data = new FormData();
   data.append("file", file);

@@ -1,11 +1,11 @@
 import { m as getContext, f as fallback, k as escape_html, b as bind_props, e as ensure_array_like, a as attr, d as attr_class, c as store_get, u as unsubscribe_stores, q as stringify, j as slot, g as clsx, h as attr_style } from "./index2.js";
 import { v4 } from "uuid";
-import { p as tags, c as config, s as settings, a3 as showControls, a5 as showEmbeds, a0 as embed, m as mobile, b as chatId, a4 as showArtifacts, aj as artifactCode, w as models, u as user, Y as temporaryChatEnabled, W as WEBUI_NAME, ak as deleteChatMessageById, r as refreshChatList, a9 as updateChatById } from "./index3.js";
+import { p as tags, c as config, s as settings, a3 as showControls, a5 as showEmbeds, a0 as embed, m as mobile, b as chatId, a4 as showArtifacts, ai as artifactCode, w as models, u as user, Y as temporaryChatEnabled, W as WEBUI_NAME, aj as deleteChatMessageById, r as refreshChatList, a9 as updateChatById } from "./index3.js";
 import { c as createEventDispatcher, o as onDestroy, t as tick } from "./index-server.js";
 import { a as toast } from "./Toaster.svelte_svelte_type_style_lang.js";
-import { a as WEBUI_API_BASE_URL, J as replaceOutsideCode, x as removeAllDetails, K as formatMessageTimestampFull, w as sanitizeResponseContent, L as formatMessageTimestamp, W as WEBUI_BASE_URL, c as WEBUI_VERSION } from "./index4.js";
+import { a as WEBUI_API_BASE_URL, I as replaceOutsideCode, x as removeAllDetails, J as formatMessageTimestampFull, w as sanitizeResponseContent, K as formatMessageTimestamp, W as WEBUI_BASE_URL, c as WEBUI_VERSION } from "./index4.js";
 import equal from "fast-deep-equal";
-import { e as Info, i as injectCsp, M as Markdown, d as CodeBlock, L as LightBulb, I as Image, F as FullHeightIframe, S as Sparkles, B as Bolt } from "./FileItemModal.svelte_svelte_type_style_lang.js";
+import { I as Info, i as injectCsp, M as Markdown, d as CodeBlock, L as LightBulb, e as Image, F as FullHeightIframe, S as Sparkles, B as Bolt } from "./FileItemModal.svelte_svelte_type_style_lang.js";
 import "file-saver";
 import "panzoom";
 import DOMPurify from "dompurify";
@@ -120,7 +120,7 @@ import "./pyodideSandboxHost.js";
 import "./codemirror.js";
 /* empty css                                          */
 import "i18next";
-import { C as ChevronRight, d as ChatBubble, h as StructuredOutputRenderer, g as getOutputText, b as ProfileImage, N as Name, a as FileItem, S as Skeleton, r as replaceOutputMessageText, L as Loader } from "./Loader.js";
+import { C as ChevronRight, d as ChatBubble, S as StructuredOutputRenderer, g as getOutputText, b as ProfileImage, N as Name, a as FileItem, f as Skeleton, r as replaceOutputMessageText, L as Loader } from "./Loader.js";
 import { T as Tooltip } from "./Tooltip.js";
 import { X as XMark } from "./XMark.js";
 import { C as ConfirmDialog } from "./ConfirmDialog.js";
