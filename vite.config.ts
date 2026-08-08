@@ -29,9 +29,13 @@ export default defineConfig({
 	server: {
 		port: 8088,
 		proxy: {
+			// /api/agents = route SvelteKit sendiri (proxy Ollama) — TANPA proxy config,
+			// Vite serve route lokal. Hanya /api lain diteruskan ke backend.
 			'/api': {
 				target: 'http://127.0.0.1:8080',
-				changeOrigin: true
+				changeOrigin: true,
+				// kecualikan /api/agents dari proxy (biar route SvelteKit menang)
+				bypass: (req) => (req.url.startsWith('/api/agents') ? req.url : undefined)
 			}
 		}
 	},

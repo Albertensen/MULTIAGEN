@@ -1,5 +1,7 @@
 # CHANGELOG.md
 
+## [2026-08-09] fix(orchestration) — LLM endpoint 404 & dry-run logic: endpoint `/api/v1/agents/generate` (backend tak punya route) → route SvelteKit `/api/agents/generate` (+server.ts proxy → Ollama /api/chat, parse `{text}`); vite.config bypass `/api/agents` dari proxy backend (EADDRINUSE fix); fallback delegasi buta DIHAPUS — koneksi gagal → pesan error rapi ke chat ("⚠️ Maaf, saya tidak dapat merespons..."), TANPA [CALL:] palsu, stream bersih; targets worker hanya dari [CALL:] eksplisit; E2E PASS: proxy 200 LLM live ("Hai juga! 👋"), delegasi jalan tanpa worker palsu
+
 ## [2026-08-07] feat(ux) — Clean brainstorming room & chat separation: leader-plan dengan [CALL:] → HANYA ke stream (ruang meeting bersih), ngobrol biasa → history; delegation-done → pesan konfirmasi bersih ke history; GLOBAL_LEADER_DIRECTIVE + aturan: jawab santai tanpa worker, panggil worker tersembunyi utk tugas kompleks + sapa ramah; E2E PASS: history = pembuka+user+delegasi+konfirmasi (tanpa [CALL:] mentah), stream tetap penuh rencana
 
 ## [2026-08-07] feat(architecture) — Fase 5: 6 micro-specialist worker (w1-w6: DataFormatter, DummySeeder, CssScaffolder, ErrorSummarizer, Copywriter, CrudGenerator) gantikan Planner/Critic/Programmer (cleanup agent lama di seed); GLOBAL_LEADER_DIRECTIVE (Modular Monolith: E-commerce/Forum/PC Builder; Leader hanya arsitektur tinggi, delegasi [CALL:]); dry-run fallback plan → worker baru; E2E PASS: roster 7 (Hermes 👑 + 6 ⚙️), delegasi [CALL: DataFormatter][CALL: CssScaffolder][CALL: CrudGenerator]

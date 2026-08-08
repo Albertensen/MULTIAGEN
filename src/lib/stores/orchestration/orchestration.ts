@@ -225,7 +225,7 @@ export const generateAgentResponse = async (opts: GenerateOptions): Promise<stri
 
 	let res: Response;
 	try {
-		res = await fetch('/api/v1/agents/generate', {
+		res = await fetch('/api/agents/generate', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			signal: AbortSignal.timeout(180000),
@@ -257,7 +257,8 @@ export const generateAgentResponse = async (opts: GenerateOptions): Promise<stri
 	let text = '';
 	try {
 		const data = await res.json();
-		text = data?.choices?.[0]?.message?.content ?? '';
+		// proxy SvelteKit → Ollama: { text }, atau OpenAI-compatible { choices[0].message.content }
+		text = data?.text ?? data?.choices?.[0]?.message?.content ?? '';
 	} catch (e) {
 		const msg = `[error] respons backend tak valid: ${String(e)}`;
 		addMessage(opts.chatId, opts.agentId, { role: 'system', content: msg });
@@ -671,17 +672,22 @@ export const delegateTask = async (opts: {
 			history: leaderHistory
 		});
 	} catch (e) {
-		// generate plan gagal (backend 404/no-LLM) — fallback dry-run: lanjut alur UI
-		planText = `[CALL: DataFormatter]\n[CALL: CssScaffolder]\n[CALL: CrudGenerator]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
-		emit('orchestration:dry-run', { chatId, leaderId, plan: planText.slice(0, 120), error: String(e) });
+		planText = '';
+		emit('orchestration:dry-run', { chatId, leaderId, plan: '', error: String(e) });
 	}
 
-	// dry-run fallback: kalau generate gagal/timeout (backend/Ollama mati),
-	// tetap lanjut delegasi dgn plan dummy spy alur UI (worker-started/done,
-	// token savings) bisa diverifikasi tanpa LLM eksternal.
+	// kegagalan koneksi LLM: JANGAN delegasi buta / generate [CALL:] palsu.
+	// Balas error rapi ke chat utama, biarkan stream bersih.
 	if (!planText || planText.startsWith('[error]')) {
-		planText = `[CALL: DataFormatter]\n[CALL: CssScaffolder]\n[CALL: CrudGenerator]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
-		emit('orchestration:dry-run', { chatId, leaderId, plan: planText.slice(0, 120) });
+		const errMsg =
+			'⚠️ Maaf, saya tidak dapat merespons. Koneksi ke otak LLM (Backend) terputus atau endpoint tidak ditemukan (404).';
+		emit('orchestration:leader-plan', { chatId, leaderId, plan: errMsg });
+		addMessage(chatId, leaderId, { role: 'assistant', content: errMsg });
+		plan.status = 'error';
+		plan.finalText = errMsg;
+		upsertDelegation(plan);
+		emit('orchestration:delegation-done', { chatId, leaderId, task, finalText: errMsg });
+		return plan;
 	}
 
 	// Feedback loop: tampilkan rencana mentah Leader ke UI stream SEBELUM
@@ -695,7 +701,8 @@ export const delegateTask = async (opts: {
 	const called = parseCalls(planText)
 		.map((t) => resolveAgentId(t))
 		.filter((id): id is string => !!id);
-	const targets = called.length > 0 ? called : workerIds; // fallback: workerIds
+	// hanya eksekusi worker yang EKSPLISIT dipanggil leader — tanpa fallback buta
+	const targets = called.length > 0 ? called : [];
 
 	plan.status = 'running';
 	plan.workerIds = targets;
