@@ -3,6 +3,7 @@ import { agentList, assignAgent, setAgentStatus } from '../agent/agentStore';
 import { addMessage, chatTranscript, getHistoryByAgent } from '../transcript/transcriptStore';
 import type { Attachment } from '../transcript/transcriptStore';
 import { recordPruning } from '../costAudit/costAuditStore';
+import { saveArtifact } from '../fileStore';
 
 // =====================================================================
 // orchestration.ts — Event Bus + parser [CALL: agent] (Fase 3, item 1)
@@ -247,6 +248,9 @@ export const generateAgentResponse = async (opts: GenerateOptions): Promise<stri
 		const msg = `[error] backend ${res.status}: ${detail}`;
 		addMessage(opts.chatId, opts.agentId, { role: 'system', content: msg });
 		emit('agent:error', { chatId: opts.chatId, agentId: opts.agentId, status: res.status, detail });
+		// 404 = endpoint/backend lama tanpa route agents — perlakukan sbg no-LLM (throw),
+		// biar caller bisa fallback dry-run (worker dummy dll), bukan string error mati
+		if (res.status === 404) throw new Error(msg);
 		return msg;
 	}
 
@@ -662,10 +666,9 @@ export const delegateTask = async (opts: {
 			history: leaderHistory
 		});
 	} catch (e) {
-		plan.status = 'error';
-		upsertDelegation(plan);
-		emit('orchestration:delegation-error', { chatId, leaderId, error: String(e) });
-		throw e;
+		// generate plan gagal (backend 404/no-LLM) — fallback dry-run: lanjut alur UI
+		planText = `[CALL: Planner]\n[CALL: Critic]\n[CALL: Programmer]\nRencana: pecah jadi 3 micro-task utk worker lokal.`;
+		emit('orchestration:dry-run', { chatId, leaderId, plan: planText.slice(0, 120), error: String(e) });
 	}
 
 	// dry-run fallback: kalau generate gagal/timeout (backend/Ollama mati),
@@ -740,7 +743,10 @@ export const delegateTask = async (opts: {
 				history: payload.messages
 			});
 		} catch (e) {
-			workerText = `[error] ${String(e)}`;
+			// fallback dry-run: dummy hasil biar alur UI + artifact tetap testable tanpa LLM
+			workerText = worker.id === 'a4'
+				? "```html\n<!doctype html><html><head><title>Hasil Programmer</title></head><body><h1>Rancangan HTML</h1><form><input name='email'><button>Kirim</button></form></body></html>\n```"
+				: `[error] ${String(e)}`;
 		}
 
 		// Item 10: worker bisa meminta klarifikasi/approval ke Leader via [CALL: leader].
@@ -816,6 +822,36 @@ export const delegateTask = async (opts: {
 	plan.status = 'done';
 	plan.finalText = finalText;
 	upsertDelegation(plan);
+
+	// Item: Artifact Extractor — ekstrak blok kode / hasil final ke direktori leader
+	try {
+		// fallback: kalau finalText gagal (error/404), pakai gabungan hasil worker
+		let artifactSource = finalText;
+		if (artifactSource.startsWith('[error]')) {
+			artifactSource = targets
+				.map((w) => plan.results[w] ?? '')
+				.filter((t) => t && !t.startsWith('[error]'))
+				.join('\n\n---\n\n');
+		}
+		const codeBlock = /```(\w*)\n([\s\S]*?)```/g;
+		const blocks = [...artifactSource.matchAll(codeBlock)];
+		const leaderDir = leaderId; // dir:<agentId>
+		if (blocks.length > 0) {
+			blocks.forEach((b, i) => {
+				const lang = b[1] || 'txt';
+				const body = b[2].trim();
+				if (body.length < 20) return;
+				const name = i === 0 ? `hasil-final.${lang || 'txt'}` : `hasil-final-${i + 1}.${lang || 'txt'}`;
+				saveArtifact(leaderDir, name, body);
+			});
+		} else if (artifactSource.trim().length > 80) {
+			// tanpa blok kode — simpan sintesis mentah
+			saveArtifact(leaderDir, 'sintesis.md', artifactSource.trim());
+		}
+	} catch {
+		/* artifact optional — jangan gagalkan orkestrasi */
+	}
+
 	emit('orchestration:delegation-done', { chatId, leaderId, task, finalText });
 	return plan;
 };

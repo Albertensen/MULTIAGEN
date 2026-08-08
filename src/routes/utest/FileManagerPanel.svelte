@@ -1,15 +1,24 @@
 <script lang="ts">
-	// FileManagerPanel.svelte — skeleton manager direktori (global / isolated per-leader)
+	// FileManagerPanel.svelte — manager direktori (global / isolated per-leader)
 	import { activeChannel, activeLeaderId } from '$lib/stores/workspace/workspaceStore';
 	import { agentList } from '$lib/stores/agent/agentStore';
+	import { filesByDirStore } from '$lib/stores/fileStore';
+	import type { ArtifactFile } from '$lib/stores/fileStore';
 
 	// nama direktori: dir:global → "global-shared", dir:<id> → "dir-<nama>"
+	$: dirId = (() => {
+		const id = $activeChannel.replace('dir:', '');
+		return id;
+	})();
 	$: dirName = (() => {
 		const id = $activeChannel.replace('dir:', '');
 		if (id === 'global') return 'global-shared';
 		const a = $agentList.find((x) => x.id === id);
 		return a ? `dir-${a.name.toLowerCase().replace(/\s+/g, '-')}` : id;
 	})();
+	// file di direktori aktif (reactive)
+	let files: ArtifactFile[] = [];
+	$: unsubFiles = filesByDirStore(dirId).subscribe((v) => (files = v));
 </script>
 
 <div class="fm-panel">
@@ -28,7 +37,20 @@
 	</div>
 
 	<div class="fm-list">
-		<span class="fm-list-empty">Belum ada file di direktori ini.</span>
+		{#if files.length === 0}
+			<span class="fm-list-empty">Belum ada file di direktori ini.</span>
+		{:else}
+			{#each files as f (f.id)}
+				<details class="fm-file">
+					<summary class="fm-file-summary">
+						<span class="fm-file-icon">📄</span>
+						<span class="fm-file-name">{f.name}</span>
+						<span class="fm-file-meta">{new Date(f.ts).toLocaleTimeString()}</span>
+					</summary>
+					<pre class="fm-file-content">{f.content}</pre>
+				</details>
+			{/each}
+		{/if}
 	</div>
 </div>
 
@@ -99,9 +121,52 @@
 	.fm-list {
 		flex: 1;
 		padding: 0 16px;
+		overflow-y: auto;
 	}
 	.fm-list-empty {
 		font-size: 13px;
 		color: #949ba4;
+	}
+	.fm-file {
+		margin-bottom: 8px;
+		background: #2b2d31;
+		border-radius: 8px;
+		border: 1px solid #1e1f22;
+	}
+	.fm-file-summary {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 12px;
+		cursor: pointer;
+		list-style: none;
+		font-size: 13px;
+	}
+	.fm-file-summary::-webkit-details-marker {
+		display: none;
+	}
+	.fm-file-icon {
+		font-size: 14px;
+	}
+	.fm-file-name {
+		font-weight: 600;
+		color: #dbdee1;
+	}
+	.fm-file-meta {
+		margin-left: auto;
+		font-size: 11px;
+		color: #80848e;
+	}
+	.fm-file-content {
+		padding: 10px 12px;
+		margin: 0;
+		border-top: 1px solid #1e1f22;
+		font-size: 11px;
+		line-height: 1.5;
+		color: #b5bac1;
+		white-space: pre-wrap;
+		word-break: break-word;
+		max-height: 240px;
+		overflow-y: auto;
 	}
 </style>
