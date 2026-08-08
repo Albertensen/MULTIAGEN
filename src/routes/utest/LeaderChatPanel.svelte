@@ -64,10 +64,9 @@
 		}
 	};
 
-	// pantau delegasi leader di ruang ini
+	// pantau delegasi leader — HANYA ke stream (orkestrasi log), TANPA System msg di chat
 	on('orchestration:delegation', (p) => {
 		if (p.leaderId === leaderId) {
-			push('system', 'System', `📢 ${agentName(String(p.leaderId))} mendelegasikan ke ${(p.workerIds as string[]).map(agentName).join(', ')}`);
 			pushStream('system', 'System', `📢 ${agentName(String(p.leaderId))} mendelegasikan ke ${(p.workerIds as string[]).map(agentName).join(', ')}`);
 		}
 	});
@@ -88,11 +87,10 @@
 			if (clean) push('leader', agentName(String(p.leaderId)), clean);
 		}
 	});
-	// setelah worker selesai + artifact tersimpan → konfirmasi bersih ke ruang meeting
+	// worker selesai — log stream saja; hasil final Leader (LLM) yg dirender ke chat
 	on('orchestration:delegation-done', (p) => {
 		if (p.leaderId === leaderId) {
 			pushStream('system', 'System', `📄 Artifact disimpan — delegasi ${String(p.task ?? '').slice(0, 60)}`);
-			push('leader', agentName(String(p.leaderId)), `Tugas telah dipecah dan dieksekusi oleh tim. Hasil akhirnya telah saya simpan di direktori file. Ada hal lain yang ingin didiskusikan?`);
 		}
 	});
 	on('orchestration:worker-started', (p) => {

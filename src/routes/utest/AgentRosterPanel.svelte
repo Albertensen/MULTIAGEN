@@ -64,8 +64,13 @@
 				<span class="rp-dot" style={`background:${statusDot(agent.status)}`}></span>
 				<span class="rp-info">
 					<span class="rp-name">{agent.name}</span>
-					<span class="rp-badge">🤖 Local (Ollama)</span>
-					<span class="rp-sub">{agent.status} · {agent.provider ?? 'ollama'}</span>
+					{#if agent.isLeader}
+						<span class="rp-badge leader">🤖 Hermes Agent (Premium)</span>
+						<span class="rp-sub">{agent.status} · hermes-agent</span>
+					{:else}
+						<span class="rp-badge">🤖 Local (Ollama)</span>
+						<span class="rp-sub">{agent.status} · {agent.provider ?? 'ollama'}</span>
+					{/if}
 				</span>
 				<span class="rp-role">
 					{#if agent.isLeader}

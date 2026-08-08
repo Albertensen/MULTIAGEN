@@ -759,10 +759,8 @@ export const delegateTask = async (opts: {
 				history: payload.messages
 			});
 		} catch (e) {
-			// fallback dry-run: dummy hasil biar alur UI + artifact tetap testable tanpa LLM
-			workerText = worker.id === 'w3'
-				? "```html\n<!doctype html><html><head><title>Hasil CssScaffolder</title></head><body><h1>Rancangan HTML</h1><form><input name='email'><button>Kirim</button></form></body></html>\n```"
-				: `[error] ${String(e)}`;
+			// tanpa fallback palsu — error asli dicatat, alur lanjut
+			workerText = `[error] ${String(e)}`;
 		}
 
 		// Item 10: worker bisa meminta klarifikasi/approval ke Leader via [CALL: leader].
