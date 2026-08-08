@@ -55,7 +55,7 @@ declare module '$env/static/private' {
 	export const DISPLAY: string;
 	export const DRIVERDATA: string;
 	export const EDITOR: string;
-	export const EFC_8256: string;
+	export const EFC_8976: string;
 	export const EXEPATH: string;
 	export const HERMES_CRON_SESSION: string;
 	export const HERMES_DESKTOP: string;
@@ -153,6 +153,7 @@ declare module '$env/static/private' {
 	export const PWD: string;
 	export const PYTHONIOENCODING: string;
 	export const PYTHONPATH: string;
+	export const PYTHONUNBUFFERED: string;
 	export const PYTHONUTF8: string;
 	export const SESSIONNAME: string;
 	export const SHELL: string;
@@ -295,7 +296,7 @@ declare module '$env/dynamic/private' {
 		DISPLAY: string;
 		DRIVERDATA: string;
 		EDITOR: string;
-		EFC_8256: string;
+		EFC_8976: string;
 		EXEPATH: string;
 		HERMES_CRON_SESSION: string;
 		HERMES_DESKTOP: string;
@@ -393,6 +394,7 @@ declare module '$env/dynamic/private' {
 		PWD: string;
 		PYTHONIOENCODING: string;
 		PYTHONPATH: string;
+		PYTHONUNBUFFERED: string;
 		PYTHONUTF8: string;
 		SESSIONNAME: string;
 		SHELL: string;
